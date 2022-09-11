@@ -143,7 +143,7 @@ function betterLvl1()
 	maxHP = ReadByte(maxHPAdr)
 	curHP = ReadByte(curHPAdr)
 	curDiff = ReadByte(curDiffAdr)
-	boostBy = math.floor(numProof+curDiff+1)/2)
+	boostBy = math.floor((numProof+curDiff+1)/2)
 	statsBoost = boostBy * (maxHP - curHP)
 	Writebyte(sora+0x09,statsBoost)--Power
 	Writebyte(sora+0x0A,statsBoost)--Magic
