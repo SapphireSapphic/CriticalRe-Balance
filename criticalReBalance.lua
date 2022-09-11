@@ -218,8 +218,8 @@ function gameplay()
 	WriteFloat(Sys3+0x1815C, base)--Riku
 	WriteFloat(Sys3+0x18364, base)--Limit Form
 	
-	--make party members Lvl 99
-	for partyLevel 0,98 do
+	--make party members Lvl to 99 super fast
+	for partyLevel = 0,98 do
 		WriteInt(Btl0+0x25F5C+(0x10 * partyLevel), 1)--Donald
 		WriteInt(Btl0+0x26590+(0x10 * partyLevel), 1)--Goofy
 		WriteInt(Btl0+0x26BC4+(0x10 * partyLevel), 1)--Mickey
