@@ -82,3 +82,12 @@ assets:
   method: copy
   source:
   - name: obj/W_EX010_BTLF_R.mset
+#1k Party Members
+- name: ard/us/hb17.ard
+  method: copy
+  source:
+  - name: ard/us/hb17.ard
+- name: ard/hb17.ard
+  method: copy
+  source:
+  - name: ard/us/hb17.ard
