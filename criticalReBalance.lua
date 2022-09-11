@@ -8,13 +8,15 @@ function _OnInit()
 		onPC=false
 		Save = 0x032BB30 --Save File
 		Sys3 = 0x1CCB300 --03system.bin
-		Btl0 = 0x1CE5D80 --00battle.bin
+		Btl0 = 0x1CE5D80 --00battle.bin	
+		Now = 0x032BAE0 --Current Location
 	elseif GAME_ID == 0x431219CC and ENGINE_TYPE == "BACKEND" then
 		onPC=true
 		ConsolePrint("Critical Re:Balance")
 		Save = 0x09A7070 - 0x56450E
 		Sys3 = 0x2A59DB0 - 0x56450E
-		Btl0 = 0x2A74840 - 0x56450E
+		Btl0 = 0x2A74840 - 0x56450E	
+		Now = 0x0714DB8 - 0x56454E
 		offset = 0x56454E
 		Hurricane = 0x2A98006 -offset
 		DrawRange = 0x2A20EA0 -offset
@@ -194,24 +196,27 @@ end
 
 function gameplay()
 	--Running Speed boost
-	WriteFloat(Sys3+0x17CE4, 45)--Base Sora
-	WriteFloat(Sys3+0x17D18, 16)--Valor
-	WriteFloat(Sys3+0x17D4C, 16)--Wis
-	WriteFloat(Sys3+0x17D80, 14)--Master
-	WriteFloat(Sys3+0x17DB4, 20)--Final
-	WriteFloat(Sys3+0x17E84, 12)--Donald
-	WriteFloat(Sys3+0x17EEC, 12)--Goofy
-	WriteFloat(Sys3+0x17F54, 12)--Aladdin
-	WriteFloat(Sys3+0x17F88, 12)--Auron
-	WriteFloat(Sys3+0x17FBC, 12)--Mulan
-	WriteFloat(Sys3+0x17FF0, 12)--Ping
-	WriteFloat(Sys3+0x18024, 12)--Tron
-	WriteFloat(Sys3+0x18058, 12)--Mickey
-	WriteFloat(Sys3+0x1808C, 12)--Beast
-	WriteFloat(Sys3+0x180C0, 12)--Jack Skel
-	WriteFloat(Sys3+0x18128, 12)--Jack Sparrow
-	WriteFloat(Sys3+0x1815C, 12)--Riku
-	WriteFloat(Sys3+0x18364, 12)--Limit Form
+	base = 12
+	faster = 16
+	fastest = 20
+	WriteFloat(Sys3+0x17CE4, base)--Base Sora
+	WriteFloat(Sys3+0x17D18, faster)--Valor
+	WriteFloat(Sys3+0x17D4C, faster)--Wis
+	WriteFloat(Sys3+0x17D80, faster)--Master
+	WriteFloat(Sys3+0x17DB4, fastest)--Final
+	WriteFloat(Sys3+0x17E84, base)--Donald
+	WriteFloat(Sys3+0x17EEC, base)--Goofy
+	WriteFloat(Sys3+0x17F54, base)--Aladdin
+	WriteFloat(Sys3+0x17F88, base)--Auron
+	WriteFloat(Sys3+0x17FBC, base)--Mulan
+	WriteFloat(Sys3+0x17FF0, base)--Ping
+	WriteFloat(Sys3+0x18024, base)--Tron
+	WriteFloat(Sys3+0x18058, base)--Mickey
+	WriteFloat(Sys3+0x1808C, base)--Beast
+	WriteFloat(Sys3+0x180C0, base)--Jack Skel
+	WriteFloat(Sys3+0x18128, base)--Jack Sparrow
+	WriteFloat(Sys3+0x1815C, base)--Riku
+	WriteFloat(Sys3+0x18364, base)--Limit Form
 	
 	if onPC == true then
 		WriteByte(Sys3+0x03E0,2) -- Valor
