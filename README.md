@@ -1,2 +1,2 @@
-# CriticalRe-Balance
-Aims to rebalance a variety of things across the vanilla game.
+# Critical Re:Balance
+Rebalances a variety of things in the game, with the goal of improving the Critical and/or Level 1 experience.
