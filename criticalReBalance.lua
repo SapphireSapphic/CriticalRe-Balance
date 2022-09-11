@@ -218,6 +218,22 @@ function gameplay()
 	WriteFloat(Sys3+0x1815C, base)--Riku
 	WriteFloat(Sys3+0x18364, base)--Limit Form
 	
+	--make party members Lvl 99
+	for partyLevel 0,98 do
+		WriteInt(Btl0+0x25F5C+(0x10 * partyLevel), 1)--Donald
+		WriteInt(Btl0+0x26590+(0x10 * partyLevel), 1)--Goofy
+		WriteInt(Btl0+0x26BC4+(0x10 * partyLevel), 1)--Mickey
+		WriteInt(Btl0+0x271F8+(0x10 * partyLevel), 1)--Auron
+		WriteInt(Btl0+0x2782C+(0x10 * partyLevel), 1)--Mulan
+		WriteInt(Btl0+0x27E60+(0x10 * partyLevel), 1)--Aladdin
+		WriteInt(Btl0+0x28494+(0x10 * partyLevel), 1)--Jack Sparrow
+		WriteInt(Btl0+0x28AC8+(0x10 * partyLevel), 1)--Beast
+		WriteInt(Btl0+0x290FC+(0x10 * partyLevel), 1)--Jack Skellington
+		WriteInt(Btl0+0x29730+(0x10 * partyLevel), 1)--Simba
+		WriteInt(Btl0+0x29D64+(0x10 * partyLevel), 1)--Tron
+		WriteInt(Btl0+0x2A398+(0x10 * partyLevel), 1)--Riku
+	end
+	
 	if onPC == true then
 		WriteByte(Sys3+0x03E0,2) -- Valor
 		WriteByte(Sys3+0x0500,1) -- Anti
