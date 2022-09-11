@@ -1,0 +1,84 @@
+title: Critical Re:Balance
+originalAuthor: SapphireSapphic
+game: kh2
+description: Rebalances a variety of things in the game, with the goal of improving the Critical and/or Level 1 experience.
+
+assets:
+#Load the Lua Script
+- name: scripts/F266B00B criticalReBalance.lua
+  method: copy
+  source:
+  - name: criticalReBalance.lua
+
+#Load patches from double plus
+- name: obj\P_EX100.mset
+  method: copy
+  platform: pc
+  package: kh2_sixth
+  multi: 
+  source:
+  - name: obj\P_EX100.mset
+    method: 
+    platform: 
+    package: 
+    multi: 
+    source: 
+    required: false
+    type: 
+    motionsetType: Default
+    language: 
+    isSwizzled: false
+    index: 0
+  required: false
+  type: 
+  motionsetType: Default
+  language: 
+  isSwizzled: false
+  index: 0
+- name: obj\W_EX010.mset
+  method: copy
+  platform: pc
+  package: kh2_sixth
+  multi: 
+  source:
+  - name: obj\W_EX010.mset
+    method: 
+    platform: 
+    package: 
+    multi: 
+    source: 
+    required: false
+    type: 
+    motionsetType: Default
+    language: 
+    isSwizzled: false
+    index: 0
+  required: false
+  type: 
+  motionsetType: Default
+  language: 
+  isSwizzled: false
+  index: 0
+#Removes Disable Form Flag
+- name: 03system.bin
+  method: binarc
+  source:
+  - method: copy
+    name: cmd
+    source:
+    - name: cmd_0.list
+    type: list
+
+#Gives Valor Magic Animations
+- name: obj/P_EX100_BTLF.mset
+  method: copy
+  source:
+  - name: obj/P_EX100_BTLF.mset
+- name: obj/W_EX010_BTLF_L.mset
+  method: copy
+  source:
+  - name: obj/W_EX010_BTLF_L.mset
+- name: obj/W_EX010_BTLF_R.mset
+  method: copy
+  source:
+  - name: obj/W_EX010_BTLF_R.mset
