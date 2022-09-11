@@ -53,7 +53,13 @@ function _OnFrame()
 	Evt    = ReadShort(Now+0x08)
 	PrevPlace = ReadShort(Now+0x30)
 	if ReadByte(curLvlAdr) == 0x01 then
-		lvl1 = true
+		for Slot = 0,80 do
+			local Current = sora +abilOff+ 2*Slot
+			local Ability = ReadShort(Current)
+			if Ability == 0x8194 then
+				lvl1 = true
+			end
+		end
 	else
 		lvl1 = false
 	end
@@ -188,7 +194,7 @@ end
 
 function gameplay()
 	--Running Speed boost
-	WriteFloat(Sys3+0x17CE4, 12)--Base Sora
+	WriteFloat(Sys3+0x17CE4, 45)--Base Sora
 	WriteFloat(Sys3+0x17D18, 16)--Valor
 	WriteFloat(Sys3+0x17D4C, 16)--Wis
 	WriteFloat(Sys3+0x17D80, 14)--Master
