@@ -32,6 +32,17 @@ function _OnInit()
 	maxHPAdr = sora + 0x05
 	donald = Save + 0x2604
 	goofy = Save + 0x2718
+	mickey = Save + 0x282C
+	auron = Save + 0x2940
+	mulan = Save + 0x2A54
+	aladdin = Save + 0x2B68
+	capJack = Save + 0x2C7C
+	beast = Save + 0x2D90
+	skelJack = Save + 0x2EA4
+	simba = Save + 0x2FB8
+	tron = Save + 0x30CC
+	riku = Save + 0x31E0
+	partyList = {sora, donald, goofy, mickey, auron, mulan, aladdin, capJack, beast, skelJack, simba, tron, riku}
 	valor = Save + 0x32FE + 0x0016 + 0x0004-- First Unused Slot, accounting for my form movement mod
 	wisdom = Save + 0x3336 + 0x000E + 0x000A
 	limit = Save + 0x336E + 0x0008
@@ -73,10 +84,10 @@ function _OnFrame()
 	
 	--Execute functions
 	newGame()
+	gameplay()
 	if lvl1 == true then
 		betterLvl1()
 	end
-	gameplay()
 	finnyFun()
 end
 
@@ -85,26 +96,14 @@ function newGame()
 		--Starting Inventory Edits
 		WriteByte(Save+0x3586, 0x32) --Start with 50 Megalixirs
 		
-		--Start SDG with all abilities equipped
-		for Slot = 0,80 do
-			local Current = sora +abilOff+ 2*Slot
-			local Ability = ReadShort(Current)
-			if Ability < 0x8000 and Ability > 0x0000 then
-				WriteShort(Current,Ability + 0x8000)
-			end
-		end
-		for Slot = 0,80 do
-			local Current = donald +abilOff+ 2*Slot
-			local Ability = ReadShort(Current)
-			if Ability < 0x8000 and Ability > 0x0000 then
-				WriteShort(Current,Ability + 0x8000)
-			end
-		end
-		for Slot = 0,80 do
-			local Current = goofy +abilOff+ 2*Slot
-			local Ability = ReadShort(Current)
-			if Ability < 0x8000 and Ability > 0x0000 then
-				WriteShort(Current,Ability + 0x8000)
+		--Start all characters with all abilities equipped
+		for partyMem = 1,13 do
+			for Slot = 0,80 do
+				local Current = partyList[partyMem] + abilOff + 2*Slot
+				local Ability = ReadShort(Current)
+				if Ability < 0x8000 and Ability > 0x0000 then
+					WriteShort(Current,Ability + 0x8000)
+				end
 			end
 		end
 		--Start All party members on sora attack
@@ -122,7 +121,7 @@ function newGame()
 	end
 end
 
-function betterLvl1()
+function gameplay()
 	--Count # of proofs
 	if ReadByte(Save+0x36B2) ~= 0x00 then
 		pCon = 1
@@ -145,56 +144,19 @@ function betterLvl1()
 		pCharm = 0
 	end
 	
-	
-	--Boost stats based on how much dmg sora has
 	numProof = pCon + pNon + pPea + pCharm
-	maxHP = ReadByte(maxHPAdr)
-	curHP = ReadByte(curHPAdr)
-	curDiff = ReadByte(curDiffAdr)
-	boostBy = math.floor((numProof+curDiff+1)/2)
-	statsBoost = boostBy * (maxHP - curHP)
-	Writebyte(sora+0x09,statsBoost)--Power
-	Writebyte(sora+0x0A,statsBoost)--Magic
-	Writebyte(sora+0x0B,statsBoost+20)--Def
+	statsBoost = numProof * 25
+	for partyMem = 2,13 do
+		Writebyte(partyList[partyMem]+0x08,statsBoost)--AP
+		Writebyte(partyList[partyMem]+0x09,statsBoost)--Power
+		Writebyte(partyList[partyMem]+0x0A,statsBoost)--Magic
+		Writebyte(partyList[partyMem]+0x0B,statsBoost)--Def
+	end
 	
-	--valor
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x02 then
-		WriteShort(valor, 0x819F) --Second Chance
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x02 and onPC == true then
+		WriteShort(limit, 0x8107) --Distance Step / Dodge Slash
 	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x04 then
-		WriteShort(valor+2, 0x81A0) --Once More
-	end
-	--wisdom
-	if ReadByte(Save + 0x332C + 0x02) >= 0x03 then
-		WriteShort(wisdom, 0x819F) --Second Chance
-	end
-	if ReadByte(Save + 0x332C + 0x02) >= 0x05 then
-		WriteShort(wisdom+2, 0x81A0) --Once More
-	end
-	--limit
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x06 then
-		WriteShort(limit, 0x819F) --Second Chance
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x07 then
-		WriteShort(limit+2, 0x81A0) --Once More
-	end
-	--master
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x04 then
-		WriteShort(master, 0x819F) --Second Chance
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x06 then
-		WriteShort(master+2, 0x81A0) --Once More
-	end
-	--final
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x05 then
-		WriteShort(final, 0x819F) --Second Chance
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x07 then
-		WriteShort(final+2, 0x81A0) --Once More
-	end
-end
-
-function gameplay()
+	
 	--Running Speed boost
 	base = 12
 	faster = 16
@@ -234,21 +196,20 @@ function gameplay()
 		WriteInt(Btl0+0x2A398+(0x10 * partyLevel), 1)--Riku
 	end
 	
+	WriteByte(Sys3+0x0500,1) -- Anti
+	WriteByte(Sys3+0x1070,5) -- Stitch
+	WriteByte(Sys3+0x10A0,2) -- Genie
+	WriteByte(Sys3+0xA40,0x0E)   -- Blizzard Cost: 14
+	WriteByte(Sys3+0x1640,0x0E)  -- Blizzara Cost: 14
+	WriteByte(Sys3+0x1670,0x0E)  -- Blizzaga Cost: 14
+	WriteByte(Sys3+0xA10,0x10)   -- Thunder Cost: 16
+	WriteByte(Sys3+0x16A0,0x10)  -- Thundara Cost: 16
+	WriteByte(Sys3+0x16D0,0x10)  -- Thundaga Cost: 16
+	WriteByte(Sys3+0x1FD0,0x0C)  -- Reflect Cost: 12
+	WriteByte(Sys3+0x2000,0x0C)  -- Reflera Cost: 12
+	WriteByte(Sys3+0x2030,0x0C)  -- Reflega Cost: 12
+	WriteByte(Sys3+0x7E50,0x28)  -- Strike Raid Cost: 40
 	if onPC == true then
-		WriteByte(Sys3+0x03E0,2) -- Valor
-		WriteByte(Sys3+0x0500,1) -- Anti
-		WriteByte(Sys3+0x1070,5) -- Stitch
-		WriteByte(Sys3+0x10A0,2) -- Genie
-		WriteByte(Sys3+0xA40,0x0E)   -- Blizzard Cost: 14
-		WriteByte(Sys3+0x1640,0x0E)  -- Blizzara Cost: 14
-		WriteByte(Sys3+0x1670,0x0E)  -- Blizzaga Cost: 14
-		WriteByte(Sys3+0xA10,0x10)   -- Thunder Cost: 16
-		WriteByte(Sys3+0x16A0,0x10)  -- Thundara Cost: 16
-		WriteByte(Sys3+0x16D0,0x10)  -- Thundaga Cost: 16
-		WriteByte(Sys3+0x1FD0,0x0C)  -- Reflect Cost: 12
-		WriteByte(Sys3+0x2000,0x0C)  -- Reflera Cost: 12
-		WriteByte(Sys3+0x2030,0x0C)  -- Reflega Cost: 12
-		WriteByte(Sys3+0x7E50,0x28)  -- Strike Raid Cost: 40
 		WriteFloat(DrawRange, 375)   -- DrawRange3x
 		WriteByte(Hurricane, 0x20)   --RemoveHurricaneWinderFloat
 		WriteByte(Hurricane+1, 0x42) --RemoveHurricaneWinderFloat
@@ -259,6 +220,142 @@ function gameplay()
 		WriteFloat(DistanceDash, 2000) --DistanceDash MAXRANGE
 		WriteByte(DistanceDash2, 0x36) --Disable DodgeSlash Entry2
 		WriteByte(DistanceDash3, 0x36) --Disable DodgeSlash Entry3
+	end
+end
+
+function betterLvl1()
+	--Count # of proofs
+	if ReadByte(Save+0x36B2) ~= 0x00 then
+		pCon = 1
+	else
+		pCon = 0
+	end
+	if ReadByte(Save+0x36B3) ~= 0x00 then
+		pNon = 1
+	else
+		pNon = 0
+	end
+	if ReadByte(Save+0x36B4) ~= 0x00 then
+		pPea = 1
+	else
+		pPea = 0
+	end
+	if ReadByte(Save+0x3964) ~= 0x00 then
+		pCharm = 1
+	else
+		pCharm = 0
+	end
+	
+	--Boost stats based on how much dmg sora has
+	numProof = pCon + pNon + pPea + pCharm
+	maxHP = ReadByte(maxHPAdr)
+	curHP = ReadByte(curHPAdr)
+	curDiff = ReadByte(curDiffAdr)
+	boostBy = math.floor((numProof+curDiff+1)/2)
+	statsBoost = boostBy * (maxHP - curHP)
+	Writebyte(sora+0x09,statsBoost)--Power
+	Writebyte(sora+0x0A,statsBoost)--Magic
+	Writebyte(sora+0x0B,statsBoost+20)--Def
+	
+--Extra form abilities
+	--valor
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x02 then
+		WriteShort(valor, 0x819F) --Second Chance
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x03 then
+		WriteShort(valor+2, 0x81A6) --MP Hastega
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x04 then
+		WriteShort(valor+4, 0x81A0) --Once More
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x05 then
+		WriteShort(valor+6, 0x8186) --Combo Boost
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x06 then
+		WriteShort(valor+8, 0x8189) --Finishing Plus
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x07 then
+		WriteShort(valor+10, 0x8187) --Air Combo Boost
+	end
+	
+	--wisdom
+	if ReadByte(Save + 0x332C + 0x02) >= 0x02 then
+		WriteShort(wisdom, 0x8193) --Magic Lock-On
+	end
+	if ReadByte(Save + 0x332C + 0x02) >= 0x03 then
+		WriteShort(wisdom+2, 0x819F) --Second Chance
+	end
+	if ReadByte(Save + 0x332C + 0x02) >= 0x04 then
+		WriteShort(wisdom+4, 0x8198) --Fire Boost
+	end
+	if ReadByte(Save + 0x332C + 0x02) >= 0x05 then
+		WriteShort(wisdom+6, 0x81A0) --Once More
+	end
+	if ReadByte(Save + 0x332C + 0x02) >= 0x06 then
+		WriteShort(wisdom+8, 0x8199) --Blizzard Boost
+	end
+	if ReadByte(Save + 0x332C + 0x02) >= 0x07 then
+		WriteShort(wisdom+10, 0x819A) --Thunder Boost
+	end
+	
+	--limit
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x02 and onPC == true then
+		WriteShort(limit, 0x8107) --Distance Step / Dodge Slash
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x03 then
+		WriteShort(limit+2, 0x8187) --Air Combo Boost
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x04 then
+		WriteShort(limit+4, 0x818E) --Form Boost
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x05 then
+		WriteShort(limit+6, 0x8186) --Combo Boost
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x06 then
+		WriteShort(limit+8, 0x819F) --Second Chance
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x07 then
+		WriteShort(limit+20, 0x81A0) --Once More
+	end
+	
+	--master
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x02 then
+		WriteShort(master, 0x821C) --Drive Converter
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x03 then
+		WriteShort(master+2, 0x8186) --MP Hastega
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x04 then
+		WriteShort(master+4, 0x819F) --Second Chance
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x05 then
+		WriteShort(master-22, 0x8187) --Air Combo Boost
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x06 then
+		WriteShort(master-24, 0x81A0) --Once More
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x07 then
+		WriteShort(master-26, 0x8187) --Air Combo Boost
+	end
+	
+	--final
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x02 then
+		WriteShort(final, 0x818E) --Form Boost
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x03 then
+		WriteShort(final+2, 0x8198) --Fire Boost
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x04 then
+		WriteShort(final+4, 0x819A) --Thunder Boost
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x05 then
+		WriteShort(final+6, 0x819F) --Second Chance
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x06 then
+		WriteShort(final+8, 0x8198) --Fire Boost
+	end
+	if ReadByte(Save + 0x32FE + 0x02) >= 0x07 then
+		WriteShort(final-14, 0x81A0) --Once More
 	end
 end
 
