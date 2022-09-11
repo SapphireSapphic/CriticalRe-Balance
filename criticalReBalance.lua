@@ -3,32 +3,39 @@ LUAGUI_AUTH = "SapphireSapphic"
 LUAGUI_DESC = "Rebalances a variety of things in the game, with the goal of improving the Critical and/or Level 1 experience."
 
 function _OnInit()
-	if GAME_ID == 0x431219CC and ENGINE_TYPE == "BACKEND" then
-		canExecute=true
+	if (GAME_ID == 0xF266B00B or GAME_ID == 0xFAF99301) and ENGINE_TYPE == "ENGINE" then --PCSX2
+		ConsolePrint("Critical Re:Balance PCSX2")
+		onPC=false
+		Save = 0x032BB30 --Save File
+		Sys3 = 0x1CCB300 --03system.bin
+		Btl0 = 0x1CE5D80 --00battle.bin
+	elseif GAME_ID == 0x431219CC and ENGINE_TYPE == "BACKEND" then
+		onPC=true
 		ConsolePrint("Critical Re:Balance")
 		Save = 0x09A7070 - 0x56450E
 		Sys3 = 0x2A59DB0 - 0x56450E
-		curLvl = Save + 0x24F0 + 0x000F
-		curDiff = Save + 0x2498
-		abilOff = 0x0054
-		sora = Save + 0x24F0
-		curHP = sora + 0x04
-		maxHp = sora + 0x05
-		donald = Save + 0x2604
-		goofy = Save + 0x2718
-		valor = Save + 0x32FE + 0x0016 + 0x0004-- First Unused Slot, accounting for my form movement mod
-		wisdom = Save + 0x3336 + 0x000E + 0x000A
-		limit = Save + 0x336E + 0x0008
-		master = Save + 0x33A6 + 0x0014 + 0x000A
-		final = Save + 0x33DE + 0x0010 + 0x000A
-		anti = Save + 0x340C + 0x000C + 0x000A
-		local offset = 0x56454E
-		local Hurricane = 0x2A98006 -offset
-		local DrawRange = 0x2A20EA0 -offset
-		local DistanceDash = 0x2A94BD4 -offset
-		local DistanceDash2 = 0x2A94CBC -offset
-		local DistanceDash3 = 0x2A94DCC -offset
+		Btl0 = 0x2A74840 - 0x56450E
+		offset = 0x56454E
+		Hurricane = 0x2A98006 -offset
+		DrawRange = 0x2A20EA0 -offset
+		DistanceDash = 0x2A94BD4 -offset
+		DistanceDash2 = 0x2A94CBC -offset
+		DistanceDash3 = 0x2A94DCC -offset
 	end
+	curLvlAdr = Save + 0x24F0 + 0x000F
+	curDiffAdr = Save + 0x2498
+	abilOff = 0x0054
+	sora = Save + 0x24F0
+	curHPAdr = sora + 0x04
+	maxHPAdr = sora + 0x05
+	donald = Save + 0x2604
+	goofy = Save + 0x2718
+	valor = Save + 0x32FE + 0x0016 + 0x0004-- First Unused Slot, accounting for my form movement mod
+	wisdom = Save + 0x3336 + 0x000E + 0x000A
+	limit = Save + 0x336E + 0x0008
+	master = Save + 0x33A6 + 0x0014 + 0x000A
+	final = Save + 0x33DE + 0x0010 + 0x000A
+	anti = Save + 0x340C + 0x000C + 0x000A
 end
 
 function Events(M,B,E) --Check for Map, Btl, and Evt
@@ -45,12 +52,12 @@ function _OnFrame()
 	Btl    = ReadShort(Now+0x06)
 	Evt    = ReadShort(Now+0x08)
 	PrevPlace = ReadShort(Now+0x30)
-	if ReadByte(curLvl) == 0x01 then
+	if ReadByte(curLvlAdr) == 0x01 then
 		lvl1 = true
 	else
 		lvl1 = false
 	end
-	if ReadByte(curDiff) == 0x03 then
+	if ReadByte(curDiffAdr) == 0x03 then
 		crit = true
 	else
 		crit = false
@@ -61,7 +68,7 @@ function _OnFrame()
 	if lvl1 == true then
 		betterLvl1()
 	end
-	doubleStuff()
+	gameplay()
 	finnyFun()
 end
 
@@ -110,30 +117,34 @@ end
 function betterLvl1()
 	--Count # of proofs
 	if ReadByte(Save+0x36B2) ~= 0x00 then
-		pCon = true
+		pCon = 1
 	else
-		pCon = false
+		pCon = 0
 	end
 	if ReadByte(Save+0x36B3) ~= 0x00 then
-		pNon = true
+		pNon = 1
 	else
-		pNon = false
+		pNon = 0
 	end
 	if ReadByte(Save+0x36B4) ~= 0x00 then
-		pPea = true
+		pPea = 1
 	else
-		pPea = false
+		pPea = 0
 	end
 	if ReadByte(Save+0x3964) ~= 0x00 then
-		pCharm = true
+		pCharm = 1
 	else
-		pCharm = false
+		pCharm = 0
 	end
 	
 	
 	--Boost stats based on how much dmg sora has
 	numProof = pCon + pNon + pPea + pCharm
-	statsBoost = numProof * (maxHP - curHP)
+	maxHP = ReadByte(maxHPAdr)
+	curHP = ReadByte(curHPAdr)
+	curDiff = ReadByte(curDiffAdr)
+	boostBy = math.floor(numProof+curDiff+1)/2)
+	statsBoost = boostBy * (maxHP - curHP)
 	Writebyte(sora+0x09,statsBoost)--Power
 	Writebyte(sora+0x0A,statsBoost)--Magic
 	Writebyte(sora+0x0B,statsBoost+20)--Def
@@ -175,36 +186,53 @@ function betterLvl1()
 	end
 end
 
-function doubleStuff()
-	WriteByte(Sys3+0x03E0,2) -- Valor
-	--WriteByte(Sys3+0x0410,3) -- Wisdom --Commented out
-	--WriteByte(Sys3+0x7A30,4) -- Limit  --Commented out
-	--WriteByte(Sys3+0x04A0,4) -- Master --Commented out
-	WriteByte(Sys3+0x0500,1) -- Anti
-	--WriteByte(Sys3+0x5180,3) -- Chicken --Commented out
-	WriteByte(Sys3+0x1070,5) -- Stitch
-	WriteByte(Sys3+0x10A0,2) -- Genie
-	--WriteByte(Sys3+0x37A0,3) -- Pan     --Commented out
-	WriteByte(Sys3+0xA40,0x0E)   -- Blizzard Cost: 14
-	WriteByte(Sys3+0x1640,0x0E)  -- Blizzara Cost: 14
-	WriteByte(Sys3+0x1670,0x0E)  -- Blizzaga Cost: 14
-	WriteByte(Sys3+0xA10,0x10)   -- Thunder Cost: 16
-	WriteByte(Sys3+0x16A0,0x10)  -- Thundara Cost: 16
-	WriteByte(Sys3+0x16D0,0x10)  -- Thundaga Cost: 16
-	WriteByte(Sys3+0x1FD0,0x0C)  -- Reflect Cost: 12
-	WriteByte(Sys3+0x2000,0x0C)  -- Reflera Cost: 12
-	WriteByte(Sys3+0x2030,0x0C)  -- Reflega Cost: 12
-	WriteByte(Sys3+0x7E50,0x28)  -- Strike Raid Cost: 40
-	WriteFloat(DrawRange, 375)   -- DrawRange3x
-	WriteByte(Hurricane, 0x20)   --RemoveHurricaneWinderFloat
-	WriteByte(Hurricane+1, 0x42) --RemoveHurricaneWinderFloat
-	WriteByte(Hurricane+4, 0x16) --RemoveHurricaneWinderFloat
-	WriteByte(Hurricane+5, 0x43) --RemoveHurricaneWinderFloat
-	WriteByte(Hurricane+8, 0x20) --RemoveHurricaneWinderFloat
-	WriteByte(Hurricane+9, 0x42) --RemoveHurricaneWinderFloat
-	WriteFloat(DistanceDash, 2000) --DistanceDash MAXRANGE
-	WriteByte(DistanceDash2, 0x36) --Disable DodgeSlash Entry2
-	WriteByte(DistanceDash3, 0x36) --Disable DodgeSlash Entry3
+function gameplay()
+	--Running Speed boost
+	WriteFloat(Sys3+0x17CE4, 12)--Base Sora
+	WriteFloat(Sys3+0x17D18, 16)--Valor
+	WriteFloat(Sys3+0x17D4C, 16)--Wis
+	WriteFloat(Sys3+0x17D80, 14)--Master
+	WriteFloat(Sys3+0x17DB4, 20)--Final
+	WriteFloat(Sys3+0x17E84, 12)--Donald
+	WriteFloat(Sys3+0x17EEC, 12)--Goofy
+	WriteFloat(Sys3+0x17F54, 12)--Aladdin
+	WriteFloat(Sys3+0x17F88, 12)--Auron
+	WriteFloat(Sys3+0x17FBC, 12)--Mulan
+	WriteFloat(Sys3+0x17FF0, 12)--Ping
+	WriteFloat(Sys3+0x18024, 12)--Tron
+	WriteFloat(Sys3+0x18058, 12)--Mickey
+	WriteFloat(Sys3+0x1808C, 12)--Beast
+	WriteFloat(Sys3+0x180C0, 12)--Jack Skel
+	WriteFloat(Sys3+0x18128, 12)--Jack Sparrow
+	WriteFloat(Sys3+0x1815C, 12)--Riku
+	WriteFloat(Sys3+0x18364, 12)--Limit Form
+	
+	if onPC == true then
+		WriteByte(Sys3+0x03E0,2) -- Valor
+		WriteByte(Sys3+0x0500,1) -- Anti
+		WriteByte(Sys3+0x1070,5) -- Stitch
+		WriteByte(Sys3+0x10A0,2) -- Genie
+		WriteByte(Sys3+0xA40,0x0E)   -- Blizzard Cost: 14
+		WriteByte(Sys3+0x1640,0x0E)  -- Blizzara Cost: 14
+		WriteByte(Sys3+0x1670,0x0E)  -- Blizzaga Cost: 14
+		WriteByte(Sys3+0xA10,0x10)   -- Thunder Cost: 16
+		WriteByte(Sys3+0x16A0,0x10)  -- Thundara Cost: 16
+		WriteByte(Sys3+0x16D0,0x10)  -- Thundaga Cost: 16
+		WriteByte(Sys3+0x1FD0,0x0C)  -- Reflect Cost: 12
+		WriteByte(Sys3+0x2000,0x0C)  -- Reflera Cost: 12
+		WriteByte(Sys3+0x2030,0x0C)  -- Reflega Cost: 12
+		WriteByte(Sys3+0x7E50,0x28)  -- Strike Raid Cost: 40
+		WriteFloat(DrawRange, 375)   -- DrawRange3x
+		WriteByte(Hurricane, 0x20)   --RemoveHurricaneWinderFloat
+		WriteByte(Hurricane+1, 0x42) --RemoveHurricaneWinderFloat
+		WriteByte(Hurricane+4, 0x16) --RemoveHurricaneWinderFloat
+		WriteByte(Hurricane+5, 0x43) --RemoveHurricaneWinderFloat
+		WriteByte(Hurricane+8, 0x20) --RemoveHurricaneWinderFloat
+		WriteByte(Hurricane+9, 0x42) --RemoveHurricaneWinderFloat
+		WriteFloat(DistanceDash, 2000) --DistanceDash MAXRANGE
+		WriteByte(DistanceDash2, 0x36) --Disable DodgeSlash Entry2
+		WriteByte(DistanceDash3, 0x36) --Disable DodgeSlash Entry3
+	end
 end
 
 function finnyFun()
