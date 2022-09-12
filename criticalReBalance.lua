@@ -147,10 +147,10 @@ function gameplay()
 	numProof = pCon + pNon + pPea + pCharm
 	statsBoost = numProof * 25
 	for partyMem = 2,13 do
-		Writebyte(partyList[partyMem]+0x08,statsBoost)--AP
-		Writebyte(partyList[partyMem]+0x09,statsBoost)--Power
-		Writebyte(partyList[partyMem]+0x0A,statsBoost)--Magic
-		Writebyte(partyList[partyMem]+0x0B,statsBoost)--Def
+		WriteByte(partyList[partyMem]+0x08,statsBoost)--AP
+		WriteByte(partyList[partyMem]+0x09,statsBoost)--Power
+		WriteByte(partyList[partyMem]+0x0A,statsBoost)--Magic
+		WriteByte(partyList[partyMem]+0x0B,statsBoost)--Def
 	end
 	
 	if ReadByte(Save + 0x32FE + 0x02) >= 0x02 and onPC == true then
