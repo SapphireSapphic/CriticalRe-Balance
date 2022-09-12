@@ -253,9 +253,9 @@ function betterLvl1()
 	curDiff = ReadByte(curDiffAdr)
 	boostBy = math.floor((numProof+curDiff+1)/2)
 	statsBoost = boostBy * (maxHP - curHP)
-	Writebyte(sora+0x09,statsBoost)--Power
-	Writebyte(sora+0x0A,statsBoost)--Magic
-	Writebyte(sora+0x0B,statsBoost+20)--Def
+	WriteByte(sora+0x09,statsBoost)--Power
+	WriteByte(sora+0x0A,statsBoost)--Magic
+	WriteByte(sora+0x0B,statsBoost+20)--Def
 	
 --Extra form abilities
 	--valor
