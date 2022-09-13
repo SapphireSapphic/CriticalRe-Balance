@@ -11,6 +11,7 @@ function _OnInit()
 		Btl0 = 0x1CE5D80 --00battle.bin	
 		Now = 0x032BAE0 --Current Location
 		Slot1    = 0x1C6C750 --Unit Slot 1
+		NextSlot = 0x268
 	elseif GAME_ID == 0x431219CC and ENGINE_TYPE == "BACKEND" then
 		onPC=true
 		ConsolePrint("Critical Re:Balance")
@@ -20,7 +21,7 @@ function _OnInit()
 		offset = 0x56454E
 		Now = 0x0714DB8 - offset
 		Slot1    = 0x2A20C58 - 0x56450E
-		
+		NextSlot = 0x278
 		--need to find PCSX2 Equivelant to these values
 			Hurricane = 0x2A98006 -offset
 			DrawRange = 0x2A20EA0 -offset
@@ -60,8 +61,10 @@ function _OnInit()
 	ThunTierAdr = Save + 0x3596
 	CureTierAdr = Save + 0x3597
 	MagTierAdr = Save + 0x35CF
-	RefTierAdr = Save + 0x35D0
+	RefTierAdr = Save +	0x35D0
 	soraMPRewrite = 100
+	startMP = 100
+	vanillaMPbonus = 0
 	Slot2  = Slot1 - NextSlot
 	Slot3  = Slot2 - NextSlot
 	Slot4  = Slot3 - NextSlot
@@ -202,69 +205,113 @@ function giveBoost()
 	picture = ReadByte(Save+0x364A)
 	if ReadByte(Save+0x36C0) & 0x01 == 0x01 then
 		stitch = 0x01
+	else
+		stitch = 0
 	end
 	if ReadByte(Save+0x36C0) & 0x02 == 0x02 then
 		valorObt = 0x01
+	else
+		valorObt = 0
 	end
 	if ReadByte(Save+0x36C0) & 0x04 == 0x04 then
 		wisdomObt = 0x01
+	else
+		wisdomObt = 0
 	end
 	if ReadByte(Save+0x36C0) & 0x08 == 0x08 then
 		chicken = 0x01
+	else
+		chicken = 0
 	end
 	if ReadByte(Save+0x36C0) & 0x10 == 0x10 then
 		finalObt = 0x01
+	else
+		finalObt = 0
 	end
 	if ReadByte(Save+0x36C0) & 0x40 == 0x40 then
 		masterObt = 0x01
+	else
+		masterObt = 0
 	end
 	if ReadByte(Save+0x36CA) & 0x08 == 0x08 then
 		limitObt = 0x01
+	else
+		limitObt = 0
 	end
 	if ReadByte(Save+0x36C4) & 0x10 == 0x10 then
 		genie = 0x01
+	else
+		genie = 0
 	end
 	if ReadByte(Save+0x36C4) & 0x20 == 0x20 then
 		peter = 0x01
+	else
+		peter = 0
 	end
 	if ReadByte(Save+0x36C4) & 0x40 == 0x40 then
 		report1 = 0x01
+	else
+		report1 = 0
 	end
 	if ReadByte(Save+0x36C4) & 0x80 == 0x80 then
 		report2 = 0x01
+	else
+		report2 = 0
 	end
 	if ReadByte(Save+0x36C5) & 0x01 == 0x01 then
 		report3 = 0x01
+	else
+		report3 = 0
 	end
 	if ReadByte(Save+0x36C5) & 0x02 == 0x02 then
 		report4 = 0x01
+	else
+		report4 = 0
 	end
 	if ReadByte(Save+0x36C5) & 0x04 == 0x04 then
 		report5 = 0x01
+	else
+		report5 = 0
 	end
 	if ReadByte(Save+0x36C5) & 0x08 == 0x08 then
 		report6 = 0x01
+	else
+		report6 = 0
 	end
 	if ReadByte(Save+0x36C5) & 0x10 == 0x10 then
 		report7 = 0x01
+	else
+		report7 = 0
 	end
 	if ReadByte(Save+0x36C5) & 0x20 == 0x20 then
 		report8 = 0x01
+	else
+		report8 = 0
 	end
 	if ReadByte(Save+0x36C5) & 0x40 == 0x40 then
 		report9 = 0x01
+	else
+		report9 = 0
 	end
 	if ReadByte(Save+0x36C5) & 0x80 == 0x80 then
 		report10 = 0x01
+	else
+		report10 = 0
 	end
 	if ReadByte(Save+0x36C6) & 0x01 == 0x01 then
 		report11 = 0x01
+	else
+		report11 = 0
 	end
 	if ReadByte(Save+0x36C6) & 0x02 == 0x02 then
 		report12 = 0x01
+	else
+		report12 = 0
 	end
 	if ReadByte(Save+0x36C6) & 0x04 == 0x04 then
 		report13 = 0x01
+	else
+		report13 = 0
 	end
 	--Combination Boosts
 	if (pPea + pNon + pCon + pCharm) == 4 then
@@ -512,7 +559,7 @@ function giveBoost()
 		end
 	else
 		for boostCheck = 1, #(boostTable) do
-			if boostTable[boostCheck] >= 0x01 and boostTable[boostCheck] == false then
+			if boostTable[boostCheck][1] >= 0x01 and isBoosted[boostCheck] == false then
 				--Has item, does not have boost
 				if lvl1 == true or boostCheck <= 4 then
 					boostTable[boostCheck].giveBoost()
