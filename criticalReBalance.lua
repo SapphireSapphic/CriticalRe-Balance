@@ -136,6 +136,7 @@ function _OnFrame()
 	end
 	
 	--Execute functions
+	sysEdits()
 	giveBoost()
 	newGame()
 	gameplay()
@@ -147,11 +148,6 @@ end
 
 function newGame()
 	if Place == 0x2002 and Events(0x01,Null,0x01) then --Station of Serenity Weapons
-		--Starting MP ReBalance
-		startMP = (curDiff+1)
-		if lvl1 == true then
-			startMP = startMP*2
-		end
 		
 		--Start all characters with all abilities equipped, except auto limit
 		for partyMem = 1,13 do
@@ -167,6 +163,9 @@ function newGame()
 				WriteByte(partyList[partyMem] + 0x00F4, 0x04)
 			end
 		end
+		
+		--Starting MP ReBalance
+		startMP = (curDiff+3)*10
 		
 		--Starting Inventory Edits
 		startMegas = curDiff
@@ -581,7 +580,12 @@ function giveBoost()
 end
 
 function gameplay()
-	soraMPRewrite = startMP + vanillaMPbonus + (totalSpells * (2+curDiff))
+	if lvl1 == true then
+		MPbonus2 = 2
+	else
+		MPbonus2 = 1
+	end
+	soraMPRewrite = startMP + vanillaMPbonus + (totalSpells * (2+curDiff) * MPbonus2)
 	WriteInt(Slot1+0x180,soraMPRewrite)
 	WriteInt(Slot1+0x184,soraMPRewrite)
 
@@ -596,71 +600,6 @@ function gameplay()
 	
 	if ReadByte(Save + 0x32FE + 0x02) >= 0x02 and onPC == true then
 		WriteShort(limit, 0x8107) --Distance Step / Dodge Slash
-	end
-	
-	--Running Speed boost
-	base = 12
-	faster = 16
-	fastest = 20
-	WriteFloat(Sys3+0x17CE4, base)--Base Sora
-	WriteFloat(Sys3+0x17D18, faster)--Valor
-	WriteFloat(Sys3+0x17D4C, faster)--Wis
-	WriteFloat(Sys3+0x17D80, faster)--Master
-	WriteFloat(Sys3+0x17DB4, fastest)--Final
-	WriteFloat(Sys3+0x17E84, base)--Donald
-	WriteFloat(Sys3+0x17EEC, base)--Goofy
-	WriteFloat(Sys3+0x17F54, base)--Aladdin
-	WriteFloat(Sys3+0x17F88, base)--Auron
-	WriteFloat(Sys3+0x17FBC, base)--Mulan
-	WriteFloat(Sys3+0x17FF0, base)--Ping
-	WriteFloat(Sys3+0x18024, base)--Tron
-	WriteFloat(Sys3+0x18058, base)--Mickey
-	WriteFloat(Sys3+0x1808C, base)--Beast
-	WriteFloat(Sys3+0x180C0, base)--Jack Skel
-	WriteFloat(Sys3+0x18128, base)--Jack Sparrow
-	WriteFloat(Sys3+0x1815C, base)--Riku
-	WriteFloat(Sys3+0x18364, base)--Limit Form
-	
-	--make party members Lvl to 99 super fast
-	for partyLevel = 0,98 do
-		WriteInt(Btl0+0x25F5C+(0x10 * partyLevel), 1)--Donald
-		WriteInt(Btl0+0x26590+(0x10 * partyLevel), 1)--Goofy
-		WriteInt(Btl0+0x26BC4+(0x10 * partyLevel), 1)--Mickey
-		WriteInt(Btl0+0x271F8+(0x10 * partyLevel), 1)--Auron
-		WriteInt(Btl0+0x2782C+(0x10 * partyLevel), 1)--Mulan
-		WriteInt(Btl0+0x27E60+(0x10 * partyLevel), 1)--Aladdin
-		WriteInt(Btl0+0x28494+(0x10 * partyLevel), 1)--Jack Sparrow
-		WriteInt(Btl0+0x28AC8+(0x10 * partyLevel), 1)--Beast
-		WriteInt(Btl0+0x290FC+(0x10 * partyLevel), 1)--Jack Skellington
-		WriteInt(Btl0+0x29730+(0x10 * partyLevel), 1)--Simba
-		WriteInt(Btl0+0x29D64+(0x10 * partyLevel), 1)--Tron
-		WriteInt(Btl0+0x2A398+(0x10 * partyLevel), 1)--Riku
-	end
-	
-	WriteByte(Sys3+0x0500,1) -- Anti
-	WriteByte(Sys3+0x1070,5) -- Stitch
-	WriteByte(Sys3+0x10A0,2) -- Genie
-	WriteByte(Sys3+0xA40,0x0E)   -- Blizzard Cost: 14
-	WriteByte(Sys3+0x1640,0x0E)  -- Blizzara Cost: 14
-	WriteByte(Sys3+0x1670,0x0E)  -- Blizzaga Cost: 14
-	WriteByte(Sys3+0xA10,0x10)   -- Thunder Cost: 16
-	WriteByte(Sys3+0x16A0,0x10)  -- Thundara Cost: 16
-	WriteByte(Sys3+0x16D0,0x10)  -- Thundaga Cost: 16
-	WriteByte(Sys3+0x1FD0,0x0C)  -- Reflect Cost: 12
-	WriteByte(Sys3+0x2000,0x0C)  -- Reflera Cost: 12
-	WriteByte(Sys3+0x2030,0x0C)  -- Reflega Cost: 12
-	WriteByte(Sys3+0x7E50,0x28)  -- Strike Raid Cost: 40
-	if onPC == true then
-		WriteFloat(DrawRange, 375)   -- DrawRange3x
-		WriteByte(Hurricane, 0x20)   --RemoveHurricaneWinderFloat
-		WriteByte(Hurricane+1, 0x42) --RemoveHurricaneWinderFloat
-		WriteByte(Hurricane+4, 0x16) --RemoveHurricaneWinderFloat
-		WriteByte(Hurricane+5, 0x43) --RemoveHurricaneWinderFloat
-		WriteByte(Hurricane+8, 0x20) --RemoveHurricaneWinderFloat
-		WriteByte(Hurricane+9, 0x42) --RemoveHurricaneWinderFloat
-		WriteFloat(DistanceDash, 2000) --DistanceDash MAXRANGE
-		WriteByte(DistanceDash2, 0x36) --Disable DodgeSlash Entry2
-		WriteByte(DistanceDash3, 0x36) --Disable DodgeSlash Entry3
 	end
 end
 
@@ -785,4 +724,71 @@ function finnyFun()
         WriteArray(0x1B086A, {0x0B, 0x02, 0x32, 0x00, 0x01, 0x00, 0x00, 0x00, 0x02, 0x00})
         WriteArray(0x1B086A + 0x30, {0x0B, 0x02, 0x32, 0x00, 0x01, 0x00, 0x00, 0x00, 0x02, 0x00})
     end
+end
+
+function sysEdits()
+	--Running Speed boost
+	base = 12
+	faster = 16
+	fastest = 20
+	WriteFloat(Sys3+0x17CE4, base)--Base Sora
+	WriteFloat(Sys3+0x17D18, faster)--Valor
+	WriteFloat(Sys3+0x17D4C, faster)--Wis
+	WriteFloat(Sys3+0x17D80, faster)--Master
+	WriteFloat(Sys3+0x17DB4, fastest)--Final
+	WriteFloat(Sys3+0x17E84, base)--Donald
+	WriteFloat(Sys3+0x17EEC, base)--Goofy
+	WriteFloat(Sys3+0x17F54, base)--Aladdin
+	WriteFloat(Sys3+0x17F88, base)--Auron
+	WriteFloat(Sys3+0x17FBC, base)--Mulan
+	WriteFloat(Sys3+0x17FF0, base)--Ping
+	WriteFloat(Sys3+0x18024, base)--Tron
+	WriteFloat(Sys3+0x18058, base)--Mickey
+	WriteFloat(Sys3+0x1808C, base)--Beast
+	WriteFloat(Sys3+0x180C0, base)--Jack Skel
+	WriteFloat(Sys3+0x18128, base)--Jack Sparrow
+	WriteFloat(Sys3+0x1815C, base)--Riku
+	WriteFloat(Sys3+0x18364, base)--Limit Form
+	
+	--make party members Lvl to 99 super fast
+	for partyLevel = 0,98 do
+		WriteInt(Btl0+0x25F5C+(0x10 * partyLevel), 1)--Donald
+		WriteInt(Btl0+0x26590+(0x10 * partyLevel), 1)--Goofy
+		WriteInt(Btl0+0x26BC4+(0x10 * partyLevel), 1)--Mickey
+		WriteInt(Btl0+0x271F8+(0x10 * partyLevel), 1)--Auron
+		WriteInt(Btl0+0x2782C+(0x10 * partyLevel), 1)--Mulan
+		WriteInt(Btl0+0x27E60+(0x10 * partyLevel), 1)--Aladdin
+		WriteInt(Btl0+0x28494+(0x10 * partyLevel), 1)--Jack Sparrow
+		WriteInt(Btl0+0x28AC8+(0x10 * partyLevel), 1)--Beast
+		WriteInt(Btl0+0x290FC+(0x10 * partyLevel), 1)--Jack Skellington
+		WriteInt(Btl0+0x29730+(0x10 * partyLevel), 1)--Simba
+		WriteInt(Btl0+0x29D64+(0x10 * partyLevel), 1)--Tron
+		WriteInt(Btl0+0x2A398+(0x10 * partyLevel), 1)--Riku
+	end
+	
+	WriteByte(Sys3+0x0500,1) -- Anti
+	WriteByte(Sys3+0x1070,5) -- Stitch
+	WriteByte(Sys3+0x10A0,2) -- Genie
+	WriteByte(Sys3+0xA40,0x0E)   -- Blizzard Cost: 14
+	WriteByte(Sys3+0x1640,0x0E)  -- Blizzara Cost: 14
+	WriteByte(Sys3+0x1670,0x0E)  -- Blizzaga Cost: 14
+	WriteByte(Sys3+0xA10,0x10)   -- Thunder Cost: 16
+	WriteByte(Sys3+0x16A0,0x10)  -- Thundara Cost: 16
+	WriteByte(Sys3+0x16D0,0x10)  -- Thundaga Cost: 16
+	WriteByte(Sys3+0x1FD0,0x0C)  -- Reflect Cost: 12
+	WriteByte(Sys3+0x2000,0x0C)  -- Reflera Cost: 12
+	WriteByte(Sys3+0x2030,0x0C)  -- Reflega Cost: 12
+	WriteByte(Sys3+0x7E50,0x28)  -- Strike Raid Cost: 40
+	if onPC == true then
+		WriteFloat(DrawRange, 375)   -- DrawRange3x
+		WriteByte(Hurricane, 0x20)   --RemoveHurricaneWinderFloat
+		WriteByte(Hurricane+1, 0x42) --RemoveHurricaneWinderFloat
+		WriteByte(Hurricane+4, 0x16) --RemoveHurricaneWinderFloat
+		WriteByte(Hurricane+5, 0x43) --RemoveHurricaneWinderFloat
+		WriteByte(Hurricane+8, 0x20) --RemoveHurricaneWinderFloat
+		WriteByte(Hurricane+9, 0x42) --RemoveHurricaneWinderFloat
+		WriteFloat(DistanceDash, 2000) --DistanceDash MAXRANGE
+		WriteByte(DistanceDash2, 0x36) --Disable DodgeSlash Entry2
+		WriteByte(DistanceDash3, 0x36) --Disable DodgeSlash Entry3
+	end
 end
