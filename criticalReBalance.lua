@@ -407,43 +407,6 @@ function giveBoost()
 			giveAbility(sora, 0x018D)--Drive Boost
 			WriteByte(Save+0x3675, ReadByte(Save+0x3675)+1)-- Acc slot
 		end}, 
-		{pAll, giveBoost = function() 
-			--Nothing apparently
-		end}, 
-		{fireAndFinal, giveBoost = function() 
-			giveAbility(sora, 0x0198)--Fire Boost
-		end}, 
-		{blizAndWiz, giveBoost = function() 
-			giveAbility(sora, 0x0199)--Blizzard Boost
-		end}, 
-		{thunAndMaster, giveBoost = function() 
-			giveAbility(sora, 0x019A)--Thunder Boost
-		end}, 
-		{cureAndLimit, giveBoost = function() 
-			giveAbility(sora, 0x0190)--Combination Boost
-			giveAbility(sora, 0x0192)--Leaf Bracer
-		end}, 
-		{refAndMaster, giveBoost = function() 
-			giveAbility(sora, 0x018E)--Form Boost
-		end}, 
-		{magAndValor, giveBoost = function() 
-			giveAbility(sora, 0x018D)--Drive Boost
-		end}, 
-		{allSpells, giveBoost = function() 
-			giveAbility(sora, 0x01A6)--MP Hastega
-		end}, 
-		{allSpells2, giveBoost = function() 
-			giveAbility(sora, 0x01A6)--MP Hastega
-		end}, 
-		{allSpells3, giveBoost = function() 
-			giveAbility(sora, 0x01A6)--MP Hastega
-		end}, 
-		{summon, giveBoost = function() 
-			giveAbility(sora, 0x018F)--Summon Boost
-		end}, 
-		{summons3, giveBoost = function() 
-			giveAbility(sora, 0x018F)--Summon Boost
-		end}, 
 		{auronWpn, giveBoost = function() 
 			WriteByte(Save+0x35BB, ReadByte(Save+0x35BB)+1)-- Full Bloom +
 			WriteByte(Save+0x3580, ReadByte(Save+0x3580)+((curDiff+1)*3))-- Potions
@@ -479,10 +442,6 @@ function giveBoost()
 		{rikuWpn, giveBoost = function() 
 			WriteByte(Save+0x35D3, ReadByte(Save+0x35D3)+1)-- Shock Charm +
 			WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*1))-- High Drive Recoveries
-		end}, 
-		{allVisit, giveBoost = function() 
-			giveAbility(sora, 0x0256)--Protectga
-			giveAbility(sora, 0x0186)--Combo Boost
 		end}, 
 		{ocStone, giveBoost = function() 
 			WriteByte(Save+0x35D4, ReadByte(Save+0x35D4)+1)-- Grand Ribbon
@@ -535,10 +494,51 @@ function giveBoost()
 		{report13, giveBoost = function() 
 			WriteByte(Save+0x35B1, ReadByte(Save+0x35B1)+3)-- Cosmic Arts
 		end}, 
+		{pAll, giveBoost = function() 
+			--Nothing apparently
+		end}, 
+		{allVisit, giveBoost = function() 
+			giveAbility(sora, 0x0256)--Protectga
+			giveAbility(sora, 0x0186)--Combo Boost
+		end}, 
 		{reportALL, giveBoost = function() 
 			giveAbility(sora, 0x0256)--Protectga
 			giveAbility(sora, 0x0187)--Air Combo Boost
-		end},
+		end},		
+		{fireAndFinal, giveBoost = function() 
+			giveAbility(sora, 0x0198)--Fire Boost
+		end}, 
+		{blizAndWiz, giveBoost = function() 
+			giveAbility(sora, 0x0199)--Blizzard Boost
+		end}, 
+		{thunAndMaster, giveBoost = function() 
+			giveAbility(sora, 0x019A)--Thunder Boost
+		end}, 
+		{cureAndLimit, giveBoost = function() 
+			giveAbility(sora, 0x0190)--Combination Boost
+			giveAbility(sora, 0x0192)--Leaf Bracer
+		end}, 
+		{refAndMaster, giveBoost = function() 
+			giveAbility(sora, 0x018E)--Form Boost
+		end}, 
+		{magAndValor, giveBoost = function() 
+			giveAbility(sora, 0x018D)--Drive Boost
+		end}, 
+		{allSpells, giveBoost = function() 
+			giveAbility(sora, 0x01A6)--MP Hastega
+		end}, 
+		{allSpells2, giveBoost = function() 
+			giveAbility(sora, 0x01A6)--MP Hastega
+		end}, 
+		{allSpells3, giveBoost = function() 
+			giveAbility(sora, 0x01A6)--MP Hastega
+		end}, 
+		{summon, giveBoost = function() 
+			giveAbility(sora, 0x018F)--Summon Boost
+		end}, 
+		{summons3, giveBoost = function() 
+			giveAbility(sora, 0x018F)--Summon Boost
+		end}, 
 		{totalSpells, giveBoost = function()
 			
 		end}
@@ -556,8 +556,8 @@ function giveBoost()
 		for boostCheck = 1, #(boostTable) do
 			if boostTable[boostCheck][1] >= 0x01 and isBoosted[boostCheck] == false then
 				--Has item, does not have boost
-				if lvl1 == true or boostCheck <= 4 then
-					ConsolePrint("Giving Boost for - "..boostTable[boostCheck][1])
+				if lvl1 == true or boostCheck <= 29 then
+					ConsolePrint("Giving Boost for - "..boostCheck)
 					boostTable[boostCheck].giveBoost()
 				end
 				isBoosted[boostCheck] = true
