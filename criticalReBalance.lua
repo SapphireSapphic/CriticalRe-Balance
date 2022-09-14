@@ -143,7 +143,6 @@ function _OnFrame()
 	if lvl1 == true then
 		betterLvl1()
 	end
-	finnyFun()
 end
 
 function newGame()
@@ -169,7 +168,7 @@ function newGame()
 		if lvl1 == true then
 			startMegas = startMegas*2
 		end
-		WriteByte(Save+0x3586, startMegas*2) --Start with Megalixirs based on difficulty
+		WriteByte(Save+0x3586, startMegas*10) --Start with Megalixirs based on difficulty
 	end
 end
 
@@ -713,15 +712,6 @@ function betterLvl1()
 	if ReadByte(Save + 0x32FE + 0x02) >= 0x07 then
 		WriteShort(final-14, 0x81A0) --Once More
 	end
-end
-
-function finnyFun()
-	local _roomRead = ReadArray(0x1B086A, 0x0A)
-
-    if _roomRead[1] == 0x0B and _roomRead[2] == 0x07 and _roomRead[9] == 0x01 then
-        WriteArray(0x1B086A, {0x0B, 0x02, 0x32, 0x00, 0x01, 0x00, 0x00, 0x00, 0x02, 0x00})
-        WriteArray(0x1B086A + 0x30, {0x0B, 0x02, 0x32, 0x00, 0x01, 0x00, 0x00, 0x00, 0x02, 0x00})
-    end
 end
 
 function sysEdits()
