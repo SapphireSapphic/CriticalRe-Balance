@@ -62,8 +62,8 @@ function _OnInit()
 	CureTierAdr = Save + 0x3597
 	MagTierAdr = Save + 0x35CF
 	RefTierAdr = Save +	0x35D0
-	soraMPRewrite = 60
-	startMP = 60
+	soraMPRewrite = 100
+	startMP = 100
 	vanillaMPbonus = 0
 	Slot2  = Slot1 - NextSlot
 	Slot3  = Slot2 - NextSlot
@@ -90,7 +90,7 @@ function giveAbility(character, abilityCode)
 				local Current = partyList[partyMem] + abilOff + 2*Slot
 				local Ability = ReadShort(Current)
 				if Ability == 0x0000 then
-					WriteShort(Current, abilityCode)
+					WriteShort(Current, abilityCode + 0x8000)
 					return
 				end
 			end
@@ -100,7 +100,7 @@ function giveAbility(character, abilityCode)
 			local Current = character + abilOff + 2*Slot
 			local Ability = ReadShort(Current)
 			if Ability == 0x0000 then
-				WriteShort(Current, abilityCode)
+				WriteShort(Current, abilityCode + 0x8000)
 				return
 			end
 		end
@@ -164,9 +164,6 @@ function newGame()
 			end
 		end
 		
-		--Starting MP ReBalance
-		startMP = (curDiff+3)*10
-		
 		--Starting Inventory Edits
 		startMegas = curDiff
 		if lvl1 == true then
@@ -188,8 +185,7 @@ function giveBoost()
 	MagTier = ReadByte(MagTierAdr)
 	RefTier = ReadByte(RefTierAdr)
 	CureTier = ReadByte(CureTierAdr)
-	totalSpells = FireTier + BlizzTier + ThunTier + MagTier + RefTier + CureTier
-	--ConsolePrint(CureTier)
+	totalSpells = FireTier + BlizzTier + ThunTier + MagTier + RefTier
 	auronWpn = ReadByte(Save+0x35AE)
 	mulanWpn = ReadByte(Save+0x35AF)
 	beastWpn = ReadByte(Save+0x35B3)
@@ -451,39 +447,39 @@ function giveBoost()
 		end}, 
 		{auronWpn, giveBoost = function() 
 			WriteByte(Save+0x35BB, ReadByte(Save+0x35BB)+1)-- Full Bloom +
-			WriteByte(Save+0x3580, ReadByte(Save+0x3580)+((curDiff+1)*10))-- Potions
+			WriteByte(Save+0x3580, ReadByte(Save+0x3580)+((curDiff+1)*3))-- Potions
 		end}, 
 		{mulanWpn, giveBoost = function() 
 			WriteByte(Save+0x35BB, ReadByte(Save+0x35BB)+1)-- Full Bloom +
-			WriteByte(Save+0x3581, ReadByte(Save+0x3581)+((curDiff+1)*10))-- Hi-Potions
+			WriteByte(Save+0x3581, ReadByte(Save+0x3581)+((curDiff+1)*3))-- Hi-Potions
 		end}, 
 		{aladdinWpn, giveBoost = function() 
 			WriteByte(Save+0x35BB, ReadByte(Save+0x35BB)+1)-- Full Bloom +
-			WriteByte(Save+0x3582, ReadByte(Save+0x3582)+((curDiff+1)*10))-- Ethers
+			WriteByte(Save+0x3582, ReadByte(Save+0x3582)+((curDiff+1)*3))-- Ethers
 		end}, 
 		{capWpn, giveBoost = function() 
 			WriteByte(Save+0x35B7, ReadByte(Save+0x35B7)+1)-- Shadow Archive +
-			WriteByte(Save+0x3583, ReadByte(Save+0x3583)+((curDiff+1)*10))-- Elixirs
+			WriteByte(Save+0x3583, ReadByte(Save+0x3583)+((curDiff+1)*3))-- Elixirs
 		end}, 
 		{beastWpn, giveBoost = function() 
 			WriteByte(Save+0x35B7, ReadByte(Save+0x35B7)+1)-- Shadow Archive +
-			WriteByte(Save+0x3584, ReadByte(Save+0x3584)+((curDiff+1)*10))-- Mega-Potions
+			WriteByte(Save+0x3584, ReadByte(Save+0x3584)+((curDiff+1)*3))-- Mega-Potions
 		end}, 
 		{boneWpn, giveBoost = function() 
 			WriteByte(Save+0x35B7, ReadByte(Save+0x35B7)+1)-- Shadow Archive +
-			WriteByte(Save+0x3585, ReadByte(Save+0x3585)+((curDiff+1)*10))-- Mega-Ethers
+			WriteByte(Save+0x3585, ReadByte(Save+0x3585)+((curDiff+1)*3))-- Mega-Ethers
 		end}, 
 		{simbaWpn, giveBoost = function() 
 			WriteByte(Save+0x35D3, ReadByte(Save+0x35D3)+1)-- Shock Charm +
-			WriteByte(Save+0x3586, ReadByte(Save+0x3586)+((curDiff+1)*10))-- Megalixirs
+			WriteByte(Save+0x3586, ReadByte(Save+0x3586)+((curDiff+1)*3))-- Megalixirs
 		end}, 
 		{tronWpn, giveBoost = function() 
 			WriteByte(Save+0x35D3, ReadByte(Save+0x35D3)+1)-- Shock Charm +
-			WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*5))-- Drive Recoveries
+			WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*1))-- Drive Recoveries
 		end}, 
 		{rikuWpn, giveBoost = function() 
 			WriteByte(Save+0x35D3, ReadByte(Save+0x35D3)+1)-- Shock Charm +
-			WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*5))-- High Drive Recoveries
+			WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*1))-- High Drive Recoveries
 		end}, 
 		{allVisit, giveBoost = function() 
 			giveAbility(sora, 0x0256)--Protectga
@@ -491,48 +487,48 @@ function giveBoost()
 		end}, 
 		{ocStone, giveBoost = function() 
 			WriteByte(Save+0x35D4, ReadByte(Save+0x35D4)+1)-- Grand Ribbon
-			WriteByte(Save+0x35E1, ReadByte(Save+0x35E1)+((curDiff+1)*10))-- Tents
+			WriteByte(Save+0x35E1, ReadByte(Save+0x35E1)+((curDiff+1)*3))-- Tents
 		end}, 
 		{iceCream, giveBoost = function() 
 			WriteByte(Save+0x35D4, ReadByte(Save+0x35D4)+1)-- Grand Ribbon
-			WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*5))-- Drive Recoveries
+			WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*1))-- Drive Recoveries
 		end}, 
 		{picture, giveBoost = function() 
 			WriteByte(Save+0x35D4, ReadByte(Save+0x35D4)+1)-- Grand Ribbon
-			WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*5))-- High Drive Recoveries
+			WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*1))-- High Drive Recoveries
 		end}, 
 		{report1, giveBoost = function() 
-			WriteByte(Save+0x3580, ReadByte(Save+0x3580)+((curDiff+1)*10))-- Potions
+			WriteByte(Save+0x3580, ReadByte(Save+0x3580)+((curDiff+1)*3))-- Potions
 		end}, 
 		{report2, giveBoost = function() 
-			WriteByte(Save+0x3581, ReadByte(Save+0x3581)+((curDiff+1)*10))-- Hi-Potions
+			WriteByte(Save+0x3581, ReadByte(Save+0x3581)+((curDiff+1)*3))-- Hi-Potions
 		end}, 
 		{report3, giveBoost = function() 
-			WriteByte(Save+0x3582, ReadByte(Save+0x3582)+((curDiff+1)*10))-- Ethers
+			WriteByte(Save+0x3582, ReadByte(Save+0x3582)+((curDiff+1)*3))-- Ethers
 		end}, 
 		{report4, giveBoost = function() 
-			WriteByte(Save+0x3583, ReadByte(Save+0x3583)+((curDiff+1)*10))-- Elixirs
+			WriteByte(Save+0x3583, ReadByte(Save+0x3583)+((curDiff+1)*3))-- Elixirs
 		end}, 
 		{report5, giveBoost = function() 
-			WriteByte(Save+0x3584, ReadByte(Save+0x3584)+((curDiff+1)*10))-- Mega-Potions
+			WriteByte(Save+0x3584, ReadByte(Save+0x3584)+((curDiff+1)*3))-- Mega-Potions
 		end}, 
 		{report6, giveBoost = function() 
-			WriteByte(Save+0x3585, ReadByte(Save+0x3585)+((curDiff+1)*10))-- Mega-Ethers
+			WriteByte(Save+0x3585, ReadByte(Save+0x3585)+((curDiff+1)*3))-- Mega-Ethers
 		end}, 
 		{report7, giveBoost = function() 
-			WriteByte(Save+0x3586, ReadByte(Save+0x3586)+((curDiff+1)*10))-- Megalixirs
+			WriteByte(Save+0x3586, ReadByte(Save+0x3586)+((curDiff+1)*3))-- Megalixirs
 		end}, 
 		{report8, giveBoost = function() 
-			WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*5))-- Drive Recoveries
+			WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*1))-- Drive Recoveries
 		end}, 
 		{report9, giveBoost = function() 
-			WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*5))-- High Drive Recoveries
+			WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*1))-- High Drive Recoveries
 		end}, 
 		{report10, giveBoost = function() 
-			WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*5))-- High Drive Recoveries
+			WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*1))-- High Drive Recoveries
 		end}, 
 		{report11, giveBoost = function() 
-			WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*5))-- Drive Recoveries
+			WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*1))-- Drive Recoveries
 		end}, 
 		{report12, giveBoost = function() 
 			WriteByte(Save+0x35B1, ReadByte(Save+0x35B1)+3)-- Cosmic Arts
@@ -562,6 +558,7 @@ function giveBoost()
 			if boostTable[boostCheck][1] >= 0x01 and isBoosted[boostCheck] == false then
 				--Has item, does not have boost
 				if lvl1 == true or boostCheck <= 4 then
+					ConsolePrint("Giving Boost for - "..boostTable[boostCheck][1])
 					boostTable[boostCheck].giveBoost()
 				end
 				isBoosted[boostCheck] = true
@@ -586,11 +583,13 @@ function gameplay()
 	else
 		MPbonus2 = 1
 	end
+	startMP = (curDiff+3)*10
 	soraMPRewrite = startMP + vanillaMPbonus + (totalSpells * (2+curDiff) * MPbonus2)
-	--WriteInt(Slot1+0x180,soraMPRewrite)
+	WriteInt(Slot1+0x180,soraMPRewrite)
 	WriteInt(Slot1+0x184,soraMPRewrite)
 
 	statsBoost = (numProof+1) * 20
+	WriteByte(sora+0x08, statsBoost)--AP
 	for partyMem = 2,13 do
 		WriteByte(partyList[partyMem]+0x08,statsBoost)--AP
 		WriteByte(partyList[partyMem]+0x09,statsBoost)--Power
