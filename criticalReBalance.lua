@@ -589,7 +589,6 @@ function gameplay()
 	WriteInt(Slot1+0x184,soraMPRewrite)
 
 	statsBoost = (numProof+1) * 20
-	WriteByte(sora+0x08, statsBoost)--AP
 	for partyMem = 2,13 do
 		WriteByte(partyList[partyMem]+0x08,statsBoost)--AP
 		WriteByte(partyList[partyMem]+0x09,statsBoost)--Power
