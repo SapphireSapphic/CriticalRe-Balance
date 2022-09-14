@@ -185,7 +185,7 @@ function giveBoost()
 	MagTier = ReadByte(MagTierAdr)
 	RefTier = ReadByte(RefTierAdr)
 	CureTier = ReadByte(CureTierAdr)
-	totalSpells = FireTier + BlizzTier + ThunTier + MagTier + RefTier
+	totalSpells = FireTier + BlizzTier + ThunTier + MagTier + RefTier + CureTier
 	auronWpn = ReadByte(Save+0x35AE)
 	mulanWpn = ReadByte(Save+0x35AF)
 	beastWpn = ReadByte(Save+0x35B3)
