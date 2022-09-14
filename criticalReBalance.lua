@@ -62,8 +62,8 @@ function _OnInit()
 	CureTierAdr = Save + 0x3597
 	MagTierAdr = Save + 0x35CF
 	RefTierAdr = Save +	0x35D0
-	soraMPRewrite = 100
-	startMP = 100
+	soraMPRewrite = 60
+	startMP = 60
 	vanillaMPbonus = 0
 	Slot2  = Slot1 - NextSlot
 	Slot3  = Slot2 - NextSlot
@@ -188,7 +188,8 @@ function giveBoost()
 	MagTier = ReadByte(MagTierAdr)
 	RefTier = ReadByte(RefTierAdr)
 	CureTier = ReadByte(CureTierAdr)
-	totalSpells = FireTier + BlizzTier + ThunTier + MagTier + RefTier
+	totalSpells = FireTier + BlizzTier + ThunTier + MagTier + RefTier + CureTier
+	--ConsolePrint(CureTier)
 	auronWpn = ReadByte(Save+0x35AE)
 	mulanWpn = ReadByte(Save+0x35AF)
 	beastWpn = ReadByte(Save+0x35B3)
@@ -586,11 +587,10 @@ function gameplay()
 		MPbonus2 = 1
 	end
 	soraMPRewrite = startMP + vanillaMPbonus + (totalSpells * (2+curDiff) * MPbonus2)
-	WriteInt(Slot1+0x180,soraMPRewrite)
+	--WriteInt(Slot1+0x180,soraMPRewrite)
 	WriteInt(Slot1+0x184,soraMPRewrite)
 
 	statsBoost = (numProof+1) * 20
-	WriteByte(sora+0x08, statsBoost)--AP
 	for partyMem = 2,13 do
 		WriteByte(partyList[partyMem]+0x08,statsBoost)--AP
 		WriteByte(partyList[partyMem]+0x09,statsBoost)--Power
