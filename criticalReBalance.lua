@@ -564,7 +564,7 @@ function giveBoost()
 		end
 	end
 	
-	if ReadByte(Save+0x3672) > 0 do
+	if ReadByte(Save+0x3672) > 0 then
 		local Bonus
 		if curDiff < 3 then --Non-Critical
 			Bonus = 10
