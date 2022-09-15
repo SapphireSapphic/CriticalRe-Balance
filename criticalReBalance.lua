@@ -48,7 +48,7 @@ function _OnInit()
 	simba = Save + 0x2FB8
 	tron = Save + 0x30CC
 	riku = Save + 0x31E0
-	partyList = {sora, donald, goofy, mickey, auron, mulan, aladdin, capJack, beast, skelJack, simba, tron, riku}
+	partyList = {sora, donald, goofy, auron, mulan, aladdin, capJack, beast, skelJack, simba, tron, riku}
 	valor = Save + 0x32FE + 0x0016 + 0x0004-- First Unused Slot, accounting for my form movement mod
 	wisdom = Save + 0x3336 + 0x000E + 0x000A
 	limit = Save + 0x336E + 0x0008
@@ -64,7 +64,7 @@ function _OnInit()
 	RefTierAdr = Save +	0x35D0
 	soraMPRewrite = 60
 	startMP = 60
-	vanillaMPbonus = 0
+	vanillaMPbonus = 10
 	Slot2  = Slot1 - NextSlot
 	Slot3  = Slot2 - NextSlot
 	Slot4  = Slot3 - NextSlot
@@ -84,7 +84,7 @@ end
 
 function giveAbility(character, abilityCode)
 	if character == "party" then
-		for partyMem = 2,13 do
+		for partyMem = 2,12 do
 			for Slot = 0,80 do
 				local Current = partyList[partyMem] + abilOff + 2*Slot
 				local Ability = ReadShort(Current)
@@ -583,11 +583,11 @@ function gameplay()
 	end
 	startMP = (curDiff+3)*10
 	soraMPRewrite = startMP + vanillaMPbonus + (totalSpells * (2+curDiff) * MPbonus2)
-	WriteInt(Slot1+0x180,soraMPRewrite)
+	--WriteInt(Slot1+0x180,soraMPRewrite)
 	WriteInt(Slot1+0x184,soraMPRewrite)
 
 	statsBoost = (numProof+1) * 20
-	for partyMem = 2,13 do
+	for partyMem = 2,12 do
 		WriteByte(partyList[partyMem]+0x08,statsBoost)--AP
 		WriteByte(partyList[partyMem]+0x09,statsBoost)--Power
 		WriteByte(partyList[partyMem]+0x0A,statsBoost)--Magic
@@ -715,7 +715,7 @@ end
 
 function sysEdits()
 	--Running Speed boost
-	base = 12
+	base = 10
 	faster = 16
 	fastest = 20
 	WriteFloat(Sys3+0x17CE4, base)--Base Sora
@@ -741,7 +741,6 @@ function sysEdits()
 	for partyLevel = 0,98 do
 		WriteInt(Btl0+0x25F5C+(0x10 * partyLevel), 1)--Donald
 		WriteInt(Btl0+0x26590+(0x10 * partyLevel), 1)--Goofy
-		WriteInt(Btl0+0x26BC4+(0x10 * partyLevel), 1)--Mickey
 		WriteInt(Btl0+0x271F8+(0x10 * partyLevel), 1)--Auron
 		WriteInt(Btl0+0x2782C+(0x10 * partyLevel), 1)--Mulan
 		WriteInt(Btl0+0x27E60+(0x10 * partyLevel), 1)--Aladdin
