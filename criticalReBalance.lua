@@ -148,7 +148,7 @@ function newGame()
 	if Place == 0x2002 and Events(0x01,Null,0x01) then --Station of Serenity Weapons
 		
 		--Start all characters with all abilities equipped, except auto limit
-		for partyMem = 1,13 do
+		for partyMem = 1,12 do
 			for Slot = 0,80 do
 				local Current = partyList[partyMem] + abilOff + 2*Slot
 				local Ability = ReadShort(Current)
