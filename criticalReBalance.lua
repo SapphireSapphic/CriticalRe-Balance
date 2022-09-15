@@ -62,8 +62,8 @@ function _OnInit()
 	CureTierAdr = Save + 0x3597
 	MagTierAdr = Save + 0x35CF
 	RefTierAdr = Save +	0x35D0
-	soraMPRewrite = 100
-	startMP = 100
+	soraMPRewrite = 60
+	startMP = 60
 	vanillaMPbonus = 0
 	Slot2  = Slot1 - NextSlot
 	Slot3  = Slot2 - NextSlot
@@ -76,7 +76,6 @@ function _OnInit()
 	Slot10 = Slot9 - NextSlot
 	Slot11 = Slot10 - NextSlot
 	Slot12 = Slot11 - NextSlot
-	vanillaMPbonus = 0
 end
 
 function Events(M,B,E) --Check for Map, Btl, and Evt
@@ -565,9 +564,9 @@ function giveBoost()
 		end
 	end
 	
-	while ReadByte(Save+0x3672) > 0 do
+	if ReadByte(Save+0x3672) > 0 do
 		local Bonus
-		if ReadByte(Save+0x2498) < 3 then --Non-Critical
+		if curDiff < 3 then --Non-Critical
 			Bonus = 10
 		else --Critical
 			Bonus = 5
