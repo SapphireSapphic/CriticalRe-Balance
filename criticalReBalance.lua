@@ -382,7 +382,9 @@ function giveBoost()
 	boostTable = {
 		{pPea, giveBoost = function() 
 			giveAbility(sora, 0x0190) --Combination Boost
-			giveAbility(sora, 0x018E) --Form Boost
+			if lvl1 == true then
+				giveAbility(sora, 0x018E) --Form Boost
+			end
 			WriteByte(Save+0x3674, ReadByte(Save+0x3674)+1)-- Armor slot
 		end}, 
 		{pNon, giveBoost = function() 
@@ -403,7 +405,9 @@ function giveBoost()
 		end}, 
 		{pCharm, giveBoost = function() 
 			giveAbility(sora, 0x018E)--Form Boost
-			giveAbility(sora, 0x018D)--Drive Boost
+			if lvl1 == true then
+				giveAbility(sora, 0x018D)--Drive Boost
+			end
 			WriteByte(Save+0x3675, ReadByte(Save+0x3675)+1)-- Acc slot
 		end}, 
 		{auronWpn, giveBoost = function() 
