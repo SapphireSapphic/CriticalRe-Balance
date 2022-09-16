@@ -162,6 +162,8 @@ function newGame()
 			end
 		end
 		
+		isBoosted = {"Init"}
+		
 		--Starting Inventory Edits
 		startMegas = curDiff
 		if lvl1 == true then
@@ -198,125 +200,125 @@ function giveBoost()
 	iceCream = ReadByte(Save+0x3649)
 	picture = ReadByte(Save+0x364A)
 	if ReadByte(Save+0x36C0) & 0x01 == 0x01 then
-		stitch = 0x01
+		stitch = 1
 	else
 		stitch = 0
 	end
 	if ReadByte(Save+0x36C0) & 0x02 == 0x02 then
-		valorObt = 0x01
+		valorObt = 1
 	else
 		valorObt = 0
 	end
 	if ReadByte(Save+0x36C0) & 0x04 == 0x04 then
-		wisdomObt = 0x01
+		wisdomObt = 1
 	else
 		wisdomObt = 0
 	end
 	if ReadByte(Save+0x36C0) & 0x08 == 0x08 then
-		chicken = 0x01
+		chicken = 1
 	else
 		chicken = 0
 	end
 	if ReadByte(Save+0x36C0) & 0x10 == 0x10 then
-		finalObt = 0x01
+		finalObt = 1
 	else
 		finalObt = 0
 	end
 	if ReadByte(Save+0x36C0) & 0x40 == 0x40 then
-		masterObt = 0x01
+		masterObt = 1
 	else
 		masterObt = 0
 	end
 	if ReadByte(Save+0x36CA) & 0x08 == 0x08 then
-		limitObt = 0x01
+		limitObt = 1
 	else
 		limitObt = 0
 	end
 	if ReadByte(Save+0x36C4) & 0x10 == 0x10 then
-		genie = 0x01
+		genie = 1
 	else
 		genie = 0
 	end
 	if ReadByte(Save+0x36C4) & 0x20 == 0x20 then
-		peter = 0x01
+		peter = 1
 	else
 		peter = 0
 	end
 	if ReadByte(Save+0x36C4) & 0x40 == 0x40 then
-		report1 = 0x01
+		report1 = 1
 	else
 		report1 = 0
 	end
 	if ReadByte(Save+0x36C4) & 0x80 == 0x80 then
-		report2 = 0x01
+		report2 = 1
 	else
 		report2 = 0
 	end
 	if ReadByte(Save+0x36C5) & 0x01 == 0x01 then
-		report3 = 0x01
+		report3 = 1
 	else
 		report3 = 0
 	end
 	if ReadByte(Save+0x36C5) & 0x02 == 0x02 then
-		report4 = 0x01
+		report4 = 1
 	else
 		report4 = 0
 	end
 	if ReadByte(Save+0x36C5) & 0x04 == 0x04 then
-		report5 = 0x01
+		report5 = 1
 	else
 		report5 = 0
 	end
 	if ReadByte(Save+0x36C5) & 0x08 == 0x08 then
-		report6 = 0x01
+		report6 = 1
 	else
 		report6 = 0
 	end
 	if ReadByte(Save+0x36C5) & 0x10 == 0x10 then
-		report7 = 0x01
+		report7 = 1
 	else
 		report7 = 0
 	end
 	if ReadByte(Save+0x36C5) & 0x20 == 0x20 then
-		report8 = 0x01
+		report8 = 1
 	else
 		report8 = 0
 	end
 	if ReadByte(Save+0x36C5) & 0x40 == 0x40 then
-		report9 = 0x01
+		report9 = 1
 	else
 		report9 = 0
 	end
 	if ReadByte(Save+0x36C5) & 0x80 == 0x80 then
-		report10 = 0x01
+		report10 = 1
 	else
 		report10 = 0
 	end
 	if ReadByte(Save+0x36C6) & 0x01 == 0x01 then
-		report11 = 0x01
+		report11 = 1
 	else
 		report11 = 0
 	end
 	if ReadByte(Save+0x36C6) & 0x02 == 0x02 then
-		report12 = 0x01
+		report12 = 1
 	else
 		report12 = 0
 	end
 	if ReadByte(Save+0x36C6) & 0x04 == 0x04 then
-		report13 = 0x01
+		report13 = 1
 	else
 		report13 = 0
 	end
 	--Combination Boosts
 	if (pPea + pNon + pCon + pCharm) == 4 then
-		pAll = 0x01
+		pAll = 1
 	else
-		pAll = 0x00
+		pAll = 0
 	end
 	if (FireTier >= 1) and (totalSpells >= 6) and (finalObt >= 1) then
-		fireAndFinal = 0x01
+		fireAndFinal = 1
 	else
-		fireAndFinal = 0x00
+		fireAndFinal = 0
 	end
 	if (BlizzTier >=1) and (totalSpells >= 6) and (wisdomObt >=1) then
 		blizAndWiz = 1
@@ -386,6 +388,7 @@ function giveBoost()
 				giveAbility(sora, 0x018E) --Form Boost
 			end
 			WriteByte(Save+0x3674, ReadByte(Save+0x3674)+1)-- Armor slot
+			giveAbility("party", 0x256) --Protectga
 		end}, 
 		{pNon, giveBoost = function() 
 			if lvl1 == true then
@@ -394,6 +397,7 @@ function giveBoost()
 				giveAbility(sora, 0x0188)--Reaction Boost
 			end
 			WriteByte(Save+0x3675, ReadByte(Save+0x3675)+1)-- Acc slot
+			giveAbility("party", 0x01A4)--Auto Healing
 		end}, 
 		{pCon, giveBoost = function() 
 			if lvl1 == true then
@@ -402,6 +406,7 @@ function giveBoost()
 				giveAbility(sora, 0x018D)--Drive Boost
 			end
 			WriteByte(Save+0x3674, ReadByte(Save+0x3674)+1)-- Armor slot
+			giveAbility("party", 0x01A3)--Hyper Healing
 		end}, 
 		{pCharm, giveBoost = function() 
 			giveAbility(sora, 0x018E)--Form Boost
@@ -409,93 +414,119 @@ function giveBoost()
 				giveAbility(sora, 0x018D)--Drive Boost
 			end
 			WriteByte(Save+0x3675, ReadByte(Save+0x3675)+1)-- Acc slot
+			giveAbility("party", 0x01A2)--Auto Change
 		end}, 
 		{auronWpn, giveBoost = function() 
 			WriteByte(Save+0x35BB, ReadByte(Save+0x35BB)+1)-- Full Bloom +
 			WriteByte(Save+0x3580, ReadByte(Save+0x3580)+((curDiff+1)*3))-- Potions
+			giveAbility("party", 0x019B)--Item Boost
 		end}, 
 		{mulanWpn, giveBoost = function() 
 			WriteByte(Save+0x35BB, ReadByte(Save+0x35BB)+1)-- Full Bloom +
 			WriteByte(Save+0x3581, ReadByte(Save+0x3581)+((curDiff+1)*3))-- Hi-Potions
+			giveAbility("party", 0x019B)--Item Boost
 		end}, 
 		{aladdinWpn, giveBoost = function() 
 			WriteByte(Save+0x35BB, ReadByte(Save+0x35BB)+1)-- Full Bloom +
 			WriteByte(Save+0x3582, ReadByte(Save+0x3582)+((curDiff+1)*3))-- Ethers
+			giveAbility("party", 0x019B)--Item Boost
 		end}, 
 		{capWpn, giveBoost = function() 
 			WriteByte(Save+0x35B7, ReadByte(Save+0x35B7)+1)-- Shadow Archive +
 			WriteByte(Save+0x3583, ReadByte(Save+0x3583)+((curDiff+1)*3))-- Elixirs
+			giveAbility("party", 0x0197)--Lucky Lucky
 		end}, 
 		{beastWpn, giveBoost = function() 
 			WriteByte(Save+0x35B7, ReadByte(Save+0x35B7)+1)-- Shadow Archive +
 			WriteByte(Save+0x3584, ReadByte(Save+0x3584)+((curDiff+1)*3))-- Mega-Potions
+			giveAbility("party", 0x0197)--Lucky Lucky
 		end}, 
 		{boneWpn, giveBoost = function() 
 			WriteByte(Save+0x35B7, ReadByte(Save+0x35B7)+1)-- Shadow Archive +
 			WriteByte(Save+0x3585, ReadByte(Save+0x3585)+((curDiff+1)*3))-- Mega-Ethers
+			giveAbility("party", 0x0197)--Lucky Lucky
 		end}, 
 		{simbaWpn, giveBoost = function() 
 			WriteByte(Save+0x35D3, ReadByte(Save+0x35D3)+1)-- Shock Charm +
 			WriteByte(Save+0x3586, ReadByte(Save+0x3586)+((curDiff+1)*3))-- Megalixirs
+			giveAbility("party", 0x019E)--Defender
 		end}, 
 		{tronWpn, giveBoost = function() 
 			WriteByte(Save+0x35D3, ReadByte(Save+0x35D3)+1)-- Shock Charm +
 			WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*1))-- Drive Recoveries
+			giveAbility("party", 0x019E)--Defender
 		end}, 
 		{rikuWpn, giveBoost = function() 
 			WriteByte(Save+0x35D3, ReadByte(Save+0x35D3)+1)-- Shock Charm +
 			WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*1))-- High Drive Recoveries
+			giveAbility("party", 0x019E)--Defender
 		end}, 
 		{ocStone, giveBoost = function() 
 			WriteByte(Save+0x35D4, ReadByte(Save+0x35D4)+1)-- Grand Ribbon
 			WriteByte(Save+0x35E1, ReadByte(Save+0x35E1)+((curDiff+1)*3))-- Tents
+			giveAbility("party", 0x021E)--Damage Control
 		end}, 
 		{iceCream, giveBoost = function() 
 			WriteByte(Save+0x35D4, ReadByte(Save+0x35D4)+1)-- Grand Ribbon
 			WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*1))-- Drive Recoveries
+			giveAbility("party", 0x021E)--Damage Control
 		end}, 
 		{picture, giveBoost = function() 
 			WriteByte(Save+0x35D4, ReadByte(Save+0x35D4)+1)-- Grand Ribbon
 			WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*1))-- High Drive Recoveries
+			giveAbility("party", 0x021E)--Damage Control
 		end}, 
 		{report1, giveBoost = function() 
 			WriteByte(Save+0x3580, ReadByte(Save+0x3580)+((curDiff+1)*3))-- Potions
+			giveAbility("party", 0x0196)--Jackpot
 		end}, 
 		{report2, giveBoost = function() 
 			WriteByte(Save+0x3581, ReadByte(Save+0x3581)+((curDiff+1)*3))-- Hi-Potions
+			giveAbility("party", 0x0196)--Jackpot
 		end}, 
 		{report3, giveBoost = function() 
 			WriteByte(Save+0x3582, ReadByte(Save+0x3582)+((curDiff+1)*3))-- Ethers
+			giveAbility("party", 0x0196)--Jackpot
 		end}, 
 		{report4, giveBoost = function() 
 			WriteByte(Save+0x3583, ReadByte(Save+0x3583)+((curDiff+1)*3))-- Elixirs
+			giveAbility("party", 0x019C)--MP Rage
 		end}, 
 		{report5, giveBoost = function() 
 			WriteByte(Save+0x3584, ReadByte(Save+0x3584)+((curDiff+1)*3))-- Mega-Potions
+			giveAbility("party", 0x019C)--MP Rage
 		end}, 
 		{report6, giveBoost = function() 
 			WriteByte(Save+0x3585, ReadByte(Save+0x3585)+((curDiff+1)*3))-- Mega-Ethers
+			giveAbility("party", 0x019C)--MP Rage
 		end}, 
 		{report7, giveBoost = function() 
 			WriteByte(Save+0x3586, ReadByte(Save+0x3586)+((curDiff+1)*3))-- Megalixirs
+			giveAbility("party", 0x01A3)--Hyper Healing
 		end}, 
 		{report8, giveBoost = function() 
 			WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*1))-- Drive Recoveries
+			giveAbility("party", 0x01A3)--Hyper Healing
 		end}, 
 		{report9, giveBoost = function() 
 			WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*1))-- High Drive Recoveries
+			giveAbility("party", 0x01A4)--Auto Healing
 		end}, 
 		{report10, giveBoost = function() 
 			WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*1))-- High Drive Recoveries
+			giveAbility("party", 0x01A4)--Auto Healing
 		end}, 
 		{report11, giveBoost = function() 
 			WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*1))-- Drive Recoveries
+			giveAbility("party", 0x0197)--Lucky Lucky
 		end}, 
 		{report12, giveBoost = function() 
 			WriteByte(Save+0x35B1, ReadByte(Save+0x35B1)+3)-- Cosmic Arts
+			giveAbility("party", 0x0197)--Lucky Lucky
 		end}, 
 		{report13, giveBoost = function() 
 			WriteByte(Save+0x35B1, ReadByte(Save+0x35B1)+3)-- Cosmic Arts
+			giveAbility("party", 0x0197)--Lucky Lucky
 		end}, 
 		{pAll, giveBoost = function() 
 			--Nothing apparently
@@ -503,23 +534,29 @@ function giveBoost()
 		{allVisit, giveBoost = function() 
 			giveAbility(sora, 0x0256)--Protectga
 			giveAbility(sora, 0x0186)--Combo Boost
+			giveAbility("party", 0x01A0)--Once More
 		end}, 
 		{reportALL, giveBoost = function() 
 			giveAbility(sora, 0x0256)--Protectga
 			giveAbility(sora, 0x0187)--Air Combo Boost
+			giveAbility("party", 0x019F)--Second Chance
 		end},		
 		{fireAndFinal, giveBoost = function() 
 			giveAbility(sora, 0x0198)--Fire Boost
+			giveAbility("party", 0x0198)--Fire Boost
 		end}, 
 		{blizAndWiz, giveBoost = function() 
 			giveAbility(sora, 0x0199)--Blizzard Boost
+			giveAbility("party", 0x0199)--Blizzard Boost
 		end}, 
 		{thunAndMaster, giveBoost = function() 
 			giveAbility(sora, 0x019A)--Thunder Boost
+			giveAbility("party", 0x019A)--Thunder Boost
 		end}, 
 		{cureAndLimit, giveBoost = function() 
 			giveAbility(sora, 0x0190)--Combination Boost
 			giveAbility(sora, 0x0192)--Leaf Bracer
+			giveAbility("party", 0x0256)--Protectga
 		end}, 
 		{refAndMaster, giveBoost = function() 
 			giveAbility(sora, 0x018E)--Form Boost
@@ -529,27 +566,33 @@ function giveBoost()
 		end}, 
 		{allSpells, giveBoost = function() 
 			giveAbility(sora, 0x01A6)--MP Hastega
+			giveAbility("party", 0x01A6)--MP Hastega
 		end}, 
 		{allSpells2, giveBoost = function() 
 			giveAbility(sora, 0x01A6)--MP Hastega
+			giveAbility("party", 0x01A6)--MP Hastega
 		end}, 
 		{allSpells3, giveBoost = function() 
 			giveAbility(sora, 0x01A6)--MP Hastega
+			giveAbility("party", 0x01A6)--MP Hastega
 		end}, 
 		{summon, giveBoost = function() 
 			giveAbility(sora, 0x018F)--Summon Boost
+			giveAbility("party", 0x0256)--Protectga
 		end}, 
 		{summons3, giveBoost = function() 
 			giveAbility(sora, 0x018F)--Summon Boost
+			giveAbility("party", 0x0256)--Protectga
 		end}, 
 		{totalSpells, giveBoost = function()
-			
+			--Nothing as of rn
 		end}
 	}
 	
-	if isBoosted[1] == "Init" then
+	if isBoosted[1] == "Init" and Place ~= 0xFFFF then
 		for boostCheck = 1, #(boostTable) do
-			if boostTable[boostCheck][1] >= 0x01 then
+			ConsolePrint(boostTable[boostCheck][1])
+			if boostTable[boostCheck][1] >= 1 then
 				isBoosted[boostCheck] = true
 			else
 				isBoosted[boostCheck] = false
