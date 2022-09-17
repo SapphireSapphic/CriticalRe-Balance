@@ -597,7 +597,7 @@ function giveBoost()
 				isBoosted[boostCheck] = false
 			end
 		end
-	elseif Place ~= 0xFFFF
+	elseif Place ~= 0xFFFF then
 		for boostCheck = 1, #(boostTable) do
 			if boostTable[boostCheck][1] >= 0x01 and isBoosted[boostCheck] == false then
 				--Has item, does not have boost
