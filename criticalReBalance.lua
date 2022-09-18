@@ -876,28 +876,8 @@ function sysEdits()
 		WriteInt(Btl0+0x29D64+(0x10 * partyLevel), 1)--Tron
 		WriteInt(Btl0+0x2A398+(0x10 * partyLevel), 1)--Riku
 	end
-	
-	WriteByte(Sys3+0x0500,1) -- Anti
-	WriteByte(Sys3+0x1070,5) -- Stitch
-	WriteByte(Sys3+0x10A0,2) -- Genie
-	WriteByte(Sys3+0xA40,0x0E)   -- Blizzard Cost: 14
-	WriteByte(Sys3+0x1640,0x0E)  -- Blizzara Cost: 14
-	WriteByte(Sys3+0x1670,0x0E)  -- Blizzaga Cost: 14
-	WriteByte(Sys3+0xA10,0x10)   -- Thunder Cost: 16
-	WriteByte(Sys3+0x16A0,0x10)  -- Thundara Cost: 16
-	WriteByte(Sys3+0x16D0,0x10)  -- Thundaga Cost: 16
-	WriteByte(Sys3+0x1FD0,0x0C)  -- Reflect Cost: 12
-	WriteByte(Sys3+0x2000,0x0C)  -- Reflera Cost: 12
-	WriteByte(Sys3+0x2030,0x0C)  -- Reflega Cost: 12
-	WriteByte(Sys3+0x7E50,0x28)  -- Strike Raid Cost: 40
+
 	if onPC == true then
-		WriteFloat(DrawRange, 375)   -- DrawRange3x
-		WriteByte(Hurricane, 0x20)   --RemoveHurricaneWinderFloat
-		WriteByte(Hurricane+1, 0x42) --RemoveHurricaneWinderFloat
-		WriteByte(Hurricane+4, 0x16) --RemoveHurricaneWinderFloat
-		WriteByte(Hurricane+5, 0x43) --RemoveHurricaneWinderFloat
-		WriteByte(Hurricane+8, 0x20) --RemoveHurricaneWinderFloat
-		WriteByte(Hurricane+9, 0x42) --RemoveHurricaneWinderFloat
 		WriteFloat(DistanceDash, 2000) --DistanceDash MAXRANGE
 		WriteByte(DistanceDash2, 0x36) --Disable DodgeSlash Entry2
 		WriteByte(DistanceDash3, 0x36) --Disable DodgeSlash Entry3
