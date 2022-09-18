@@ -77,8 +77,8 @@ function _OnInit()
 	Slot12 = Slot11 - NextSlot
 	armors = sora + 0x14
 	accessories = sora + 0x24
-	armorStart = Sys3+0x1275C
-	accessoryStart = Sys3+0x12A8C
+	armorStart = Sys3+0x1275C+pcOffset
+	accessoryStart = Sys3+0x12A8C+pcOffset
 	subID = { --Strength, Magic, Defense
 		{0, 0, 2}, --Divine Bandana / 1
 		{0, 0, 4}, --Power Band / 2
@@ -708,17 +708,17 @@ function betterLvl1()
 	equipMAG = 0
 	equipDEF = 0
 	for a = 0,5 do
-		armorSora = ReadShort(armors + a)
-		accSora = ReadShort(accessories + a)
+		armorSora = ReadShort(armors + (a*2))
+		accSora = ReadShort(accessories + (a*2))
 		for l = 0,33 do --Run through armor/acc list
 			curArmorList = armorStart + (l*0x18)
-			if ReadShort(armorSora) == ReadShort(curArmorList) then
+			curAccList = accessoryStart + (l*0x18)
+			if ReadShort(armorSora) == ReadShort(curArmorList) and ReadShort(armorSora) ~= 0x0000 then
 				equipSTR = equipSTR + subID[ReadByte(curArmorList+6)][1]
 				equipMAG = equipMAG + subID[ReadByte(curArmorList+6)][2]
 				equipDEF = equipDEF + subID[ReadByte(curArmorList+6)][3]
 			end
-			curAccList = accessoryStart + (l*0x18)
-			if ReadShort(accSora) == ReadShort(curAccList) then
+			if ReadShort(accSora) == ReadShort(curAccList) and ReadShort(accSora) ~= 0x0000 then
 				equipSTR = equipSTR + subID[ReadByte(curAccList+6)][1]
 				equipMAG = equipMAG + subID[ReadByte(curAccList+6)][2]
 				equipDEF = equipDEF + subID[ReadByte(curAccList+6)][3]
