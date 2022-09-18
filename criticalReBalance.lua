@@ -679,7 +679,7 @@ function giveBoost()
 			lastSpells = lastSpells + 1
 		end}
 	}
-	
+	statsBoost = 0
 	if lvl1 == true and curDiff ~= 3 then
 		statsBoost = auronWpn + mulanWpn + beastWpn + boneWpn + simbaWpn + capWpn + aladdinWpn + rikuWpn + tronWpn + memCard + ocStone + iceCream + picture + (totalSpells*2) + (numProof * 5) + report1 + report2 + report3 + report4 + report5 + report6 + report7 + report8 + report9 + report10 + report11 + report12 + report13 + ((stitch + genie + peter + chicken)*2)
 	elseif lvl1 == true and curDiff == 3 then
