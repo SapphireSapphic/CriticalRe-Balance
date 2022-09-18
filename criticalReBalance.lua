@@ -466,7 +466,7 @@ function giveBoost()
 			giveAbility("party", 0x256) --Protectga
 		end}, 
 		{pNon, giveBoost = function() --2
-			if lvl1 == true then
+			if lvl1 == true and curDiff ~= 3 then
 				giveAbility(sora, 0x0187)--Air Combo Boost
 			else
 				giveAbility(sora, 0x0188)--Reaction Boost
@@ -475,7 +475,7 @@ function giveBoost()
 			giveAbility("party", 0x01A4)--Auto Healing
 		end}, 
 		{pCon, giveBoost = function() --3
-			if lvl1 == true then
+			if lvl1 == true and curDiff ~= 3 then
 				giveAbility(sora, 0x0186)--Combo Boost
 			else
 				giveAbility(sora, 0x018D)--Drive Boost
@@ -672,6 +672,15 @@ function giveBoost()
 		end}
 	}
 	
+	if lvl1 == true and curDiff ~= 3 then
+		statsBoost = auronWpn + mulanWpn + beastWpn + boneWpn + simbaWpn + capWpn + aladdinWpn + rikuWpn + tronWpn + memCard + ocStone + iceCream + picture + (totalSpells*2) + (numProof * 5) + report1 + report2 + report3 + report4 + report5 + report6 + report7 + report8 + report9 + report10 + report11 + report12 + report13 + ((stitch + genie + peter + chicken)*2)
+	elseif lvl1 == true and curDiff == 3 then
+		statsBoost = 0
+	end
+	WriteByte(sora+0x09,statsBoost)--Power
+	WriteByte(sora+0x0A,statsBoost)--Magic
+	WriteByte(sora+0x0B,math.floor(statsBoost/(curDiff+1)))--Def
+	
 	if isBoosted[1] == "Init" and Place ~= 0xFFFF then
 		lastSpells = totalSpells
 		for boostCheck = 1, #(boostTable) do
@@ -710,55 +719,6 @@ function gameplay()
 end
 
 function betterLvl1()
-	--Boost stats based on how much dmg sora has
-	pCon = ReadByte(Save+0x36B2-pcOffset)
-	pNon = ReadByte(Save+0x36B3-pcOffset)
-	pPea = ReadByte(Save+0x36B4-pcOffset)
-	pCharm = ReadByte(Save+0x3964-pcOffset)
-	numProof = pCon + pNon + pPea + pCharm
-	maxHP = ReadByte(maxHPAdr)
-	curHP = ReadByte(curHPAdr)
-	boostBy = math.floor((numProof+curDiff+1)/2)
-	statsBoost = boostBy * (maxHP - curHP)
-	baseStat = (numProof+curDiff+3)*2
-	equipSTR = 0
-	equipMAG = 0
-	equipDEF = 0
-	armorSlots = ReadByte(sora+0x10)
-	accSlots = ReadByte(sora+0x11)
-	
-	--Error Starts Here
-	for a = 0, (armorSlots-1) do
-		armorSora = ReadShort(armors + (a*2))
-		for r = 1,#(equipsID) do --Run through armor/acc list
-			if ReadShort(armorSora) == ReadShort(equipsID[r][1]) and ReadShort(armorSora) ~= 0x0000 then
-				equipSTR = equipSTR + equipsID[r][2]
-				equipMAG = equipMAG + equipsID[r][3]
-				equipDEF = equipDEF + equipsID[r][4]
-			end
-		end		
-	end
-	for a=0, (accSlots-1) do		
-		accSora = ReadShort(accessories + (a*2))
-		for r = 1,#(equipsID) do --Run through armor/acc list
-			if ReadShort(accSora) == ReadShort(equipsID[r][1]) and ReadShort(accSora) ~= 0x0000 then
-				equipSTR = equipSTR + equipsID[r][2]
-				equipMAG = equipMAG + equipsID[r][3]
-				equipDEF = equipDEF + equipsID[r][4]
-			end
-		end	
-	end
-	--Error Ends Here
-	
-	--weaponSora = ReadByte(sora)
-	--weaponValor = ReadByte(Save+0x32F4)
-	--weaponMaster = ReadByte(Save+0x339C)
-	--weaponFinal = ReadByte(Save+0x33D4)
-	
-	WriteByte(Slot1+0x0188,statsBoost+baseStat+equipSTR)--Power
-	WriteByte(Slot1+0x018A,statsBoost+baseStat+equipMAG)--Magic
-	WriteByte(Slot1+0x018C,statsBoost+baseStat+equipDEF)--Def
-	
 --Extra form abilities
 	--valor
 	if ReadByte(Save + 0x32FE + 0x02) >= 0x02 then
