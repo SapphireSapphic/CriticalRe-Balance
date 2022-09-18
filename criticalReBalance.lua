@@ -459,7 +459,7 @@ function giveBoost()
 	boostTable = {
 		{pPea, giveBoost = function() --1
 			giveAbility(sora, 0x0190) --Combination Boost
-			if lvl1 == true then
+			if lvl1 == true and curDiff ~= 3 then
 				giveAbility(sora, 0x018E) --Form Boost
 			end
 			WriteByte(Save+0x3674, ReadByte(Save+0x3674)+1)-- Armor slot
@@ -485,7 +485,7 @@ function giveBoost()
 		end}, 
 		{pCharm, giveBoost = function() --4
 			giveAbility(sora, 0x018E)--Form Boost
-			if lvl1 == true then
+			if lvl1 == true and curDiff ~= 3 then
 				giveAbility(sora, 0x018D)--Drive Boost
 			end
 			WriteByte(Save+0x3675, ReadByte(Save+0x3675)+1)-- Acc slot
@@ -596,23 +596,21 @@ function giveBoost()
 			giveAbility("party", 0x0197)--Lucky Lucky
 		end}, 
 		{report12, giveBoost = function() --28
-			WriteByte(Save+0x35B1, ReadByte(Save+0x35B1)+3)-- Cosmic Arts
+			WriteByte(Save+0x35B1, ReadByte(Save+0x35B1)+1)-- Cosmic Arts
 			giveAbility("party", 0x0197)--Lucky Lucky
 		end}, 
 		{report13, giveBoost = function() --29
-			WriteByte(Save+0x35B1, ReadByte(Save+0x35B1)+3)-- Cosmic Arts
+			WriteByte(Save+0x35B1, ReadByte(Save+0x35B1)+1)-- Cosmic Arts
 			giveAbility("party", 0x0197)--Lucky Lucky
 		end}, 
 		{pAll, giveBoost = function() --30
 			--Nothing apparently
 		end}, 
 		{allVisit, giveBoost = function() --31
-			giveAbility(sora, 0x0256)--Protectga
 			giveAbility(sora, 0x0186)--Combo Boost
 			giveAbility("party", 0x01A0)--Once More
 		end}, 
 		{reportALL, giveBoost = function() --32
-			giveAbility(sora, 0x0256)--Protectga
 			giveAbility(sora, 0x0187)--Air Combo Boost
 			giveAbility("party", 0x019F)--Second Chance
 		end},		
@@ -630,7 +628,9 @@ function giveBoost()
 		end}, 
 		{cureAndLimit, giveBoost = function() --36
 			giveAbility(sora, 0x0190)--Combination Boost
-			giveAbility(sora, 0x0192)--Leaf Bracer
+			if curDiff ~= 3 then
+				giveAbility(sora, 0x0192)--Leaf Bracer
+			end
 			giveAbility("party", 0x0256)--Protectga
 		end}, 
 		{refAndMaster, giveBoost = function() --37
@@ -640,19 +640,27 @@ function giveBoost()
 			giveAbility(sora, 0x018D)--Drive Boost
 		end}, 
 		{allSpells, giveBoost = function() --39
-			giveAbility(sora, 0x01A6)--MP Hastega
+			if curDiff == 0 then
+				giveAbility(sora, 0x01A6)--MP Hastega
+			end
 			giveAbility("party", 0x01A6)--MP Hastega
 		end}, 
 		{allSpells2, giveBoost = function() --40
-			giveAbility(sora, 0x01A6)--MP Hastega
+			if curDiff <= 1 then
+				giveAbility(sora, 0x01A6)--MP Hastega
+			end
 			giveAbility("party", 0x01A6)--MP Hastega
 		end}, 
 		{allSpells3, giveBoost = function() --41
-			giveAbility(sora, 0x01A6)--MP Hastega
+			if curDiff <= 2 then
+				giveAbility(sora, 0x01A6)--MP Hastega
+			end
 			giveAbility("party", 0x01A6)--MP Hastega
 		end}, 
 		{summon, giveBoost = function() --42
-			giveAbility(sora, 0x018F)--Summon Boost
+			if curDiff <=1 then
+				giveAbility(sora, 0x018F)--Summon Boost
+			end
 			giveAbility("party", 0x0256)--Protectga
 		end}, 
 		{summons3, giveBoost = function() --43
