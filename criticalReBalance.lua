@@ -230,6 +230,9 @@ function newGame()
 			
 			--Starting MP from 30 to 60
 			startMP = (curDiff+3)*10
+			WriteInt(Slot1+0x180,startMP)
+			WriteInt(Slot1+0x184,startMP)
+			lastSpells = 0
 			
 			--Start All party members on sora attack	
 			if partyMem ~= 1 then
