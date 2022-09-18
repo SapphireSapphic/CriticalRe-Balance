@@ -25,8 +25,6 @@ function _OnInit()
 		NextSlot = 0x278
 		pcOffset = 0x40
 		--need to find PCSX2 Equivelant to these values
-			Hurricane = 0x2A98006 -offset
-			DrawRange = 0x2A20EA0 -offset
 			DistanceDash = 0x2A94BD4 -offset
 			DistanceDash2 = 0x2A94CBC -offset
 			DistanceDash3 = 0x2A94DCC -offset
