@@ -64,7 +64,7 @@ function _OnInit()
 	RefTierAdr = Save +	0x35D0
 	soraMPRewrite = 60
 	startMP = 60
-	vanillaMPbonus = 10
+	vanillaMPbonus = 0
 	Slot2  = Slot1 - NextSlot
 	Slot3  = Slot2 - NextSlot
 	Slot4  = Slot3 - NextSlot
