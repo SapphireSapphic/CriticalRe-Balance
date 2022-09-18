@@ -79,7 +79,7 @@ function _OnInit()
 	accessories = sora + 0x24
 	armorStart = Sys3+0x1275C+pcOffset
 	accessoryStart = Sys3+0x12A8C+pcOffset
-	subID = { --ID, Strength, Magic, Defense
+	equipsID = { --ID, Strength, Magic, Defense
 		{0x0044, 0, 0, 2}, --Divine Bandana
 		{0x0045, 0, 0, 4}, --Power Band
 		{0x0046, 0, 0, 5}, --Buster Band
@@ -718,7 +718,6 @@ function betterLvl1()
 	numProof = pCon + pNon + pPea + pCharm
 	maxHP = ReadByte(maxHPAdr)
 	curHP = ReadByte(curHPAdr)
-	curDiff = ReadByte(curDiffAdr)
 	boostBy = math.floor((numProof+curDiff+1)/2)
 	statsBoost = boostBy * (maxHP - curHP)
 	baseStat = (numProof+curDiff+3)*2
@@ -728,23 +727,23 @@ function betterLvl1()
 	armorSlots = ReadByte(sora+0x10)
 	accSlots = ReadByte(sora+0x11)
 	--Error Starts Here
-	for a = 0,armorSlots-1 do
+	for a = 0, (armorSlots-1) do
 		armorSora = ReadShort(armors + (a*2))
-		for l = 1,#(subID) do --Run through armor/acc list
-			if ReadShort(armorSora) == ReadShort(subID[l][1]) and ReadShort(armorSora) ~= 0x0000 then
-				equipSTR = equipSTR + subID[l][2]
-				equipMAG = equipMAG + subID[l][3]
-				equipDEF = equipDEF + subID[l][4]
+		for r = 1,#(equipsID) do --Run through armor/acc list
+			if ReadShort(armorSora) == ReadShort(equipsID[r][1]) and ReadShort(armorSora) ~= 0x0000 then
+				equipSTR = equipSTR + equipsID[r][2]
+				equipMAG = equipMAG + equipsID[r][3]
+				equipDEF = equipDEF + equipsID[r][4]
 			end
 		end		
 	end
-	for a=0, accSlots-1 do		
+	for a=0, (accSlots-1) do		
 		accSora = ReadShort(accessories + (a*2))
-		for l = 1,#(subID) do --Run through armor/acc list
-			if ReadShort(accSora) == ReadShort(subID[l][1]) and ReadShort(accSora) ~= 0x0000 then
-				equipSTR = equipSTR + subID[l][2]
-				equipMAG = equipMAG + subID[l][3]
-				equipDEF = equipDEF + subID[l][4]
+		for r = 1,#(equipsID) do --Run through armor/acc list
+			if ReadShort(accSora) == ReadShort(equipsID[r][1]) and ReadShort(accSora) ~= 0x0000 then
+				equipSTR = equipSTR + equipsID[r][2]
+				equipMAG = equipMAG + equipsID[r][3]
+				equipDEF = equipDEF + equipsID[r][4]
 			end
 		end	
 	end
