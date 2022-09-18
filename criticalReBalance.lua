@@ -229,7 +229,7 @@ function newGame()
 			end
 			
 			--Starting MP from 30 to 60
-			startMP = (curDiff+3)*10
+			startMP = 100-((curDiff+2)*10)
 			WriteInt(Slot1+0x180,startMP)
 			WriteInt(Slot1+0x184,startMP)
 			lastSpells = 0
