@@ -725,24 +725,29 @@ function betterLvl1()
 	equipSTR = 0
 	equipMAG = 0
 	equipDEF = 0
-	
+	armorSlots = ReadByte(sora+0x10)
+	accSlots = ReadByte(sora+0x11)
 	--Error Starts Here
-	for a = 0,5 do
+	for a = 0,armorSlots-1 do
 		armorSora = ReadShort(armors + (a*2))
-		accSora = ReadShort(accessories + (a*2))
 		for l = 1,#(subID) do --Run through armor/acc list
 			if ReadShort(armorSora) == ReadShort(subID[l][1]) and ReadShort(armorSora) ~= 0x0000 then
 				equipSTR = equipSTR + subID[l][2]
 				equipMAG = equipMAG + subID[l][3]
 				equipDEF = equipDEF + subID[l][4]
 			end
+		end		
+	end
+	for a=0, accSlots-1 do		
+		accSora = ReadShort(accessories + (a*2))
+		for l = 1,#(subID) do --Run through armor/acc list
 			if ReadShort(accSora) == ReadShort(subID[l][1]) and ReadShort(accSora) ~= 0x0000 then
 				equipSTR = equipSTR + subID[l][2]
 				equipMAG = equipMAG + subID[l][3]
 				equipDEF = equipDEF + subID[l][4]
 			end
-		end		
-	end		
+		end	
+	end
 	--Error Ends Here
 	
 	--weaponSora = ReadByte(sora)
