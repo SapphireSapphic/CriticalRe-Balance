@@ -252,10 +252,10 @@ function newGame()
 end
 
 function giveBoost()
-	pCon = ReadByte(Save+0x36B2-pcOffset)
-	pNon = ReadByte(Save+0x36B3-pcOffset)
-	pPea = ReadByte(Save+0x36B4-pcOffset)
-	pCharm = ReadByte(Save+0x3964-pcOffset)
+	pCon = ReadByte(Save+0x36B2)
+	pNon = ReadByte(Save+0x36B3)
+	pPea = ReadByte(Save+0x36B4)
+	pCharm = ReadByte(Save+0x3964)
 	numProof = pCon + pNon + pPea + pCharm
 	FireTier = ReadByte(FireTierAdr)
 	BlizzTier = ReadByte(BlizzTierAdr)
