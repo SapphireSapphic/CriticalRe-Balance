@@ -91,12 +91,3 @@ assets:
   method: copy
   source:
   - name: ard/us/hb17.ard
-  
-- method: binarc
-  name: 00battle.bin
-  source:
-  - method: copy
-    name: atkp
-    source:
-    - name: atkp_0.list
-    type: list
