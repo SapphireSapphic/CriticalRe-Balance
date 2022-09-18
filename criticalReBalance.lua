@@ -210,7 +210,7 @@ function _OnFrame()
 	giveBoost()
 	newGame()
 	gameplay()
-	if lvl1 == true then
+	if lvl1 == true and Place ~= 0xFFFF and Place ~= 0x1A04 and Place ~= 0x000F and (Place ~= 0x2002 and not(Events(0x01,Null,0x01))) then
 		betterLvl1()
 	end
 end
@@ -726,6 +726,7 @@ function betterLvl1()
 	equipDEF = 0
 	armorSlots = ReadByte(sora+0x10)
 	accSlots = ReadByte(sora+0x11)
+	
 	--Error Starts Here
 	for a = 0, (armorSlots-1) do
 		armorSora = ReadShort(armors + (a*2))
