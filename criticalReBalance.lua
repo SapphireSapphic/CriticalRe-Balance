@@ -79,56 +79,74 @@ function _OnInit()
 	accessories = sora + 0x24
 	armorStart = Sys3+0x1275C+pcOffset
 	accessoryStart = Sys3+0x12A8C+pcOffset
-	subID = { --Strength, Magic, Defense
-		{0, 0, 2}, --Divine Bandana / 1
-		{0, 0, 4}, --Power Band / 2
-		{0, 0, 5}, --Buster Band / 3
-		{0, 0, 3}, --Protect Belt / 4
-		{0, 0, 3}, --Gaia Belt / 5
-		{0, 0, 6}, --Cosmic Belt / 6
-		{0, 0, 3}, --Shock Charm / 7
-		{0, 0, 3}, --Shock Charm+ / 8
-		{0, 0, 4}, --Grand Ribbon / 9
+	subID = { --ID, Strength, Magic, Defense
+		{0x0044, 0, 0, 2}, --Divine Bandana
+		{0x0045, 0, 0, 4}, --Power Band
+		{0x0046, 0, 0, 5}, --Buster Band
+		{0x004E, 0, 0, 3}, --Protect Belt
+		{0x004F, 0, 0, 3}, --Gaia Belt
+		{0x006F, 0, 0, 6}, --Cosmic Belt
+		{0x0084, 0, 0, 3}, --Shock Charm
+		{0x0085, 0, 0, 3}, --Shock Charm+
+		{0x009D, 0, 0, 4}, --Grand Ribbon
+		{0x00AD, 0, 0, 1}, --Fire Bangle
+		{0x00AE, 0, 0, 2}, --Fira Bangle
+		{0x00C5, 0, 0, 3}, --Firaga Bangle
+		{0x011C, 1, 0, 4}, --Firagun Bangle
+		{0x011E, 0, 0, 1}, --Blizzard Armlet
+		{0x011F, 0, 0, 2}, --Blizzara Armlet
+		{0x0120, 0, 0, 3}, --Blizzaga Armlet
+		{0x0121, 1, 0, 4}, --Blizzagun Armlet
+		{0x0123, 0, 0, 1}, --Thunder Trinket
+		{0x0124, 0, 0, 2}, --Thundara Trinket
+		{0x0125, 0, 0, 3}, --Thundaga Trinket
+		{0x0126, 1, 0, 4}, --Thundagun Trinket
+		{0x0128, 0, 0, 1}, --Shadow Anklet
+		{0x0129, 0, 0, 2}, --Dark Anklet
+		{0x012A, 0, 0, 3}, --Midnight Anklet
+		{0x012B, 1, 0, 4}, --Chaos Anklet
+		{0x012D, 0, 0, 1}, --Abas Chain
+		{0x012E, 0, 0, 2}, --Aegis Chain
+		{0x012F, 0, 0, 3}, --Acrisius
+		{0x0133, 0, 1, 3}, --Acrisius+
+		{0x0134, 0, 1, 4}, --Cosmic Chain
+		{0x0132, 0, 0, 4}, --Petit Ribbon
+		{0x0130, 0, 0, 4}, --Ribbon
+		{0x0131, 1, 1, 0}, --Champion Belt
+		{0x0008, 0, 0, 0}, --Ability Ring
+		{0x0009, 0, 0, 0}, --Engineer's Ring
+		{0x000A, 0, 0, 0}, --Technician's Ring
+		{0x000B, 0, 0, 0}, --Expert's Ring
+		{0x0022, 0, 0, 0}, --Master's Ring
+		{0x0257, 0, 0, 0}, --Executive's Ring
+		{0x0034, 0, 0, 0}, --Cosmic Ring
+		{0x0026, 0, 0, 0}, --Skill Ring
+		{0x0027, 0, 0, 0}, --Skillful Ring
+		{0x000C, 1, 0, 0}, --Sardonyx Ring
+		{0x000D, 1, 0, 0}, --Tourmaline Ring
+		{0x000E, 1, 0, 0}, --Aquamarine Ring
+		{0x000F, 1, 0, 0}, --Garnet Ring
+		{0x0010, 1, 0, 0}, --Diamond Ring
+		{0x0011, 1, 0, 0}, --Silver Ring
+		{0x0012, 0, 1, 0}, --Gold
+		{0x0013, 0, 1, 0}, --Platinum
+		{0x0014, 0, 1, 0}, --Mythril
+		{0x001C, 0, 1, 0}, --Orichalcum
+		{0x0023, 2, 2, 0}, --Moon Amulet
+		{0x0024, 2, 2, 0}, --Star Charm
+		{0x0028, 2, 0, 0}, --Soldier Earring
+		{0x002E, 2, 1, 0}, --Fencer Earring
+		{0x002F, 0, 2, 0}, --Mage Earring
+		{0x0030, 1, 2, 0}, --Slayer Earring
+		{0x0035, 0, 0, 0}, --Medal
+		{0x0038, 2, 2, 0}, --Cosmic Arts
+		{0x0039, 0, 3, 0}, --Shadow Archive
+		{0x003A, 0, 3, 0}, --Shadow Archive+
+		{0x003F, 0, 0, 0}, --Lucky Ring
+		{0x0040, 3, 0, 0}, --Full Bloom
+		{0x0041, 0, 0, 0}, --Draw Ring
+		{0x0042, 3, 0, 0} --Full Bloom+
 	}
-	subID[0] = {0, 0, 1} -- Elven Bandana
-	for s = 0, 4 do
-		subID[12+(s*5)] = {0, 0, 1} -- Elemental Bangle
-		subID[13+(s*5)] = {0, 0, 2} -- Elemental-a Bangle
-		subID[14+(s*5)] = {0, 0, 3} -- Elemental-ga Bangle
-		subID[15+(s*5)] = {1, 0, 3} -- Elemental-gun Bangle
-	end
-	subID[36] = {3, 3, 0} -- Champion Belt	
-	subID[37] = {0, 0, 4} -- Petit Ribbon	
-	subID[38] = {0, 0, 3} -- Acrisius	
-	subID[39] = {0, 0, 3} -- Cosmic Chain
-	for s = 0,3 do
-		subID[48+s] = {0, 0, 0} -- Ability Rings
-	end
-	for s = 0, 5 do
-		subID[52+s] = {1, 0, 0} -- Strength Rings
-	end
-	for s = 0, 3 do
-		subID[58+s] = {1, 0, 0} -- Mag Rings
-	end
-	subID[62] = {0, 0, 0} -- Ability Ring
-	subID[63] = {2, 2, 0} -- Moon Amulet
-	subID[64] = {2, 2, 0} -- Star Charm
-	subID[65] = {0, 0, 0} -- Ability Ring
-	subID[66] = {0, 0, 0} -- Ability Ring
-	subID[67] = {2, 0, 0} -- Soldier Earring
-	subID[68] = {2, 1, 0} -- Fencer Earring
-	subID[69] = {0, 2, 0} -- Mage
-	subID[70] = {1, 2, 0} -- Slayer
-	subID[71] = {0, 0, 0} -- Cosmic Ring
-	subID[72] = {1, 0, 0} -- Medal
-	subID[73] = {2, 2, 0} -- Cosmic Arts
-	subID[74] = {0, 3, 0} -- Shadow Archive
-	subID[75] = {0, 3, 0} -- Shadow Archive+
-	subID[76] = {0, 0, 0} -- Ability Ring
-	subID[77] = {3, 0, 0} -- Full Bloom
-	subID[78] = {0, 0, 0} -- Ability Ring
-	subID[79] = {3, 0, 0} -- Full Bloom+
-	subID[164] = {0, 0, 0} -- Ability Ring
 end
 
 function Events(M,B,E) --Check for Map, Btl, and Evt
@@ -707,24 +725,26 @@ function betterLvl1()
 	equipSTR = 0
 	equipMAG = 0
 	equipDEF = 0
+	
+	--Error Starts Here
 	for a = 0,5 do
 		armorSora = ReadShort(armors + (a*2))
 		accSora = ReadShort(accessories + (a*2))
-		for l = 0,33 do --Run through armor/acc list
-			curArmorList = armorStart + (l*0x18)
-			curAccList = accessoryStart + (l*0x18)
-			if ReadShort(armorSora) == ReadShort(curArmorList) and ReadShort(armorSora) ~= 0x0000 then
-				equipSTR = equipSTR + subID[ReadByte(curArmorList+6)][1]
-				equipMAG = equipMAG + subID[ReadByte(curArmorList+6)][2]
-				equipDEF = equipDEF + subID[ReadByte(curArmorList+6)][3]
+		for l = 1,#(subID) do --Run through armor/acc list
+			if ReadShort(armorSora) == ReadShort(subID[l][1]) and ReadShort(armorSora) ~= 0x0000 then
+				equipSTR = equipSTR + subID[l][2]
+				equipMAG = equipMAG + subID[l][3]
+				equipDEF = equipDEF + subID[l][4]
 			end
-			if ReadShort(accSora) == ReadShort(curAccList) and ReadShort(accSora) ~= 0x0000 then
-				equipSTR = equipSTR + subID[ReadByte(curAccList+6)][1]
-				equipMAG = equipMAG + subID[ReadByte(curAccList+6)][2]
-				equipDEF = equipDEF + subID[ReadByte(curAccList+6)][3]
+			if ReadShort(accSora) == ReadShort(subID[l][1]) and ReadShort(accSora) ~= 0x0000 then
+				equipSTR = equipSTR + subID[l][2]
+				equipMAG = equipMAG + subID[l][3]
+				equipDEF = equipDEF + subID[l][4]
 			end
-		end
-	end
+		end		
+	end		
+	--Error Ends Here
+	
 	--weaponSora = ReadByte(sora)
 	--weaponValor = ReadByte(Save+0x32F4)
 	--weaponMaster = ReadByte(Save+0x339C)
