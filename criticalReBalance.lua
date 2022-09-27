@@ -37,16 +37,16 @@ function _OnInit()
 	maxHPAdr = sora + 0x05
 	maxMPAdr = sora + 0x07
 	donald = Save + 0x2604
-	goofy = Save + 0x2718 + pcOffset
-	auron = Save + 0x2940 + pcOffset
-	mulan = Save + 0x2A54 + pcOffset
-	aladdin = Save + 0x2B68 + pcOffset
-	capJack = Save + 0x2C7C + pcOffset
-	beast = Save + 0x2D90 + pcOffset
-	skelJack = Save + 0x2EA4 + pcOffset
-	simba = Save + 0x2FB8 + pcOffset
-	tron = Save + 0x30CC + pcOffset
-	riku = Save + 0x31E0 + pcOffset
+	goofy = Save + 0x2718
+	auron = Save + 0x2940
+	mulan = Save + 0x2A54
+	aladdin = Save + 0x2B68
+	capJack = Save + 0x2C7C
+	beast = Save + 0x2D90
+	skelJack = Save + 0x2EA4
+	simba = Save + 0x2FB8
+	tron = Save + 0x30CC
+	riku = Save + 0x31E0
 	partyList = {sora, donald, goofy, auron, mulan, aladdin, capJack, beast, skelJack, simba, tron, riku}
 	valor = Save + 0x32FE + 0x0016 + 0x0004-- First Unused Slot, accounting for my form movement mod
 	wisdom = Save + 0x3336 + 0x000E + 0x000A
@@ -83,12 +83,13 @@ end
 function giveAbility(character, abilityCode)
 	if character == "party" then
 		for partyMem = 2,12 do
+			abilityGiven = false
 			for Slot = 0,80 do
 				local Current = partyList[partyMem] + abilOff + 2*Slot
 				local Ability = ReadShort(Current)
-				if Ability == 0x0000 then
+				if Ability == 0x0000 and abilityGiven == false then
 					WriteShort(Current, abilityCode + 0x8000)
-					return
+					abilityGiven = true
 				end
 			end
 		end
@@ -96,9 +97,9 @@ function giveAbility(character, abilityCode)
 		for Slot = 0,80 do
 			local Current = character + abilOff + 2*Slot
 			local Ability = ReadShort(Current)
-			if Ability == 0x0000 then
+			if Ability == 0x0000 and abilityGiven == false then
 				WriteShort(Current, abilityCode + 0x8000)
-				return
+				abilityGiven = true
 			end
 		end
 	end
