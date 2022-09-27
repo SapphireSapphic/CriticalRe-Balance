@@ -636,8 +636,7 @@ function giveBoost()
 			if boostTable[boostCheck][1] >= 0x01 and (isBoosted[boostCheck] == false or (lastSpells < totalSpells and boostCheck == #(boostTable))) then
 				--Has item, does not have boost
 				if lvl1 == true or boostCheck <= 29 or boostCheck == #(boostTable) then
-					ConsolePrint("Giving Boost for - "..boostTable[boostCheck][2])
-					ConsolePrint("Boost Variable Value - "..boostTable[boostCheck][1])
+					ConsolePrint("Giving Boost for - "..boostTable[boostCheck][2].." x"..boostTable[boostCheck][1])
 					isBoosted[boostCheck] = true
 					boostTable[boostCheck].giveBoost(boostCheck)
 				end
