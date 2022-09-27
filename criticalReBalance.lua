@@ -37,17 +37,16 @@ function _OnInit()
 	maxHPAdr = sora + 0x05
 	maxMPAdr = sora + 0x07
 	donald = Save + 0x2604
-	goofy = Save + 0x2718
-	mickey = Save + 0x282C
-	auron = Save + 0x2940
-	mulan = Save + 0x2A54
-	aladdin = Save + 0x2B68
-	capJack = Save + 0x2C7C
-	beast = Save + 0x2D90
-	skelJack = Save + 0x2EA4
-	simba = Save + 0x2FB8
-	tron = Save + 0x30CC
-	riku = Save + 0x31E0
+	goofy = Save + 0x2718 + pcOffset
+	auron = Save + 0x2940 + pcOffset
+	mulan = Save + 0x2A54 + pcOffset
+	aladdin = Save + 0x2B68 + pcOffset
+	capJack = Save + 0x2C7C + pcOffset
+	beast = Save + 0x2D90 + pcOffset
+	skelJack = Save + 0x2EA4 + pcOffset
+	simba = Save + 0x2FB8 + pcOffset
+	tron = Save + 0x30CC + pcOffset
+	riku = Save + 0x31E0 + pcOffset
 	partyList = {sora, donald, goofy, auron, mulan, aladdin, capJack, beast, skelJack, simba, tron, riku}
 	valor = Save + 0x32FE + 0x0016 + 0x0004-- First Unused Slot, accounting for my form movement mod
 	wisdom = Save + 0x3336 + 0x000E + 0x000A
@@ -633,7 +632,7 @@ function giveBoost()
 		end
 	elseif Place ~= 0xFFFF then
 		for boostCheck = 1, #(boostTable) do
-			if boostTable[boostCheck][1] >= 0x01 and (isBoosted[boostCheck] == false or lastSpells < totalSpells) then
+			if boostTable[boostCheck][1] >= 0x01 and (isBoosted[boostCheck] == false or (lastSpells < totalSpells and boostCheck == #(boostTable))) then
 				--Has item, does not have boost
 				if lvl1 == true or boostCheck <= 29 or boostCheck == #(boostTable) then
 					ConsolePrint("Giving Boost for - "..boostTable[boostCheck][2])
