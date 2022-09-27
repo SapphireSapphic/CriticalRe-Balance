@@ -607,8 +607,9 @@ function giveBoost()
 			spellMPBoost = (2+curDiff) *MPbonus2
 			WriteInt(Slot1+0x180,ReadInt(Slot1+0x180)+spellMPBoost)
 			WriteInt(Slot1+0x184,ReadInt(Slot1+0x184)+spellMPBoost)
-			lastSpells = lastSpells + 1
 			ConsolePrint("lastSpells = "..lastSpells)
+			lastSpells = lastSpells + 1
+			ConsolePrint("totalSpells = "..totalSpells)
 		end}
 	}
 	statsBoost = 0
@@ -636,6 +637,8 @@ function giveBoost()
 				--Has item, does not have boost
 				if lvl1 == true or boostCheck <= 29 or boostCheck == 44 then
 					ConsolePrint("Giving Boost for - "..boostCheck)
+					ConsolePrint("isBoost? - "..isBoosted[boostCheck])
+					ConsolePrint("Boost Variable Value - "..boostTable[boostCheck][1])
 					boostTable[boostCheck].giveBoost()
 				end
 				isBoosted[boostCheck] = true
