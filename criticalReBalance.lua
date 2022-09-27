@@ -608,13 +608,14 @@ function giveBoost()
 			WriteInt(Slot1+0x180,ReadInt(Slot1+0x180)+spellMPBoost)
 			WriteInt(Slot1+0x184,ReadInt(Slot1+0x184)+spellMPBoost)
 			lastSpells = lastSpells + 1
+			ConsolePrint("lastSpells = "..lastSpells)
 		end}
 	}
 	statsBoost = 0
 	if lvl1 == true and curDiff ~= 3 then
 		statsBoost = auronWpn + mulanWpn + beastWpn + boneWpn + simbaWpn + capWpn + aladdinWpn + rikuWpn + tronWpn + memCard + ocStone + iceCream + picture + (totalSpells*2) + (numProof * 5) + report1 + report2 + report3 + report4 + report5 + report6 + report7 + report8 + report9 + report10 + report11 + report12 + report13 + ((stitch + genie + peter + chicken)*2)
 	elseif lvl1 == true and curDiff == 3 then
-		statsBoost = 0
+		statsBoost = numProof
 	end
 	WriteByte(sora+0x09,statsBoost)--Power
 	WriteByte(sora+0x0A,statsBoost)--Magic
@@ -644,10 +645,10 @@ function giveBoost()
 end
 
 function gameplay()
-	pCon = ReadByte(Save+0x36B2)
-	pNon = ReadByte(Save+0x36B3)
-	pPea = ReadByte(Save+0x36B4)
-	pCharm = ReadByte(Save+0x3964)
+	pCon = ReadByte(Save+0x36B2+pcOffset)
+	pNon = ReadByte(Save+0x36B3+pcOffset)
+	pPea = ReadByte(Save+0x36B4+pcOffset)
+	pCharm = ReadByte(Save+0x3964+pcOffset)
 	numProof = pCon + pNon + pPea + pCharm
 	statsBoost = (numProof+1) * 20
 	for partyMem = 2,12 do
