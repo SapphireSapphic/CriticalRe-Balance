@@ -638,15 +638,10 @@ function giveBoost()
 				--Has item, does not have boost
 				if lvl1 == true or boostCheck <= 29 or boostCheck == #(boostTable) then
 					ConsolePrint("Giving Boost for - "..boostTable[boostCheck][2])
-					if isBoosted[boostCheck] == true then
-						ConsolePrint("isBoost? - True")						
-					else
-						ConsolePrint("isBoost? - False")						
-					end
 					ConsolePrint("Boost Variable Value - "..boostTable[boostCheck][1])
+					isBoosted[boostCheck] = true
 					boostTable[boostCheck].giveBoost(boostCheck)
 				end
-				isBoosted[boostCheck] = true
 			end
 		end
 	end
