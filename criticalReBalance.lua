@@ -610,7 +610,7 @@ function giveBoost()
 			ConsolePrint("lastSpells = "..lastSpells)
 			lastSpells = lastSpells + 1
 			ConsolePrint("totalSpells = "..totalSpells)
-			isBoosted[bC] = false
+			isBoosted[bC] = lastSpells
 		end}
 	}
 	statsBoost = 0
@@ -634,7 +634,7 @@ function giveBoost()
 		end
 	elseif Place ~= 0xFFFF then
 		for boostCheck = 1, #(boostTable) do
-			if boostTable[boostCheck][1] >= 0x01 and isBoosted[boostCheck] == false then
+			if boostTable[boostCheck][1] >= 0x01 and (isBoosted[boostCheck] == false or isBoosted[boostCheck] < totalSpells) then
 				--Has item, does not have boost
 				if lvl1 == true or boostCheck <= 29 or boostCheck == #(boostTable) then
 					ConsolePrint("Giving Boost for - "..boostTable[boostCheck][2])
