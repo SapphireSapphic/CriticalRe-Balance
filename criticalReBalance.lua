@@ -48,11 +48,26 @@ function _OnInit()
 	tron = Save + 0x30CC
 	riku = Save + 0x31E0
 	partyList = {sora, donald, goofy, auron, mulan, aladdin, capJack, beast, skelJack, simba, tron, riku}
-	valor = Save + 0x32FE + 0x0016 + 0x0004-- First Unused Slot, accounting for my form movement mod
-	wisdom = Save + 0x3336 + 0x000E + 0x000A
-	limit = Save + 0x336E + 0x0008
-	master = Save + 0x33A6 + 0x0014 + 0x000A
-	final = Save + 0x33DE + 0x0010 + 0x000A
+	valorAnc = Save + 0x32FE
+	wisdomAnc = Save + 0x3336
+	limitAnc = Save + 0x336E
+	masterAnc = Save + 0x33A6
+	finalAnc = Save + 0x33DE
+	valorLvlAdr = valorAnc + 0x02
+	wisdomLvlAdr = wisdomAnc + 0x02
+	limitLvlAdr = limitAnc + 0x02
+	masterLvlAdr = masterAnc + 0x02
+	finalLvlAdr = finalAnc + 0x02
+	valorLast = 1
+	wisdomLast = 1
+	limitLast = 1
+	masterLast = 1
+	finalLast = 1
+	valor = valorAnc + 0x0016 + 0x0004-- First Unused Slot, accounting for my form movement mod
+	wisdom = wisdomAnc + 0x000E + 0x000A
+	limit = limitAnc + 0x0008
+	master = masterAnc + 0x0014 + 0x000A
+	final = finalAnc + 0x0010 + 0x000A
 	anti = Save + 0x340C + 0x000C + 0x000A
 	isBoosted = {"Init"}
 	FireTierAdr = Save + 0x3594
@@ -138,9 +153,6 @@ function _OnFrame()
 	giveBoost()
 	newGame()
 	gameplay()
-	if lvl1 == true and Place ~= 0xFFFF and Place ~= 0x1A04 and Place ~= 0x000F and (Place ~= 0x2002 and not(Events(0x01,Null,0x01))) then
-		betterLvl1()
-	end
 end
 
 function newGame()
@@ -205,6 +217,11 @@ function giveBoost()
 	ocStone = ReadByte(Save+0x3644)
 	iceCream = ReadByte(Save+0x3649)
 	picture = ReadByte(Save+0x364A)
+	valorLvl = ReadByte(valorLvlAdr)
+	wisdomLvl = ReadByte(wisdomLvlAdr)
+	limitLvl = ReadByte(limitLvlAdr)
+	masterLvl = ReadByte(masterLvlAdr)
+	finalLvl = ReadByte(finalLvlAdr)
 	if ReadByte(Save+0x36C0) & 0x01 == 0x01 then
 		stitch = 1
 	else
@@ -610,6 +627,111 @@ function giveBoost()
 			--ConsolePrint("lastSpells = "..lastSpells)
 			lastSpells = lastSpells + 1
 			--ConsolePrint("totalSpells = "..totalSpells)
+		end}, 
+		{valorLvl, "Valor Form", giveBoost = function() --45
+			if valorLvl >= 0x02 then
+				WriteShort(valor, 0x819F) --Second Chance
+			end
+			if valorLvl >= 0x03 then
+				WriteShort(valor+2, 0x81A6) --MP Hastega
+			end
+			if valorLvl >= 0x04 then
+				WriteShort(valor+4, 0x81A0) --Once More
+			end
+			if valorLvl >= 0x05 then
+				WriteShort(valor+6, 0x8186) --Combo Boost
+			end
+			if valorLvl >= 0x06 then
+				WriteShort(valor+8, 0x8189) --Finishing Plus
+			end
+			if valorLvl >= 0x07 then
+				WriteShort(valor+10, 0x8187) --Air Combo Boost
+			end
+			valorLast = valorLast + 1
+		end}, 
+		{wisdomLvl, "Wisdom Form", giveBoost = function() --46
+			if wisdomLvl >= 0x02 then
+				WriteShort(wisdom, 0x8193) --Magic Lock-On
+			end
+			if wisdomLvl >= 0x03 then
+				WriteShort(wisdom+2, 0x819F) --Second Chance
+			end
+			if wisdomLvl >= 0x04 then
+				WriteShort(wisdom+4, 0x8198) --Fire Boost
+			end
+			if wisdomLvl >= 0x05 then
+				WriteShort(wisdom+6, 0x81A0) --Once More
+			end
+			if wisdomLvl >= 0x06 then
+				WriteShort(wisdom+8, 0x8199) --Blizzard Boost
+			end
+			if wisdomLvl >= 0x07 then
+				WriteShort(wisdom+10, 0x819A) --Thunder Boost
+			end
+			wisdomLast = wisdomLast + 1
+		end}, 
+		{limitLvl, "Limit Form", giveBoost = function() --47
+			if limitLvl >= 0x02 and onPC == true then
+				WriteShort(limit, 0x8107) --Distance Step / Dodge Slash
+			end
+			if limitLvl >= 0x03 then
+				WriteShort(limit+2, 0x8187) --Air Combo Boost
+			end
+			if limitLvl >= 0x04 then
+				WriteShort(limit+4, 0x810F) --Horizontal Slash
+			end
+			if limitLvl >= 0x05 then
+				WriteShort(limit+6, 0x8186) --Combo Boost
+			end
+			if limitLvl >= 0x06 then
+				WriteShort(limit+8, 0x819F) --Second Chance
+			end
+			if limitLvl >= 0x07 then
+				WriteShort(limit+20, 0x81A0) --Once More
+			end
+			limitLast = limitLast + 1
+		end}, 
+		{masterLvl, "Master Form", giveBoost = function() --48
+			if masterLvl >= 0x02 then
+				WriteShort(master, 0x821C) --Drive Converter
+			end
+			if masterLvl >= 0x03 then
+				WriteShort(master+2, 0x8186) --MP Hastega
+			end
+			if masterLvl >= 0x04 then
+				WriteShort(master+4, 0x819F) --Second Chance
+			end
+			if masterLvl >= 0x05 then
+				WriteShort(master-22, 0x8187) --Air Combo Boost
+			end
+			if masterLvl >= 0x06 then
+				WriteShort(master-24, 0x81A0) --Once More
+			end
+			if masterLvl >= 0x07 then
+				WriteShort(master-26, 0x8187) --Air Combo Boost
+			end
+			masterLast = masterLast + 1
+		end}, 
+		{finalLvl, "Final Form", giveBoost = function() --49
+			if finalLvl >= 0x02 then
+				WriteShort(final, 0x819A) --Thunder Boost
+			end
+			if finalLvl >= 0x03 then
+				WriteShort(final+2, 0x8198) --Fire Boost
+			end
+			if finalLvl >= 0x04 then
+				WriteShort(final+4, 0x819A) --Thunder Boost
+			end
+			if finalLvl >= 0x05 then
+				WriteShort(final+6, 0x819F) --Second Chance
+			end
+			if finalLvl >= 0x06 then
+				WriteShort(final+8, 0x8198) --Fire Boost
+			end
+			if finalLvl >= 0x07 then
+				WriteShort(final-14, 0x81A0) --Once More
+			end
+			finalLast = finalLvl + 1
 		end}
 	}
 	statsBoost = 0
@@ -633,7 +755,7 @@ function giveBoost()
 		end
 	elseif Place ~= 0xFFFF then
 		for boostCheck = 1, #(boostTable) do
-			if boostTable[boostCheck][1] >= 0x01 and (isBoosted[boostCheck] == false or (lastSpells < totalSpells and boostCheck == #(boostTable))) then
+			if boostTable[boostCheck][1] >= 0x01 and (isBoosted[boostCheck] == false or (lastSpells < totalSpells and boostCheck == 44) or (valorLast < valorLvl and boostCheck == 45) or (wisdomLast < wisdomLvl and boostCheck == 46) or (limitLast < limitLvl and boostCheck == 47) or (masterLast < masterLvl and boostCheck == 48) or (finalLast < finalLvl and boostCheck == 49)) then
 				--Has item, does not have boost
 				if lvl1 == true or boostCheck <= 29 or boostCheck == #(boostTable) then
 					ConsolePrint("Giving Boost for - "..boostTable[boostCheck][2].." x"..boostTable[boostCheck][1])
@@ -661,109 +783,6 @@ function gameplay()
 	
 	if ReadByte(Save + 0x32FE + 0x02) >= 0x02 and onPC == true then
 		WriteShort(limit, 0x8107) --Distance Step / Dodge Slash
-	end
-end
-
-function betterLvl1()
---Extra form abilities
-	--valor
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x02 then
-		WriteShort(valor, 0x819F) --Second Chance
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x03 then
-		WriteShort(valor+2, 0x81A6) --MP Hastega
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x04 then
-		WriteShort(valor+4, 0x81A0) --Once More
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x05 then
-		WriteShort(valor+6, 0x8186) --Combo Boost
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x06 then
-		WriteShort(valor+8, 0x8189) --Finishing Plus
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x07 then
-		WriteShort(valor+10, 0x8187) --Air Combo Boost
-	end
-	
-	--wisdom
-	if ReadByte(Save + 0x332C + 0x02) >= 0x02 then
-		WriteShort(wisdom, 0x8193) --Magic Lock-On
-	end
-	if ReadByte(Save + 0x332C + 0x02) >= 0x03 then
-		WriteShort(wisdom+2, 0x819F) --Second Chance
-	end
-	if ReadByte(Save + 0x332C + 0x02) >= 0x04 then
-		WriteShort(wisdom+4, 0x8198) --Fire Boost
-	end
-	if ReadByte(Save + 0x332C + 0x02) >= 0x05 then
-		WriteShort(wisdom+6, 0x81A0) --Once More
-	end
-	if ReadByte(Save + 0x332C + 0x02) >= 0x06 then
-		WriteShort(wisdom+8, 0x8199) --Blizzard Boost
-	end
-	if ReadByte(Save + 0x332C + 0x02) >= 0x07 then
-		WriteShort(wisdom+10, 0x819A) --Thunder Boost
-	end
-	
-	--limit
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x02 and onPC == true then
-		WriteShort(limit, 0x8107) --Distance Step / Dodge Slash
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x03 then
-		WriteShort(limit+2, 0x8187) --Air Combo Boost
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x04 then
-		WriteShort(limit+4, 0x810F) --Horizontal Slash
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x05 then
-		WriteShort(limit+6, 0x8186) --Combo Boost
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x06 then
-		WriteShort(limit+8, 0x819F) --Second Chance
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x07 then
-		WriteShort(limit+20, 0x81A0) --Once More
-	end
-	
-	--master
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x02 then
-		WriteShort(master, 0x821C) --Drive Converter
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x03 then
-		WriteShort(master+2, 0x8186) --MP Hastega
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x04 then
-		WriteShort(master+4, 0x819F) --Second Chance
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x05 then
-		WriteShort(master-22, 0x8187) --Air Combo Boost
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x06 then
-		WriteShort(master-24, 0x81A0) --Once More
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x07 then
-		WriteShort(master-26, 0x8187) --Air Combo Boost
-	end
-	
-	--final
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x02 then
-		WriteShort(final, 0x819A) --Thunder Boost
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x03 then
-		WriteShort(final+2, 0x8198) --Fire Boost
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x04 then
-		WriteShort(final+4, 0x819A) --Thunder Boost
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x05 then
-		WriteShort(final+6, 0x819F) --Second Chance
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x06 then
-		WriteShort(final+8, 0x8198) --Fire Boost
-	end
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x07 then
-		WriteShort(final-14, 0x81A0) --Once More
 	end
 end
 
