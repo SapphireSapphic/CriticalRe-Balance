@@ -196,6 +196,7 @@ function giveBoost()
 	pNon = ReadByte(Save+0x36B3)
 	pPea = ReadByte(Save+0x36B4)
 	pCharm = ReadByte(Save+0x3964)
+	numProof = pCon + pNon + pPea + pCharm
 	statsBoost = (numProof+1) * 20
 	for partyMem = 2,12 do
 		WriteByte(partyList[partyMem]+0x08,statsBoost)--AP
@@ -203,7 +204,6 @@ function giveBoost()
 		WriteByte(partyList[partyMem]+0x0A,statsBoost)--Magic
 		WriteByte(partyList[partyMem]+0x0B,statsBoost)--Def
 	end
-	numProof = pCon + pNon + pPea + pCharm
 	FireTier = ReadByte(FireTierAdr)
 	BlizzTier = ReadByte(BlizzTierAdr)
 	ThunTier = ReadByte(ThunTierAdr)
