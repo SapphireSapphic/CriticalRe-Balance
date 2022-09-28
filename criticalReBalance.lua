@@ -109,6 +109,7 @@ function giveAbility(character, abilityCode)
 			end
 		end
 	else
+		abilityGiven = false
 		for Slot = 0,80 do
 			local Current = character + abilOff + 2*Slot
 			local Ability = ReadShort(Current)
@@ -149,10 +150,9 @@ function _OnFrame()
 	end
 	
 	--Execute functions
+	newGame()
 	sysEdits()
 	giveBoost()
-	newGame()
-	gameplay()
 end
 
 function newGame()
@@ -196,6 +196,13 @@ function giveBoost()
 	pNon = ReadByte(Save+0x36B3)
 	pPea = ReadByte(Save+0x36B4)
 	pCharm = ReadByte(Save+0x3964)
+	statsBoost = (numProof+1) * 20
+	for partyMem = 2,12 do
+		WriteByte(partyList[partyMem]+0x08,statsBoost)--AP
+		WriteByte(partyList[partyMem]+0x09,statsBoost)--Power
+		WriteByte(partyList[partyMem]+0x0A,statsBoost)--Magic
+		WriteByte(partyList[partyMem]+0x0B,statsBoost)--Def
+	end
 	numProof = pCon + pNon + pPea + pCharm
 	FireTier = ReadByte(FireTierAdr)
 	BlizzTier = ReadByte(BlizzTierAdr)
@@ -764,25 +771,6 @@ function giveBoost()
 				end
 			end
 		end
-	end
-end
-
-function gameplay()
-	pCon = ReadByte(Save+0x36B2+pcOffset)
-	pNon = ReadByte(Save+0x36B3+pcOffset)
-	pPea = ReadByte(Save+0x36B4+pcOffset)
-	pCharm = ReadByte(Save+0x3964+pcOffset)
-	numProof = pCon + pNon + pPea + pCharm
-	statsBoost = (numProof+1) * 20
-	for partyMem = 2,12 do
-		WriteByte(partyList[partyMem]+0x08,statsBoost)--AP
-		WriteByte(partyList[partyMem]+0x09,statsBoost)--Power
-		WriteByte(partyList[partyMem]+0x0A,statsBoost)--Magic
-		WriteByte(partyList[partyMem]+0x0B,statsBoost)--Def
-	end
-	
-	if ReadByte(Save + 0x32FE + 0x02) >= 0x02 and onPC == true then
-		WriteShort(limit, 0x8107) --Distance Step / Dodge Slash
 	end
 end
 
