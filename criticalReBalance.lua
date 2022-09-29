@@ -160,13 +160,7 @@ function _OnFrame()
 	--Execute functions
 	newGame()
 	sysEdits()
-	if onPC == true then
-		if battleFlag ~= 2 and onTitle ~= 1 then
-			giveBoost()
-		end
-	else
-		giveBoost()
-	end
+	giveBoost()
 end
 
 function newGame()
