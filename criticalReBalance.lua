@@ -155,7 +155,7 @@ function _OnFrame()
 	else
 		crit = false
 	end
-	--[[if onPC == true then
+	if onPC == true then
 		deadMenu = ReadInt(deadMenuAdr)
 		battleFlag = ReadByte(battleFlagAdr)
 		if (onTitle == 1 or (deadMenu ~= 0x00 and battleFlag > 0)) and dontSpam == false then
@@ -166,12 +166,18 @@ function _OnFrame()
 		if onTitle ~= 1 then
 			dontSpam = false
 		end	
-	end]]--
+	end
 	
 	--Execute functions
 	newGame()
 	sysEdits()
-	giveBoost()
+	if onPC == true then
+		if battleFlag ~= 2 then
+			giveBoost()
+		end
+	else
+		giveBoost()
+	end
 end
 
 function newGame()
