@@ -155,17 +155,19 @@ function _OnFrame()
 	else
 		crit = false
 	end
-	curHP1 = ReadByte(curHPAdr)
-	curHP2 = ReadByte(Slot1)
-	deadMenu = ReadInt(deadMenuAdr)
-	battleFlag = ReadByte(battleFlagAdr)
-	if (onTitle == 1 or curHP1 == 0 or curHP2 == 0 or (deadMenu ~= 0x00 and battleFlag > 0)) and dontSpam == false then
-		isBoosted = {"Reload"}
-		--ConsolePrint("Reloading Boost Table")
-		dontSpam = true
-	end
-	if onTitle ~= 1 then
-		dontSpam = false
+	if onPC == true then
+		curHP1 = ReadByte(curHPAdr)
+		curHP2 = ReadByte(Slot1)
+		deadMenu = ReadInt(deadMenuAdr)
+		battleFlag = ReadByte(battleFlagAdr)
+		if (onTitle == 1 or curHP1 == 0 or curHP2 == 0 or (deadMenu ~= 0x00 and battleFlag > 0)) and dontSpam == false then
+			isBoosted = {"Reload"}
+			--ConsolePrint("Reloading Boost Table")
+			dontSpam = true
+		end
+		if onTitle ~= 1 then
+			dontSpam = false
+		end	
 	end
 	
 	--Execute functions
