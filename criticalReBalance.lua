@@ -514,6 +514,10 @@ function sysEdits()
 	end
 end
 
+function boostTable()
+	
+end
+
 boostTable = {
 	{pPea, "Proof of Peace", giveBoost = function() --1
 		giveAbility(sora, 0x0190) --Combination Boost
