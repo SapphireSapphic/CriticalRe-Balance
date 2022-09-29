@@ -76,17 +76,6 @@ function _OnInit()
 	RefTierAdr = Save +	0x35D0
 	startMP = 50
 	lastSpells = 0
-	Slot2  = Slot1 - NextSlot
-	Slot3  = Slot2 - NextSlot
-	Slot4  = Slot3 - NextSlot
-	Slot5  = Slot4 - NextSlot
-	Slot6  = Slot5 - NextSlot
-	Slot7  = Slot6 - NextSlot
-	Slot8  = Slot7 - NextSlot
-	Slot9  = Slot8 - NextSlot
-	Slot10 = Slot9 - NextSlot
-	Slot11 = Slot10 - NextSlot
-	Slot12 = Slot11 - NextSlot
 	titleScreenAdr = Now - 0x0654
 	deadMenuAdr = 0x68863A --Aka Menu Point
 	menuSelectAdr = 0x39C242 --Aka Menu Read
@@ -95,352 +84,6 @@ function _OnInit()
 	cutsceneFlagAdr = 0x1C1C52
 	pauseFlagAdr = 0x554092
 	dontSpam = false
-end
-
-function Events(M,B,E) --Check for Map, Btl, and Evt
-return ((Map == M or not M) and (Btl == B or not B) and (Evt == E or not E))
-end
-
-function giveAbility(character, abilityCode)
-	if character == "party" then
-		for partyMem = 2,12 do
-			abilityGiven = false
-			for Slot = 0,80 do
-				local Current = partyList[partyMem] + abilOff + 2*Slot
-				local Ability = ReadShort(Current)
-				if Ability == 0x0000 and abilityGiven == false then
-					WriteShort(Current, abilityCode + 0x8000)
-					abilityGiven = true
-				end
-			end
-		end
-	else
-		abilityGiven = false
-		for Slot = 0,80 do
-			local Current = character + abilOff + 2*Slot
-			local Ability = ReadShort(Current)
-			if Ability == 0x0000 and abilityGiven == false then
-				WriteShort(Current, abilityCode + 0x8000)
-				abilityGiven = true
-			end
-		end
-	end
-end
-
-function _OnFrame()
-	-- define crucial variables
-	World  = ReadByte(Now+0x00)
-	Room   = ReadByte(Now+0x01)
-	Place  = ReadShort(Now+0x00)
-	Door   = ReadShort(Now+0x02)
-	Map    = ReadShort(Now+0x04)
-	Btl    = ReadShort(Now+0x06)
-	Evt    = ReadShort(Now+0x08)
-	PrevPlace = ReadShort(Now+0x30)
-	onTitle = ReadInt(titleScreenAdr)
-	if ReadByte(curLvlAdr) == 0x01 then
-		for Slot = 0,80 do
-			local Current = sora +abilOff+ 2*Slot
-			local Ability = ReadShort(Current)
-			if Ability == 0x8194 then
-				lvl1 = true
-			end
-		end
-	else
-		lvl1 = false
-	end
-	curDiff = ReadByte(curDiffAdr)
-	if curDiff == 0x03 then
-		crit = true
-	else
-		crit = false
-	end
-	if onPC == true then
-		deadMenu = ReadInt(deadMenuAdr)
-		battleFlag = ReadByte(battleFlagAdr)
-		if (onTitle == 1 or (deadMenu ~= 0x00 and battleFlag > 0)) and dontSpam == false then
-			isBoosted = {"Reload"}
-			--ConsolePrint("Reloading Boost Table")
-			dontSpam = true
-		end
-		if onTitle ~= 1 then
-			dontSpam = false
-		end	
-	end
-	
-	--Execute functions
-	newGame()
-	sysEdits()
-	if onPC == true then
-		if battleFlag ~= 2 then
-			giveBoost()
-		end
-	else
-		giveBoost()
-	end
-end
-
-function newGame()
-	valorLast = 1
-	wisdomLast = 1
-	limitLast = 1
-	masterLast = 1
-	finalLast = 1
-	if Place == 0x2002 and Events(0x01,Null,0x01) then --Station of Serenity Weapons
-		
-		--Start all characters with all abilities equipped, except auto limit
-		for partyMem = 1,12 do
-			for Slot = 0,80 do
-				local Current = partyList[partyMem] + abilOff + 2*Slot
-				local Ability = ReadShort(Current)
-				if Ability < 0x8000 and Ability > 0x0000 and Ability ~= 0x01A1 then
-					WriteShort(Current,Ability + 0x8000)
-				end
-			end
-			
-			--Starting MP from 30 to 60
-			startMP = 100-((curDiff+2)*10)
-			WriteInt(Slot1+0x180,startMP)
-			WriteInt(Slot1+0x184,startMP)
-			lastSpells = 0
-			
-			--Start All party members on sora attack	
-			if partyMem ~= 1 then
-				WriteByte(partyList[partyMem] + 0x00F4, 0x04)
-			end
-		end
-		
-		isBoosted = {"Init"}
-		
-		--Starting Inventory Edits
-		startMegas = curDiff
-		if lvl1 == true then
-			startMegas = startMegas*2
-		end
-		WriteByte(Save+0x3586, startMegas*10) --Start with Megalixirs based on difficulty
-	end
-end
-
-function giveBoost()
-	pCon = ReadByte(Save+0x36B2)
-	pNon = ReadByte(Save+0x36B3)
-	pPea = ReadByte(Save+0x36B4)
-	pCharm = ReadByte(Save+0x3964)
-	numProof = pCon + pNon + pPea + pCharm
-	statsBoost = (numProof+1) * 20
-	for partyMem = 2,12 do
-		WriteByte(partyList[partyMem]+0x08,statsBoost)--AP
-		WriteByte(partyList[partyMem]+0x09,statsBoost)--Power
-		WriteByte(partyList[partyMem]+0x0A,statsBoost)--Magic
-		WriteByte(partyList[partyMem]+0x0B,statsBoost)--Def
-	end
-	FireTier = ReadByte(FireTierAdr)
-	BlizzTier = ReadByte(BlizzTierAdr)
-	ThunTier = ReadByte(ThunTierAdr)
-	MagTier = ReadByte(MagTierAdr)
-	RefTier = ReadByte(RefTierAdr)
-	CureTier = ReadByte(CureTierAdr)
-	totalSpells = FireTier + BlizzTier + ThunTier + MagTier + RefTier + CureTier
-	auronWpn = ReadByte(Save+0x35AE)
-	mulanWpn = ReadByte(Save+0x35AF)
-	beastWpn = ReadByte(Save+0x35B3)
-	boneWpn = ReadByte(Save+0x35B4)
-	simbaWpn = ReadByte(Save+0x35B5)
-	capWpn = ReadByte(Save+0x35B6)
-	aladdinWpn = ReadByte(Save+0x35C0)
-	rikuWpn = ReadByte(Save+0x35C1)
-	tronWpn = ReadByte(Save+0x35C2)
-	memCard = ReadByte(Save+0x3643)
-	ocStone = ReadByte(Save+0x3644)
-	iceCream = ReadByte(Save+0x3649)
-	picture = ReadByte(Save+0x364A)
-	valorLvl = ReadByte(valorLvlAdr)
-	wisdomLvl = ReadByte(wisdomLvlAdr)
-	limitLvl = ReadByte(limitLvlAdr)
-	masterLvl = ReadByte(masterLvlAdr)
-	finalLvl = ReadByte(finalLvlAdr)
-	if ReadByte(Save+0x36C0) & 0x01 == 0x01 then
-		stitch = 1
-	else
-		stitch = 0
-	end
-	if ReadByte(Save+0x36C0) & 0x02 == 0x02 then
-		valorObt = 1
-	else
-		valorObt = 0
-	end
-	if ReadByte(Save+0x36C0) & 0x04 == 0x04 then
-		wisdomObt = 1
-	else
-		wisdomObt = 0
-	end
-	if ReadByte(Save+0x36C0) & 0x08 == 0x08 then
-		chicken = 1
-	else
-		chicken = 0
-	end
-	if ReadByte(Save+0x36C0) & 0x10 == 0x10 then
-		finalObt = 1
-	else
-		finalObt = 0
-	end
-	if ReadByte(Save+0x36C0) & 0x40 == 0x40 then
-		masterObt = 1
-	else
-		masterObt = 0
-	end
-	if ReadByte(Save+0x36CA) & 0x08 == 0x08 then
-		limitObt = 1
-	else
-		limitObt = 0
-	end
-	if ReadByte(Save+0x36C4) & 0x10 == 0x10 then
-		genie = 1
-	else
-		genie = 0
-	end
-	if ReadByte(Save+0x36C4) & 0x20 == 0x20 then
-		peter = 1
-	else
-		peter = 0
-	end
-	if ReadByte(Save+0x36C4) & 0x40 == 0x40 then
-		report1 = 1
-	else
-		report1 = 0
-	end
-	if ReadByte(Save+0x36C4) & 0x80 == 0x80 then
-		report2 = 1
-	else
-		report2 = 0
-	end
-	if ReadByte(Save+0x36C5) & 0x01 == 0x01 then
-		report3 = 1
-	else
-		report3 = 0
-	end
-	if ReadByte(Save+0x36C5) & 0x02 == 0x02 then
-		report4 = 1
-	else
-		report4 = 0
-	end
-	if ReadByte(Save+0x36C5) & 0x04 == 0x04 then
-		report5 = 1
-	else
-		report5 = 0
-	end
-	if ReadByte(Save+0x36C5) & 0x08 == 0x08 then
-		report6 = 1
-	else
-		report6 = 0
-	end
-	if ReadByte(Save+0x36C5) & 0x10 == 0x10 then
-		report7 = 1
-	else
-		report7 = 0
-	end
-	if ReadByte(Save+0x36C5) & 0x20 == 0x20 then
-		report8 = 1
-	else
-		report8 = 0
-	end
-	if ReadByte(Save+0x36C5) & 0x40 == 0x40 then
-		report9 = 1
-	else
-		report9 = 0
-	end
-	if ReadByte(Save+0x36C5) & 0x80 == 0x80 then
-		report10 = 1
-	else
-		report10 = 0
-	end
-	if ReadByte(Save+0x36C6) & 0x01 == 0x01 then
-		report11 = 1
-	else
-		report11 = 0
-	end
-	if ReadByte(Save+0x36C6) & 0x02 == 0x02 then
-		report12 = 1
-	else
-		report12 = 0
-	end
-	if ReadByte(Save+0x36C6) & 0x04 == 0x04 then
-		report13 = 1
-	else
-		report13 = 0
-	end
-	--Combination Boosts
-	if (pPea + pNon + pCon + pCharm) == 4 then
-		pAll = 1
-	else
-		pAll = 0
-	end
-	if (FireTier >= 1) and (totalSpells >= 6) and (finalObt >= 1) then
-		fireAndFinal = 1
-	else
-		fireAndFinal = 0
-	end
-	if (BlizzTier >=1) and (totalSpells >= 6) and (wisdomObt >=1) then
-		blizAndWiz = 1
-	else
-		blizAndWiz = 0
-	end
-	if (ThunTier >=1) and (totalSpells >= 6) and (masterObt >=1) then
-		thunAndMaster = 1
-	else
-		thunAndMaster = 0
-	end
-	if (CureTier >=1) and (totalSpells >= 9) and (limitObt >=1) then
-		cureAndLimit = 1
-	else
-		cureAndLimit = 0
-	end
-	if (RefTier >= 1) and (totalSpells >= 9) and (masterObt>=1) then
-		refAndMaster = 1
-	else
-		refAndMaster = 0
-	end	
-	if (MagTier >= 1) and (totalSpells >= 9) and (valorObt>=1) then
-		magAndValor = 1
-	else
-		magAndValor = 0
-	end
-	if genie + peter + stitch + chicken >= 1 then
-		summon = 1
-	else
-		summon = 0
-	end
-	if genie + peter + stitch + chicken >= 3 then
-		summons3 = 1
-	else
-		summons3 = 0
-	end
-	if (FireTier>=3) and (BlizzTier>=3) and (ThunTier>=3) and (CureTier>=3) and (RefTier>=3) and (MagTier>=3) then
-		allSpells3 = 1
-	else
-		allSpells3 = 0
-	end
-	if (FireTier>=2) and (BlizzTier>=2) and (ThunTier>=2) and (CureTier>=2) and (RefTier>=2) and (MagTier>=2) then
-		allSpells2 = 1
-	else
-		allSpells2 = 0
-	end
-	if (FireTier>=1) and (BlizzTier>=1) and (ThunTier>=1) and (CureTier>=1) and (RefTier>=1) and (MagTier>=1) then
-		allSpells = 1
-	else
-		allSpells = 0
-	end
-	if report1 + report2 + report3 + report4 + report5 + report6 + report7 + report8 + report9 + report10 + report11 + report12 + report13 >= 13 then
-		reportALL = 1
-	else
-		reportALL = 0
-	end
-	if auronWpn + mulanWpn + aladdinWpn + capWpn + beastWpn + boneWpn + simbaWpn + tronWpn + rikuWpn + iceCream + picture >= 11 then
-		allVisit = 1
-	else
-		allVisit = 0
-	end
-	
 	boostTable = {
 		{pPea, "Proof of Peace", giveBoost = function() --1
 			giveAbility(sora, 0x0190) --Combination Boost
@@ -771,6 +414,352 @@ function giveBoost()
 			finalLast = finalLvl + 1
 		end}
 	}
+end
+
+function Events(M,B,E) --Check for Map, Btl, and Evt
+return ((Map == M or not M) and (Btl == B or not B) and (Evt == E or not E))
+end
+
+function giveAbility(character, abilityCode)
+	if character == "party" then
+		for partyMem = 2,12 do
+			abilityGiven = false
+			for Slot = 0,80 do
+				local Current = partyList[partyMem] + abilOff + 2*Slot
+				local Ability = ReadShort(Current)
+				if Ability == 0x0000 and abilityGiven == false then
+					WriteShort(Current, abilityCode + 0x8000)
+					abilityGiven = true
+				end
+			end
+		end
+	else
+		abilityGiven = false
+		for Slot = 0,80 do
+			local Current = character + abilOff + 2*Slot
+			local Ability = ReadShort(Current)
+			if Ability == 0x0000 and abilityGiven == false then
+				WriteShort(Current, abilityCode + 0x8000)
+				abilityGiven = true
+			end
+		end
+	end
+end
+
+function _OnFrame()
+	-- define crucial variables
+	World  = ReadByte(Now+0x00)
+	Room   = ReadByte(Now+0x01)
+	Place  = ReadShort(Now+0x00)
+	Door   = ReadShort(Now+0x02)
+	Map    = ReadShort(Now+0x04)
+	Btl    = ReadShort(Now+0x06)
+	Evt    = ReadShort(Now+0x08)
+	PrevPlace = ReadShort(Now+0x30)
+	onTitle = ReadInt(titleScreenAdr)
+	if ReadByte(curLvlAdr) == 0x01 then
+		for Slot = 0,80 do
+			local Current = sora +abilOff+ 2*Slot
+			local Ability = ReadShort(Current)
+			if Ability == 0x8194 then
+				lvl1 = true
+			end
+		end
+	else
+		lvl1 = false
+	end
+	curDiff = ReadByte(curDiffAdr)
+	if curDiff == 0x03 then
+		crit = true
+	else
+		crit = false
+	end
+	if onPC == true then
+		deadMenu = ReadInt(deadMenuAdr)
+		battleFlag = ReadByte(battleFlagAdr)
+		if (onTitle == 1 or (deadMenu ~= 0x00 and battleFlag > 0)) and dontSpam == false then
+			isBoosted = {"Reload"}
+			--ConsolePrint("Reloading Boost Table")
+			dontSpam = true
+		end
+		if onTitle ~= 1 then
+			dontSpam = false
+		end	
+	end
+	
+	--Execute functions
+	newGame()
+	sysEdits()
+	if onPC == true then
+		if battleFlag ~= 2 and onTitle ~= 1 then
+			giveBoost()
+		end
+	else
+		giveBoost()
+	end
+end
+
+function newGame()
+	valorLast = 1
+	wisdomLast = 1
+	limitLast = 1
+	masterLast = 1
+	finalLast = 1
+	if Place == 0x2002 and Events(0x01,Null,0x01) then --Station of Serenity Weapons
+		
+		--Start all characters with all abilities equipped, except auto limit
+		for partyMem = 1,12 do
+			for Slot = 0,80 do
+				local Current = partyList[partyMem] + abilOff + 2*Slot
+				local Ability = ReadShort(Current)
+				if Ability < 0x8000 and Ability > 0x0000 and Ability ~= 0x01A1 then
+					WriteShort(Current,Ability + 0x8000)
+				end
+			end
+			
+			--Starting MP
+			startMP = 100-((curDiff+2)*10)
+			WriteInt(Slot1+0x180,startMP)
+			WriteInt(Slot1+0x184,startMP)
+			lastSpells = 0
+			
+			--Start All party members on sora attack	
+			if partyMem ~= 1 then
+				WriteByte(partyList[partyMem] + 0x00F4, 0x04)
+			end
+		end
+		
+		isBoosted = {"Init"}
+		
+		--Starting Inventory Edits
+		startMegas = curDiff
+		if lvl1 == true then
+			startMegas = startMegas*2
+		end
+		WriteByte(Save+0x3586, startMegas*10) --Start with Megalixirs based on difficulty
+	end
+end
+
+function giveBoost()
+	pCon = ReadByte(Save+0x36B2)
+	pNon = ReadByte(Save+0x36B3)
+	pPea = ReadByte(Save+0x36B4)
+	pCharm = ReadByte(Save+0x3964)
+	numProof = pCon + pNon + pPea + pCharm
+	statsBoost = (numProof+1) * 20
+	for partyMem = 2,12 do
+		WriteByte(partyList[partyMem]+0x08,statsBoost)--AP
+		WriteByte(partyList[partyMem]+0x09,statsBoost)--Power
+		WriteByte(partyList[partyMem]+0x0A,statsBoost)--Magic
+		WriteByte(partyList[partyMem]+0x0B,statsBoost)--Def
+	end
+	FireTier = ReadByte(FireTierAdr)
+	BlizzTier = ReadByte(BlizzTierAdr)
+	ThunTier = ReadByte(ThunTierAdr)
+	MagTier = ReadByte(MagTierAdr)
+	RefTier = ReadByte(RefTierAdr)
+	CureTier = ReadByte(CureTierAdr)
+	totalSpells = FireTier + BlizzTier + ThunTier + MagTier + RefTier + CureTier
+	auronWpn = ReadByte(Save+0x35AE)
+	mulanWpn = ReadByte(Save+0x35AF)
+	beastWpn = ReadByte(Save+0x35B3)
+	boneWpn = ReadByte(Save+0x35B4)
+	simbaWpn = ReadByte(Save+0x35B5)
+	capWpn = ReadByte(Save+0x35B6)
+	aladdinWpn = ReadByte(Save+0x35C0)
+	rikuWpn = ReadByte(Save+0x35C1)
+	tronWpn = ReadByte(Save+0x35C2)
+	memCard = ReadByte(Save+0x3643)
+	ocStone = ReadByte(Save+0x3644)
+	iceCream = ReadByte(Save+0x3649)
+	picture = ReadByte(Save+0x364A)
+	valorLvl = ReadByte(valorLvlAdr)
+	wisdomLvl = ReadByte(wisdomLvlAdr)
+	limitLvl = ReadByte(limitLvlAdr)
+	masterLvl = ReadByte(masterLvlAdr)
+	finalLvl = ReadByte(finalLvlAdr)
+	if ReadByte(Save+0x36C0) & 0x01 == 0x01 then
+		stitch = 1
+	else
+		stitch = 0
+	end
+	if ReadByte(Save+0x36C0) & 0x02 == 0x02 then
+		valorObt = 1
+	else
+		valorObt = 0
+	end
+	if ReadByte(Save+0x36C0) & 0x04 == 0x04 then
+		wisdomObt = 1
+	else
+		wisdomObt = 0
+	end
+	if ReadByte(Save+0x36C0) & 0x08 == 0x08 then
+		chicken = 1
+	else
+		chicken = 0
+	end
+	if ReadByte(Save+0x36C0) & 0x10 == 0x10 then
+		finalObt = 1
+	else
+		finalObt = 0
+	end
+	if ReadByte(Save+0x36C0) & 0x40 == 0x40 then
+		masterObt = 1
+	else
+		masterObt = 0
+	end
+	if ReadByte(Save+0x36CA) & 0x08 == 0x08 then
+		limitObt = 1
+	else
+		limitObt = 0
+	end
+	if ReadByte(Save+0x36C4) & 0x10 == 0x10 then
+		genie = 1
+	else
+		genie = 0
+	end
+	if ReadByte(Save+0x36C4) & 0x20 == 0x20 then
+		peter = 1
+	else
+		peter = 0
+	end
+	if ReadByte(Save+0x36C4) & 0x40 == 0x40 then
+		report1 = 1
+	else
+		report1 = 0
+	end
+	if ReadByte(Save+0x36C4) & 0x80 == 0x80 then
+		report2 = 1
+	else
+		report2 = 0
+	end
+	if ReadByte(Save+0x36C5) & 0x01 == 0x01 then
+		report3 = 1
+	else
+		report3 = 0
+	end
+	if ReadByte(Save+0x36C5) & 0x02 == 0x02 then
+		report4 = 1
+	else
+		report4 = 0
+	end
+	if ReadByte(Save+0x36C5) & 0x04 == 0x04 then
+		report5 = 1
+	else
+		report5 = 0
+	end
+	if ReadByte(Save+0x36C5) & 0x08 == 0x08 then
+		report6 = 1
+	else
+		report6 = 0
+	end
+	if ReadByte(Save+0x36C5) & 0x10 == 0x10 then
+		report7 = 1
+	else
+		report7 = 0
+	end
+	if ReadByte(Save+0x36C5) & 0x20 == 0x20 then
+		report8 = 1
+	else
+		report8 = 0
+	end
+	if ReadByte(Save+0x36C5) & 0x40 == 0x40 then
+		report9 = 1
+	else
+		report9 = 0
+	end
+	if ReadByte(Save+0x36C5) & 0x80 == 0x80 then
+		report10 = 1
+	else
+		report10 = 0
+	end
+	if ReadByte(Save+0x36C6) & 0x01 == 0x01 then
+		report11 = 1
+	else
+		report11 = 0
+	end
+	if ReadByte(Save+0x36C6) & 0x02 == 0x02 then
+		report12 = 1
+	else
+		report12 = 0
+	end
+	if ReadByte(Save+0x36C6) & 0x04 == 0x04 then
+		report13 = 1
+	else
+		report13 = 0
+	end
+	--Combination Boosts
+	if numProof >= 4 then
+		pAll = 1
+	else
+		pAll = 0
+	end
+	if (FireTier >= 1) and (totalSpells >= 6) and (finalObt >= 1) then
+		fireAndFinal = 1
+	else
+		fireAndFinal = 0
+	end
+	if (BlizzTier >=1) and (totalSpells >= 6) and (wisdomObt >=1) then
+		blizAndWiz = 1
+	else
+		blizAndWiz = 0
+	end
+	if (ThunTier >=1) and (totalSpells >= 6) and (masterObt >=1) then
+		thunAndMaster = 1
+	else
+		thunAndMaster = 0
+	end
+	if (CureTier >=1) and (totalSpells >= 9) and (limitObt >=1) then
+		cureAndLimit = 1
+	else
+		cureAndLimit = 0
+	end
+	if (RefTier >= 1) and (totalSpells >= 9) and (masterObt>=1) then
+		refAndMaster = 1
+	else
+		refAndMaster = 0
+	end	
+	if (MagTier >= 1) and (totalSpells >= 9) and (valorObt>=1) then
+		magAndValor = 1
+	else
+		magAndValor = 0
+	end
+	if genie + peter + stitch + chicken >= 1 then
+		summon = 1
+	else
+		summon = 0
+	end
+	if genie + peter + stitch + chicken >= 3 then
+		summons3 = 1
+	else
+		summons3 = 0
+	end
+	if (FireTier>=3) and (BlizzTier>=3) and (ThunTier>=3) and (CureTier>=3) and (RefTier>=3) and (MagTier>=3) then
+		allSpells3 = 1
+	else
+		allSpells3 = 0
+	end
+	if (FireTier>=2) and (BlizzTier>=2) and (ThunTier>=2) and (CureTier>=2) and (RefTier>=2) and (MagTier>=2) then
+		allSpells2 = 1
+	else
+		allSpells2 = 0
+	end
+	if (FireTier>=1) and (BlizzTier>=1) and (ThunTier>=1) and (CureTier>=1) and (RefTier>=1) and (MagTier>=1) then
+		allSpells = 1
+	else
+		allSpells = 0
+	end
+	if report1 + report2 + report3 + report4 + report5 + report6 + report7 + report8 + report9 + report10 + report11 + report12 + report13 >= 13 then
+		reportALL = 1
+	else
+		reportALL = 0
+	end
+	if auronWpn + mulanWpn + aladdinWpn + capWpn + beastWpn + boneWpn + simbaWpn + tronWpn + rikuWpn + iceCream + picture >= 11 then
+		allVisit = 1
+	else
+		allVisit = 0
+	end
+	
 	statsBoost = 0
 	if lvl1 == true and curDiff ~= 3 then
 		statsBoost = auronWpn + mulanWpn + beastWpn + boneWpn + simbaWpn + capWpn + aladdinWpn + rikuWpn + tronWpn + memCard + ocStone + iceCream + picture + (totalSpells*2) + (numProof * 5) + report1 + report2 + report3 + report4 + report5 + report6 + report7 + report8 + report9 + report10 + report11 + report12 + report13 + ((stitch + genie + peter + chicken)*2)
