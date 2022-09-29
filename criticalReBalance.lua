@@ -440,15 +440,18 @@ function giveBoost()
 	WriteByte(sora+0x0A,statsBoost)--Magic
 	WriteByte(sora+0x0B,math.floor(statsBoost/(curDiff+1)))--Def
 	
+	boostVars = {pPea, pNon, pCon, pCharm, auronWpn, mulanWpn, aladdinWpn, capWpn, beastWpn, boneWpn, simbaWpn, tronWpn, rikuWpn, ocStone, iceCream, picture, report1, report2, report3, report4, report5, report6, report7, report8, report9, report10, report11, report12, report13, pAll, allVisit, reportALL, fireAndFinal, blizAndWiz, thunAndMaster, cureAndLimit, refAndMaster, magAndValor, allSpells, allSpells2, allSpells3, summon, summons3, totalSpells, valorLvl, wisdomLvl, limitLvl, masterLvl, finalLvl}
+	boostNames = {"Proof of Peace", "Proof of Nonexistence", "Proof of Connection", "Promise Charm", "Auron Weapon", "Mulan Weapon", "Aladdin Weapon", "Cap Jack Weapon", "Beast Weapon", "Skel Jack Weapon", "Simba Weapon", "Tron Weapon", "Riku Weapon", "Olympus Stone", "Ice Cream", "Picture", "Ansem Report 1", "Ansem Report 2", "Ansem Report 3", "Ansem Report 4", "Ansem Report 5", "Ansem Report 6", "Ansem Report 7", "Ansem Report 8", "Ansem Report 9", "Ansem Report 10", "Ansem Report 11", "Ansem Report 12", "Ansem Report 13", "All Proofs + Promise Charm", "All Party Weapons", "All Ansem Reports", "Fire and Final", "Blizzard and Wisdom", "Thunder and Master", "Cure and Limit", "Reflect and Master", "Magnet and Valor", "All Teir 1 Spells", "All Teir 2 Spells", "All Teir 3 Spells", "Any One Summon", "Any Three Summons", "Total Spells", "Valor Lvl Up", "Wisdom Lvl Up", "Limit Lvl Up", "Master Lvl Up", "Final Lvl Up"}
+	
 	if isBoosted[1] == "Init" and Place ~= 0xFFFF and onTitle ~= 1 then
 		lastSpells = 0
-		for boostCheck = 1, #(boostTable) do
+		for boostCheck = 1, #(boostVars) do
 			isBoosted[boostCheck] = false
 		end
 	elseif isBoosted[1] == "Reload" and Place ~= 0xFFFF and onTitle ~= 1 then
 		lastSpells = totalSpells
-		for boostCheck = 1, #(boostTable) do
-			if boostTable[boostCheck][1] >= 1 then
+		for boostCheck = 1, #(boostVars) do
+			if boostVars[boostCheck] >= 1 then
 				isBoosted[boostCheck] = true
 			else
 				isBoosted[boostCheck] = false
@@ -456,12 +459,12 @@ function giveBoost()
 		end
 	elseif Place ~= 0xFFFF and onTitle ~= 1 then
 		for boostCheck = 1, #(boostTable) do
-			if boostTable[boostCheck][1] >= 0x01 and (isBoosted[boostCheck] == false or (lastSpells < totalSpells and boostCheck == 44) or (valorLast < valorLvl and boostCheck == 45) or (wisdomLast < wisdomLvl and boostCheck == 46) or (limitLast < limitLvl and boostCheck == 47) or (masterLast < masterLvl and boostCheck == 48) or (finalLast < finalLvl and boostCheck == 49)) then
+			if boostVars[boostCheck] >= 0x01 and isBoosted[boostCheck] == false then
 				--Has item, does not have boost
-				if (lvl1 == true or boostCheck <= 29 or boostCheck == #(boostTable)) and ((onPC == true and ReadByte(ADDR_BattleFlag) == 0) or onPC==false) then
-					ConsolePrint("Giving Boost for - "..boostTable[boostCheck][2].." x"..boostTable[boostCheck][1])
+				if lvl1 == true or boostCheck <= 29 or (lastSpells < totalSpells and boostNames[boostCheck] == "Total Spells") or (valorLast < valorLvl and boostNames[boostCheck] == "Valor Lvl Up") or (wisdomLast < wisdomLvl and boostNames[boostCheck] == "Wisdom Lvl Up") or (limitLast < limitLvl and boostNames[boostCheck] == "Limit Lvl Up") or (masterLast < masterLvl and boostNames[boostCheck] == "Master Lvl Up") or (finalLast < finalLvl and boostNames[boostCheck] == "Final Lvl Up") then
+					ConsolePrint("Giving Boost for - "..boostNames[boostCheck].." x"..boostVars[boostCheck])
 					isBoosted[boostCheck] = true
-					boostTable[boostCheck].giveBoost()
+					boostTable(boostCheck, boostNames, boostVars)
 				end
 			end
 		end
@@ -514,20 +517,15 @@ function sysEdits()
 	end
 end
 
-function boostTable()
-	
-end
-
-boostTable = {
-	{pPea, "Proof of Peace", giveBoost = function() --1
+function boostTable(boostCheck, boostNames, boostVars)
+	if boostNames[boostCheck] == "Proof of Peace" then
 		giveAbility(sora, 0x0190) --Combination Boost
 		if lvl1 == true and curDiff ~= 3 then
 			giveAbility(sora, 0x018E) --Form Boost
 		end
 		WriteByte(Save+0x3674, ReadByte(Save+0x3674)+1)-- Armor slot
 		giveAbility("party", 0x256) --Protectga
-	end}, 
-	{pNon, "Proof of Nonexistence", giveBoost = function() --2
+	elseif boostNames[boostCheck] == "Proof of Nonexistence" then
 		if lvl1 == true and curDiff ~= 3 then
 			giveAbility(sora, 0x0187)--Air Combo Boost
 		else
@@ -535,8 +533,7 @@ boostTable = {
 		end
 		WriteByte(Save+0x3675, ReadByte(Save+0x3675)+1)-- Acc slot
 		giveAbility("party", 0x01A4)--Auto Healing
-	end}, 
-	{pCon, "Proof of Connection", giveBoost = function() --3
+	elseif boostNames[boostCheck] == "Proof of Connection" then
 		if lvl1 == true and curDiff ~= 3 then
 			giveAbility(sora, 0x0186)--Combo Boost
 		else
@@ -544,192 +541,151 @@ boostTable = {
 		end
 		WriteByte(Save+0x3674, ReadByte(Save+0x3674)+1)-- Armor slot
 		giveAbility("party", 0x01A3)--Hyper Healing
-	end}, 
-	{pCharm, "Promise Charm", giveBoost = function() --4
+	elseif boostNames[boostCheck] == "Promise Charm" then
 		giveAbility(sora, 0x018E)--Form Boost
 		if lvl1 == true and curDiff ~= 3 then
 			giveAbility(sora, 0x018D)--Drive Boost
 		end
 		WriteByte(Save+0x3675, ReadByte(Save+0x3675)+1)-- Acc slot
 		giveAbility("party", 0x01A2)--Auto Change
-	end}, 
-	{auronWpn, "Battlefields of War (Auron)", giveBoost = function() --5
+	elseif boostNames[boostCheck] == "Auron Weapon" then
 		WriteByte(Save+0x35BB, ReadByte(Save+0x35BB)+1)-- Full Bloom +
 		WriteByte(Save+0x3580, ReadByte(Save+0x3580)+((curDiff+1)*3))-- Potions
 		giveAbility("party", 0x019B)--Item Boost
-	end}, 
-	{mulanWpn, "Sword of the Ancestor (Mulan)", giveBoost = function() --6
+	elseif boostNames[boostCheck] == "Mulan Weapon" then
 		WriteByte(Save+0x35BB, ReadByte(Save+0x35BB)+1)-- Full Bloom +
 		WriteByte(Save+0x3581, ReadByte(Save+0x3581)+((curDiff+1)*3))-- Hi-Potions
 		giveAbility("party", 0x019B)--Item Boost
-	end}, 
-	{aladdinWpn, "Scimitar (Aladdin)", giveBoost = function()--7
+	elseif boostNames[boostCheck] == "Aladdin Weapon" then
 		WriteByte(Save+0x35BB, ReadByte(Save+0x35BB)+1)-- Full Bloom +
 		WriteByte(Save+0x3582, ReadByte(Save+0x3582)+((curDiff+1)*3))-- Ethers
 		giveAbility("party", 0x019B)--Item Boost
-	end}, 
-	{capWpn, "Skill and Crossbones (Captain Jack)", giveBoost = function() --8
+	elseif boostNames[boostCheck] == "Cap Jack Weapon" then
 		WriteByte(Save+0x35B7, ReadByte(Save+0x35B7)+1)-- Shadow Archive +
 		WriteByte(Save+0x3583, ReadByte(Save+0x3583)+((curDiff+1)*3))-- Elixirs
 		giveAbility("party", 0x0197)--Lucky Lucky
-	end}, 
-	{beastWpn, "Beast's Claw (Beast)", giveBoost = function() --9
+	elseif boostNames[boostCheck] == "Beast Weapon" then
 		WriteByte(Save+0x35B7, ReadByte(Save+0x35B7)+1)-- Shadow Archive +
 		WriteByte(Save+0x3584, ReadByte(Save+0x3584)+((curDiff+1)*3))-- Mega-Potions
 		giveAbility("party", 0x0197)--Lucky Lucky
-	end}, 
-	{boneWpn, "Bone Fist (Jack Skellington)", giveBoost = function() --10
+	elseif boostNames[boostCheck] == "Skel Jack Weapon" then
 		WriteByte(Save+0x35B7, ReadByte(Save+0x35B7)+1)-- Shadow Archive +
 		WriteByte(Save+0x3585, ReadByte(Save+0x3585)+((curDiff+1)*3))-- Mega-Ethers
 		giveAbility("party", 0x0197)--Lucky Lucky
-	end}, 
-	{simbaWpn, "Proud Fang (Simba)", giveBoost = function() --11
+	elseif boostNames[boostCheck] == "Simba Weapon" then
 		WriteByte(Save+0x35D3, ReadByte(Save+0x35D3)+1)-- Shock Charm +
 		WriteByte(Save+0x3586, ReadByte(Save+0x3586)+((curDiff+1)*3))-- Megalixirs
 		giveAbility("party", 0x019E)--Defender
-	end}, 
-	{tronWpn, "Identity Disk (Tron)", giveBoost = function() --12
+	elseif boostNames[boostCheck] == "Tron Weapon" then
 		WriteByte(Save+0x35D3, ReadByte(Save+0x35D3)+1)-- Shock Charm +
 		WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*1))-- Drive Recoveries
 		giveAbility("party", 0x019E)--Defender
-	end}, 
-	{rikuWpn, "Way to the Dawn (Riku)", giveBoost = function() --13
+	elseif boostNames[boostCheck] == "Riku Weapon" then
 		WriteByte(Save+0x35D3, ReadByte(Save+0x35D3)+1)-- Shock Charm +
 		WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*1))-- High Drive Recoveries
 		giveAbility("party", 0x019E)--Defender
-	end}, 
-	{ocStone, "Olympus Stone", giveBoost = function() --14
+	elseif boostNames[boostCheck] == "Olympus Stone" then
 		WriteByte(Save+0x35D4, ReadByte(Save+0x35D4)+1)-- Grand Ribbon
 		WriteByte(Save+0x35E1, ReadByte(Save+0x35E1)+((curDiff+1)*3))-- Tents
 		giveAbility("party", 0x021E)--Damage Control
-	end}, 
-	{iceCream, "Ice Cream", giveBoost = function() --15
+	elseif boostNames[boostCheck] == "Ice Cream" then
 		WriteByte(Save+0x35D4, ReadByte(Save+0x35D4)+1)-- Grand Ribbon
 		WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*1))-- Drive Recoveries
 		giveAbility("party", 0x021E)--Damage Control
-	end}, 
-	{picture, "Picture", giveBoost = function() --16
+	elseif boostNames[boostCheck] == "Picture" then
 		WriteByte(Save+0x35D4, ReadByte(Save+0x35D4)+1)-- Grand Ribbon
 		WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*1))-- High Drive Recoveries
 		giveAbility("party", 0x021E)--Damage Control
-	end}, 
-	{report1, "Ansem Report 1", giveBoost = function() --17
+	elseif boostNames[boostCheck] == "Ansem Report 1" then
 		WriteByte(Save+0x3580, ReadByte(Save+0x3580)+((curDiff+1)*3))-- Potions
 		giveAbility("party", 0x0196)--Jackpot
-	end}, 
-	{report2, "Ansem Report 2", giveBoost = function() --18
+	elseif boostNames[boostCheck] == "Ansem Report 2" then
 		WriteByte(Save+0x3581, ReadByte(Save+0x3581)+((curDiff+1)*3))-- Hi-Potions
 		giveAbility("party", 0x0196)--Jackpot
-	end}, 
-	{report3, "Ansem Report 3", giveBoost = function() --19
+	elseif boostNames[boostCheck] == "Ansem Report 3" then
 		WriteByte(Save+0x3582, ReadByte(Save+0x3582)+((curDiff+1)*3))-- Ethers
 		giveAbility("party", 0x0196)--Jackpot
-	end}, 
-	{report4, "Ansem Report 4", giveBoost = function() --20
+	elseif boostNames[boostCheck] == "Ansem Report 4" then
 		WriteByte(Save+0x3583, ReadByte(Save+0x3583)+((curDiff+1)*3))-- Elixirs
 		giveAbility("party", 0x019C)--MP Rage
-	end}, 
-	{report5, "Ansem Report 5", giveBoost = function() --21
+	elseif boostNames[boostCheck] == "Ansem Report 5" then
 		WriteByte(Save+0x3584, ReadByte(Save+0x3584)+((curDiff+1)*3))-- Mega-Potions
 		giveAbility("party", 0x019C)--MP Rage
-	end}, 
-	{report6, "Ansem Report 6", giveBoost = function() --22
+	elseif boostNames[boostCheck] == "Ansem Report 6" then
 		WriteByte(Save+0x3585, ReadByte(Save+0x3585)+((curDiff+1)*3))-- Mega-Ethers
 		giveAbility("party", 0x019C)--MP Rage
-	end}, 
-	{report7, "Ansem Report 7", giveBoost = function() --23
+	elseif boostNames[boostCheck] == "Ansem Report 7" then
 		WriteByte(Save+0x3586, ReadByte(Save+0x3586)+((curDiff+1)*3))-- Megalixirs
 		giveAbility("party", 0x01A3)--Hyper Healing
-	end}, 
-	{report8, "Ansem Report 8", giveBoost = function() --24
+	elseif boostNames[boostCheck] == "Ansem Report 8" then
 		WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*1))-- Drive Recoveries
 		giveAbility("party", 0x01A3)--Hyper Healing
-	end}, 
-	{report9, "Ansem Report 9", giveBoost = function() --25
+	elseif boostNames[boostCheck] == "Ansem Report 9" then
 		WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*1))-- High Drive Recoveries
 		giveAbility("party", 0x01A4)--Auto Healing
-	end}, 
-	{report10, "Ansem Report 10", giveBoost = function() --26
+	elseif boostNames[boostCheck] == "Ansem Report 10" then
 		WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*1))-- High Drive Recoveries
 		giveAbility("party", 0x01A4)--Auto Healing
-	end}, 
-	{report11, "Ansem Report 11", giveBoost = function() --27
+	elseif boostNames[boostCheck] == "Ansem Report 11" then
 		WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*1))-- Drive Recoveries
 		giveAbility("party", 0x0197)--Lucky Lucky
-	end}, 
-	{report12, "Ansem Report 12", giveBoost = function() --28
+	elseif boostNames[boostCheck] == "Ansem Report 12" then
 		WriteByte(Save+0x35B1, ReadByte(Save+0x35B1)+1)-- Cosmic Arts
 		giveAbility("party", 0x0197)--Lucky Lucky
-	end}, 
-	{report13, "Ansem Report 13", giveBoost = function() --29
+	elseif boostNames[boostCheck] == "Ansem Report 13" then
 		WriteByte(Save+0x35B1, ReadByte(Save+0x35B1)+1)-- Cosmic Arts
 		giveAbility("party", 0x0197)--Lucky Lucky
-	end}, 
-	{pAll, "All Proofs + Promise Charm", giveBoost = function() --30
-		--Nothing apparently
-	end}, 
-	{allVisit, "All Party Weapons", giveBoost = function() --31
+	elseif boostNames[boostCheck] == "All Proofs + Promise Charm" then
+		--Nothing yet
+	elseif boostNames[boostCheck] == "All Party Weapons" then
 		giveAbility(sora, 0x0186)--Combo Boost
 		giveAbility("party", 0x01A0)--Once More
-	end}, 
-	{reportALL, "All Reports", giveBoost = function() --32
+	elseif boostNames[boostCheck] == "All Ansem Reports" then
 		giveAbility(sora, 0x0187)--Air Combo Boost
 		giveAbility("party", 0x019F)--Second Chance
-	end},		
-	{fireAndFinal, "Fire + Final", giveBoost = function() --33
+	elseif boostNames[boostCheck] == "Fire and Final" then
 		giveAbility(sora, 0x0198)--Fire Boost
 		giveAbility("party", 0x0198)--Fire Boost
-	end}, 
-	{blizAndWiz, "Blizzard + Wisdom", giveBoost = function() --34
+	elseif boostNames[boostCheck] == "Blizzard and Wisdom" then
 		giveAbility(sora, 0x0199)--Blizzard Boost
 		giveAbility("party", 0x0199)--Blizzard Boost
-	end}, 
-	{thunAndMaster, "Thunder + Master", giveBoost = function() --35
+	elseif boostNames[boostCheck] == "Thunder and Master" then
 		giveAbility(sora, 0x019A)--Thunder Boost
 		giveAbility("party", 0x019A)--Thunder Boost
-	end}, 
-	{cureAndLimit, "Cure + Limit", giveBoost = function() --36
+	elseif boostNames[boostCheck] == "Cure and Limit" then
 		giveAbility(sora, 0x0190)--Combination Boost
 		if curDiff ~= 3 then
 			giveAbility(sora, 0x0192)--Leaf Bracer
 		end
 		giveAbility("party", 0x0256)--Protectga
-	end}, 
-	{refAndMaster, "Reflect + Master", giveBoost = function() --37
+	elseif boostNames[boostCheck] == "Reflect and Master" then
 		giveAbility(sora, 0x018E)--Form Boost
-	end}, 
-	{magAndValor, "Magnet + Valor", giveBoost = function() --38
+	elseif boostNames[boostCheck] == "Magnet and Valor" then
 		giveAbility(sora, 0x018D)--Drive Boost
-	end}, 
-	{allSpells, "All Tier 1 Spells", giveBoost = function() --39
+	elseif boostNames[boostCheck] == "All Tier 1 Spells" then
 		if curDiff == 0 then
 			giveAbility(sora, 0x01A6)--MP Hastega
 		end
 		giveAbility("party", 0x01A6)--MP Hastega
-	end}, 
-	{allSpells2, "All Tier 2 Spells", giveBoost = function() --40
+	elseif boostNames[boostCheck] == "All Tier 2 Spells" then
 		if curDiff <= 1 then
 			giveAbility(sora, 0x01A6)--MP Hastega
 		end
 		giveAbility("party", 0x01A6)--MP Hastega
-	end}, 
-	{allSpells3, "All Tier 3 Spells", giveBoost = function() --41
+	elseif boostNames[boostCheck] == "All Tier 3 Spells" then
 		if curDiff <= 2 then
 			giveAbility(sora, 0x01A6)--MP Hastega
 		end
 		giveAbility("party", 0x01A6)--MP Hastega
-	end}, 
-	{summon, "Any One Summon", giveBoost = function() --42
+	elseif boostNames[boostCheck] == "Any One Summon" then
 		if curDiff <=1 then
 			giveAbility(sora, 0x018F)--Summon Boost
 		end
 		giveAbility("party", 0x0256)--Protectga
-	end}, 
-	{summons3, "Any Three Summons", giveBoost = function() --43
+	elseif boostNames[boostCheck] == "Any Three Summons" then
 		giveAbility(sora, 0x018F)--Summon Boost
 		giveAbility("party", 0x0256)--Protectga
-	end}, 
-	{totalSpells, "Total Spells", giveBoost = function() --44
+	elseif boostNames[boostCheck] == "Total Spells" then
 		if lvl1 == true then
 			MPbonus2 = 2
 		else
@@ -741,110 +697,107 @@ boostTable = {
 		--ConsolePrint("lastSpells = "..lastSpells)
 		lastSpells = lastSpells + 1
 		--ConsolePrint("totalSpells = "..totalSpells)
-	end}, 
-	{valorLvl, "Valor Form", giveBoost = function() --45
-		if valorLvl >= 0x02 then
+	elseif boostNames[boostCheck] == "Valor Lvl Up" then
+		if valorLvl >= 2 then
 			WriteShort(valor, 0x819F) --Second Chance
 		end
-		if valorLvl >= 0x03 then
+		if valorLvl >= 3 then
 			WriteShort(valor+2, 0x81A6) --MP Hastega
 		end
-		if valorLvl >= 0x04 then
+		if valorLvl >= 4 then
 			WriteShort(valor+4, 0x81A0) --Once More
 		end
-		if valorLvl >= 0x05 then
+		if valorLvl >= 5 then
 			WriteShort(valor+6, 0x8186) --Combo Boost
 		end
-		if valorLvl >= 0x06 then
+		if valorLvl >= 6 then
 			WriteShort(valor+8, 0x8189) --Finishing Plus
 		end
-		if valorLvl >= 0x07 then
+		if valorLvl >= 7 then
 			WriteShort(valor+10, 0x8187) --Air Combo Boost
 		end
 		valorLast = valorLast + 1
-	end}, 
-	{wisdomLvl, "Wisdom Form", giveBoost = function() --46
-		if wisdomLvl >= 0x02 then
+	elseif boostNames[boostCheck] == "Wisdom Lvl Up" then
+		if wisdomLvl >= 2 then
 			WriteShort(wisdom, 0x8193) --Magic Lock-On
 		end
-		if wisdomLvl >= 0x03 then
+		if wisdomLvl >= 3 then
 			WriteShort(wisdom+2, 0x819F) --Second Chance
 		end
-		if wisdomLvl >= 0x04 then
+		if wisdomLvl >= 4 then
 			WriteShort(wisdom+4, 0x8198) --Fire Boost
 		end
-		if wisdomLvl >= 0x05 then
+		if wisdomLvl >= 5 then
 			WriteShort(wisdom+6, 0x81A0) --Once More
 		end
-		if wisdomLvl >= 0x06 then
+		if wisdomLvl >= 6 then
 			WriteShort(wisdom+8, 0x8199) --Blizzard Boost
 		end
-		if wisdomLvl >= 0x07 then
+		if wisdomLvl >= 7 then
 			WriteShort(wisdom+10, 0x819A) --Thunder Boost
 		end
 		wisdomLast = wisdomLast + 1
-	end}, 
-	{limitLvl, "Limit Form", giveBoost = function() --47
-		if limitLvl >= 0x02 and onPC == true then
+	elseif boostNames[boostCheck] == "Limit Lvl Up" then
+		if limitLvl >= 2 and onPC == true then
 			WriteShort(limit, 0x8107) --Distance Step / Dodge Slash
 		end
-		if limitLvl >= 0x03 then
+		if limitLvl >= 3 then
 			WriteShort(limit+2, 0x8187) --Air Combo Boost
 		end
-		if limitLvl >= 0x04 then
+		if limitLvl >= 4 then
 			WriteShort(limit+4, 0x810F) --Horizontal Slash
 		end
-		if limitLvl >= 0x05 then
+		if limitLvl >= 5 then
 			WriteShort(limit+6, 0x8186) --Combo Boost
 		end
-		if limitLvl >= 0x06 then
+		if limitLvl >= 6 then
 			WriteShort(limit+8, 0x819F) --Second Chance
 		end
-		if limitLvl >= 0x07 then
+		if limitLvl >= 7 then
 			WriteShort(limit+20, 0x81A0) --Once More
 		end
 		limitLast = limitLast + 1
-	end}, 
-	{masterLvl, "Master Form", giveBoost = function() --48
-		if masterLvl >= 0x02 then
+	elseif boostNames[boostCheck] == "Master Lvl Up" then
+		if masterLvl >= 2 then
 			WriteShort(master, 0x821C) --Drive Converter
 		end
-		if masterLvl >= 0x03 then
+		if masterLvl >= 3 then
 			WriteShort(master+2, 0x8186) --MP Hastega
 		end
-		if masterLvl >= 0x04 then
+		if masterLvl >= 4 then
 			WriteShort(master+4, 0x819F) --Second Chance
 		end
-		if masterLvl >= 0x05 then
+		if masterLvl >= 5 then
 			WriteShort(master-22, 0x8187) --Air Combo Boost
 		end
-		if masterLvl >= 0x06 then
+		if masterLvl >= 6 then
 			WriteShort(master-24, 0x81A0) --Once More
 		end
-		if masterLvl >= 0x07 then
+		if masterLvl >= 7 then
 			WriteShort(master-26, 0x8187) --Air Combo Boost
 		end
 		masterLast = masterLast + 1
-	end}, 
-	{finalLvl, "Final Form", giveBoost = function() --49
-		if finalLvl >= 0x02 then
+	elseif boostNames[boostCheck] == "Final Lvl Up" then
+		if finalLvl >= 2 then
 			WriteShort(final, 0x819A) --Thunder Boost
 		end
-		if finalLvl >= 0x03 then
+		if finalLvl >= 3 then
 			WriteShort(final+2, 0x8198) --Fire Boost
 		end
-		if finalLvl >= 0x04 then
+		if finalLvl >= 4 then
 			WriteShort(final+4, 0x819A) --Thunder Boost
 		end
-		if finalLvl >= 0x05 then
+		if finalLvl >= 5 then
 			WriteShort(final+6, 0x819F) --Second Chance
 		end
-		if finalLvl >= 0x06 then
+		if finalLvl >= 6 then
 			WriteShort(final+8, 0x8198) --Fire Boost
 		end
-		if finalLvl >= 0x07 then
+		if finalLvl >= 7 then
 			WriteShort(final-14, 0x81A0) --Once More
 		end
 		finalLast = finalLvl + 1
-	end}
-}
+	else
+		ConsolePrint("Unrecognized Boost. How'd you do that?")
+	end
+end	
