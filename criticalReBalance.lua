@@ -84,7 +84,7 @@ function _OnInit()
 	cutsceneFlagAdr = 0x1C1C52
 	pauseFlagAdr = 0x554092
 	dontSpam = false
-	boostTable = {
+	_boostTable = {
 		{pPea, "Proof of Peace", giveBoost = function() --1
 			giveAbility(sora, 0x0190) --Combination Boost
 			if lvl1 == true and curDiff ~= 3 then
@@ -772,26 +772,26 @@ function giveBoost()
 	
 	if isBoosted[1] == "Init" and Place ~= 0xFFFF and onTitle ~= 1 then
 		lastSpells = 0
-		for boostCheck = 1, #(boostTable) do
+		for boostCheck = 1, #(_boostTable) do
 			isBoosted[boostCheck] = false
 		end
 	elseif isBoosted[1] == "Reload" and Place ~= 0xFFFF and onTitle ~= 1 then
 		lastSpells = totalSpells
-		for boostCheck = 1, #(boostTable) do
-			if boostTable[boostCheck][1] >= 1 then
+		for boostCheck = 1, #(_boostTable) do
+			if _boostTable[boostCheck][1] >= 1 then
 				isBoosted[boostCheck] = true
 			else
 				isBoosted[boostCheck] = false
 			end
 		end
 	elseif Place ~= 0xFFFF and onTitle ~= 1 then
-		for boostCheck = 1, #(boostTable) do
-			if boostTable[boostCheck][1] >= 0x01 and (isBoosted[boostCheck] == false or (lastSpells < totalSpells and boostCheck == 44) or (valorLast < valorLvl and boostCheck == 45) or (wisdomLast < wisdomLvl and boostCheck == 46) or (limitLast < limitLvl and boostCheck == 47) or (masterLast < masterLvl and boostCheck == 48) or (finalLast < finalLvl and boostCheck == 49)) then
+		for boostCheck = 1, #(_boostTable) do
+			if _boostTable[boostCheck][1] >= 0x01 and (isBoosted[boostCheck] == false or (lastSpells < totalSpells and boostCheck == 44) or (valorLast < valorLvl and boostCheck == 45) or (wisdomLast < wisdomLvl and boostCheck == 46) or (limitLast < limitLvl and boostCheck == 47) or (masterLast < masterLvl and boostCheck == 48) or (finalLast < finalLvl and boostCheck == 49)) then
 				--Has item, does not have boost
-				if (lvl1 == true or boostCheck <= 29 or boostCheck == #(boostTable)) and ((onPC == true and ReadByte(ADDR_BattleFlag) == 0) or onPC==false) then
-					ConsolePrint("Giving Boost for - "..boostTable[boostCheck][2].." x"..boostTable[boostCheck][1])
+				if (lvl1 == true or boostCheck <= 29 or boostCheck == #(_boostTable)) and ((onPC == true and ReadByte(ADDR_BattleFlag) == 0) or onPC==false) then
+					ConsolePrint("Giving Boost for - ".._boostTable[boostCheck][2].." x".._boostTable[boostCheck][1])
 					isBoosted[boostCheck] = true
-					boostTable[boostCheck].giveBoost()
+					_boostTable[boostCheck].giveBoost()
 				end
 			end
 		end
