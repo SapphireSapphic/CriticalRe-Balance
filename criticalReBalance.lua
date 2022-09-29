@@ -458,7 +458,7 @@ function giveBoost()
 			end
 		end
 	elseif Place ~= 0xFFFF and onTitle ~= 1 then
-		for boostCheck = 1, #(boostTable) do
+		for boostCheck = 1, #(boostVars) do
 			if boostVars[boostCheck] >= 0x01 and isBoosted[boostCheck] == false then
 				--Has item, does not have boost
 				if lvl1 == true or boostCheck <= 29 or (lastSpells < totalSpells and boostNames[boostCheck] == "Total Spells") or (valorLast < valorLvl and boostNames[boostCheck] == "Valor Lvl Up") or (wisdomLast < wisdomLvl and boostNames[boostCheck] == "Wisdom Lvl Up") or (limitLast < limitLvl and boostNames[boostCheck] == "Limit Lvl Up") or (masterLast < masterLvl and boostNames[boostCheck] == "Master Lvl Up") or (finalLast < finalLvl and boostNames[boostCheck] == "Final Lvl Up") then
