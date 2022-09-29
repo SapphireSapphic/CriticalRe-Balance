@@ -161,7 +161,7 @@ function _OnFrame()
 	battleFlag = ReadByte(battleFlagAdr)
 	if (onTitle == 1 or curHP1 == 0 or curHP2 == 0 or (deadMenu ~= 0x00 and battleFlag > 0)) and dontSpam == false then
 		isBoosted = {"Reload"}
-		ConsolePrint("Reloading Boost Table")
+		--ConsolePrint("Reloading Boost Table")
 		dontSpam = true
 	end
 	if onTitle ~= 1 then
