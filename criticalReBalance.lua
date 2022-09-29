@@ -29,7 +29,6 @@ function _OnInit()
 			DistanceDash = 0x2A94BD4 -offset
 			DistanceDash2 = 0x2A94CBC -offset
 			DistanceDash3 = 0x2A94DCC -offset
-		ADDR_BattleFlag = 0x24AA5B6
 	end
 	curLvlAdr = Save + 0x24F0 + 0x000F
 	curDiffAdr = Save + 0x2498
@@ -71,7 +70,7 @@ function _OnInit()
 	master = masterAnc + 0x0014 + 0x000A + 0x08
 	final = finalAnc + 0x0010 + 0x000A + 0x08
 	anti = Save + 0x340C + 0x000C + 0x000A + 0x08
-	isBoosted = {"Init"}
+	isBoosted = {"Reload"}
 	FireTierAdr = Save + 0x3594
 	BlizzTierAdr = Save + 0x3595
 	ThunTierAdr = Save + 0x3596
@@ -91,6 +90,7 @@ function _OnInit()
 	Slot10 = Slot9 - NextSlot
 	Slot11 = Slot10 - NextSlot
 	Slot12 = Slot11 - NextSlot
+	titleScreenAdr = Now - 0x0654
 end
 
 function Events(M,B,E) --Check for Map, Btl, and Evt
@@ -133,6 +133,7 @@ function _OnFrame()
 	Btl    = ReadShort(Now+0x06)
 	Evt    = ReadShort(Now+0x08)
 	PrevPlace = ReadShort(Now+0x30)
+	onTitle = ReadInt(titleScreenAdr)
 	if ReadByte(curLvlAdr) == 0x01 then
 		for Slot = 0,80 do
 			local Current = sora +abilOff+ 2*Slot
@@ -149,6 +150,12 @@ function _OnFrame()
 		crit = true
 	else
 		crit = false
+	end
+	curHP1 = ReadByte(curHPAdr)
+	curHP2 = ReadByte(Slot1)
+	if onTitle == 1 or curHP1 == 0 or curHP2 == 0 then
+		isBoosted = {"Reload"}
+		ConsolePrint("Reloading Boost Table")
 	end
 	
 	--Execute functions
@@ -758,7 +765,12 @@ function giveBoost()
 	WriteByte(sora+0x0A,statsBoost)--Magic
 	WriteByte(sora+0x0B,math.floor(statsBoost/(curDiff+1)))--Def
 	
-	if isBoosted[1] == "Init" and Place ~= 0xFFFF then
+	if isBoosted[1] == "Init" and Place ~= 0xFFFF and onTitle ~= 1 then
+		lastSpells = 0
+		for boostCheck = 1, #(boostTable) do
+			isBoosted[boostCheck] = false
+		end
+	elseif isBoosted[1] == "Reload" and Place ~= 0xFFFF and onTitle ~= 1 then
 		lastSpells = totalSpells
 		for boostCheck = 1, #(boostTable) do
 			if boostTable[boostCheck][1] >= 1 then
@@ -767,7 +779,7 @@ function giveBoost()
 				isBoosted[boostCheck] = false
 			end
 		end
-	elseif Place ~= 0xFFFF then
+	elseif Place ~= 0xFFFF and onTitle ~= 1 then
 		for boostCheck = 1, #(boostTable) do
 			if boostTable[boostCheck][1] >= 0x01 and (isBoosted[boostCheck] == false or (lastSpells < totalSpells and boostCheck == 44) or (valorLast < valorLvl and boostCheck == 45) or (wisdomLast < wisdomLvl and boostCheck == 46) or (limitLast < limitLvl and boostCheck == 47) or (masterLast < masterLvl and boostCheck == 48) or (finalLast < finalLvl and boostCheck == 49)) then
 				--Has item, does not have boost
