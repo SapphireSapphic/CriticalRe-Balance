@@ -12,8 +12,6 @@ function _OnInit()
 		Now = 0x032BAE0 --Current Location
 		Slot1    = 0x1C6C750 --Unit Slot 1
 		NextSlot = 0x268
-		pcOffset = 0x00
-		ADDR_BattleFlag = 0x00
 	elseif GAME_ID == 0x431219CC and ENGINE_TYPE == "BACKEND" then
 		onPC=true
 		ConsolePrint("Critical Re:Balance")
@@ -24,7 +22,6 @@ function _OnInit()
 		Now = 0x0714DB8 - offset
 		Slot1    = 0x2A20C58 - 0x56450E
 		NextSlot = 0x278
-		pcOffset = 0x40
 		--need to find PCSX2 Equivelant to these values
 			DistanceDash = 0x2A94BD4 -offset
 			DistanceDash2 = 0x2A94CBC -offset
@@ -77,7 +74,7 @@ function _OnInit()
 	CureTierAdr = Save + 0x3597
 	MagTierAdr = Save + 0x35CF
 	RefTierAdr = Save +	0x35D0
-	startMP = 60
+	startMP = 50
 	lastSpells = 0
 	Slot2  = Slot1 - NextSlot
 	Slot3  = Slot2 - NextSlot
@@ -91,6 +88,12 @@ function _OnInit()
 	Slot11 = Slot10 - NextSlot
 	Slot12 = Slot11 - NextSlot
 	titleScreenAdr = Now - 0x0654
+	deadMenuAdr = 0x68863A --Aka Menu Point
+	menuSelectAdr = 0x39C242 --Aka Menu Read
+	menuCountAdr = 0x39C258 --Aka Option Read
+	battleFlagAdr = 0x24AA5B6
+	cutsceneFlagAdr = 0x1C1C52
+	pauseFlagAdr = 0x554092
 end
 
 function Events(M,B,E) --Check for Map, Btl, and Evt
@@ -153,7 +156,9 @@ function _OnFrame()
 	end
 	curHP1 = ReadByte(curHPAdr)
 	curHP2 = ReadByte(Slot1)
-	if onTitle == 1 or curHP1 == 0 or curHP2 == 0 then
+	deadMenu = ReadInt(deadMenuAdr)
+	battleFlag = ReadByte(battleFlagAdr)
+	if onTitle == 1 or curHP1 == 0 or curHP2 == 0 or (deadMenu ~= 0x00 and battleFlag > 0) then
 		isBoosted = {"Reload"}
 		ConsolePrint("Reloading Boost Table")
 	end
