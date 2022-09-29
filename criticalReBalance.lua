@@ -13,6 +13,7 @@ function _OnInit()
 		Slot1    = 0x1C6C750 --Unit Slot 1
 		NextSlot = 0x268
 		pcOffset = 0x00
+		ADDR_BattleFlag = 0x00
 	elseif GAME_ID == 0x431219CC and ENGINE_TYPE == "BACKEND" then
 		onPC=true
 		ConsolePrint("Critical Re:Balance")
@@ -28,6 +29,7 @@ function _OnInit()
 			DistanceDash = 0x2A94BD4 -offset
 			DistanceDash2 = 0x2A94CBC -offset
 			DistanceDash3 = 0x2A94DCC -offset
+		ADDR_BattleFlag = 0x24AA5B6
 	end
 	curLvlAdr = Save + 0x24F0 + 0x000F
 	curDiffAdr = Save + 0x2498
@@ -48,11 +50,11 @@ function _OnInit()
 	tron = Save + 0x30CC
 	riku = Save + 0x31E0
 	partyList = {sora, donald, goofy, auron, mulan, aladdin, capJack, beast, skelJack, simba, tron, riku}
-	valorAnc = Save + 0x32FE
-	wisdomAnc = Save + 0x3336
-	limitAnc = Save + 0x336E
-	masterAnc = Save + 0x33A6
-	finalAnc = Save + 0x33DE
+	valorAnc = Save + 0x32F4
+	wisdomAnc = Save + 0x332C
+	limitAnc = Save + 0x3364
+	masterAnc = Save + 0x339C
+	finalAnc = Save + 0x33D4
 	valorLvlAdr = valorAnc + 0x02
 	wisdomLvlAdr = wisdomAnc + 0x02
 	limitLvlAdr = limitAnc + 0x02
@@ -63,12 +65,12 @@ function _OnInit()
 	limitLast = 1
 	masterLast = 1
 	finalLast = 1
-	valor = valorAnc + 0x0016 + 0x0004-- First Unused Slot, accounting for my form movement mod
-	wisdom = wisdomAnc + 0x000E + 0x000A
-	limit = limitAnc + 0x0008
-	master = masterAnc + 0x0014 + 0x000A
-	final = finalAnc + 0x0010 + 0x000A
-	anti = Save + 0x340C + 0x000C + 0x000A
+	valor = valorAnc + 0x0016 + 0x0004 + 0x08-- First Unused Slot, accounting for my form movement mod
+	wisdom = wisdomAnc + 0x000E + 0x000A + 0x08
+	limit = limitAnc + 0x0008 + 0x08
+	master = masterAnc + 0x0014 + 0x000A + 0x08
+	final = finalAnc + 0x0010 + 0x000A + 0x08
+	anti = Save + 0x340C + 0x000C + 0x000A + 0x08
 	isBoosted = {"Init"}
 	FireTierAdr = Save + 0x3594
 	BlizzTierAdr = Save + 0x3595
@@ -156,6 +158,11 @@ function _OnFrame()
 end
 
 function newGame()
+	valorLast = 1
+	wisdomLast = 1
+	limitLast = 1
+	masterLast = 1
+	finalLast = 1
 	if Place == 0x2002 and Events(0x01,Null,0x01) then --Station of Serenity Weapons
 		
 		--Start all characters with all abilities equipped, except auto limit
@@ -764,7 +771,7 @@ function giveBoost()
 		for boostCheck = 1, #(boostTable) do
 			if boostTable[boostCheck][1] >= 0x01 and (isBoosted[boostCheck] == false or (lastSpells < totalSpells and boostCheck == 44) or (valorLast < valorLvl and boostCheck == 45) or (wisdomLast < wisdomLvl and boostCheck == 46) or (limitLast < limitLvl and boostCheck == 47) or (masterLast < masterLvl and boostCheck == 48) or (finalLast < finalLvl and boostCheck == 49)) then
 				--Has item, does not have boost
-				if lvl1 == true or boostCheck <= 29 or boostCheck == #(boostTable) then
+				if (lvl1 == true or boostCheck <= 29 or boostCheck == #(boostTable)) and ((onPC == true and ReadByte(ADDR_BattleFlag) == 0) or onPC==false) then
 					ConsolePrint("Giving Boost for - "..boostTable[boostCheck][2].." x"..boostTable[boostCheck][1])
 					isBoosted[boostCheck] = true
 					boostTable[boostCheck].giveBoost()
