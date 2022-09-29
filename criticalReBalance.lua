@@ -94,6 +94,7 @@ function _OnInit()
 	battleFlagAdr = 0x24AA5B6
 	cutsceneFlagAdr = 0x1C1C52
 	pauseFlagAdr = 0x554092
+	dontSpam = false
 end
 
 function Events(M,B,E) --Check for Map, Btl, and Evt
@@ -158,9 +159,13 @@ function _OnFrame()
 	curHP2 = ReadByte(Slot1)
 	deadMenu = ReadInt(deadMenuAdr)
 	battleFlag = ReadByte(battleFlagAdr)
-	if onTitle == 1 or curHP1 == 0 or curHP2 == 0 or (deadMenu ~= 0x00 and battleFlag > 0) then
+	if onTitle == 1 or curHP1 == 0 or curHP2 == 0 or (deadMenu ~= 0x00 and battleFlag > 0) and dontSpam == false then
 		isBoosted = {"Reload"}
 		ConsolePrint("Reloading Boost Table")
+		dontSpam = true
+	end
+	if onTitle ~= 1 then
+		dontSpam = false
 	end
 	
 	--Execute functions
