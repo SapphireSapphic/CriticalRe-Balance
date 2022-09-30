@@ -176,7 +176,7 @@ function newGame()
 			end
 			
 			--Starting MP
-			startMP = 100-((curDiff+1)*10)
+			startMP = 100-((curDiff+2)*10)
 			WriteInt(Slot1+0x180,startMP)
 			WriteInt(Slot1+0x184,startMP)
 			lastSpells = 0
@@ -695,7 +695,6 @@ function boostTable(boostCheck, boostNames, boostVars)
 		--ConsolePrint("lastSpells = "..lastSpells)
 		lastSpells = lastSpells + 1
 		--ConsolePrint("totalSpells = "..totalSpells)
-		isBoosted[boostCheck] = false
 	elseif boostNames[boostCheck] == "Valor Lvl Up" and valorLast < valorLvl then
 		if valorLvl >= 2 then
 			WriteShort(valor, 0x819F) --Second Chance
@@ -797,6 +796,6 @@ function boostTable(boostCheck, boostNames, boostVars)
 		end
 		finalLast = finalLvl + 1
 	else
-		ConsolePrint("Unrecognized Boost. How'd you do that?")
+		--ConsolePrint("Unrecognized Boost. How'd you do that?")
 	end
 end	
