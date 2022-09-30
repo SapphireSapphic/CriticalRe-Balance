@@ -447,13 +447,11 @@ function giveBoost()
 		end
 	elseif Place ~= 0xFFFF and onTitle ~= 1 then
 		for boostCheck = 1, #(boostVars) do
-			if boostVars[boostCheck] >= 0x01 and isBoosted[boostCheck] == false then
+			if boostVars[boostCheck] > 0 and isBoosted[boostCheck] == false then
 				--Has item, does not have boost
-				if lvl1 == true or boostCheck <= 29 or (lastSpells < totalSpells and boostNames[boostCheck] == "Total Spells") or (valorLast < valorLvl and boostNames[boostCheck] == "Valor Lvl Up") or (wisdomLast < wisdomLvl and boostNames[boostCheck] == "Wisdom Lvl Up") or (limitLast < limitLvl and boostNames[boostCheck] == "Limit Lvl Up") or (masterLast < masterLvl and boostNames[boostCheck] == "Master Lvl Up") or (finalLast < finalLvl and boostNames[boostCheck] == "Final Lvl Up") then
-					ConsolePrint("Giving Boost for - "..boostNames[boostCheck].." x"..boostVars[boostCheck])
-					isBoosted[boostCheck] = true
-					boostTable(boostCheck, boostNames, boostVars)
-				end
+				ConsolePrint("Giving Boost for - "..boostNames[boostCheck].." x"..boostVars[boostCheck])
+				isBoosted[boostCheck] = true
+				boostTable(boostCheck, boostNames, boostVars)
 			end
 		end
 	end
@@ -628,54 +626,64 @@ function boostTable(boostCheck, boostNames, boostVars)
 	elseif boostNames[boostCheck] == "All Proofs + Promise Charm" then
 		--Nothing yet
 	elseif boostNames[boostCheck] == "All Party Weapons" then
-		giveAbility(sora, 0x0186)--Combo Boost
+		if lvl1 == true then
+			giveAbility(sora, 0x0186)--Combo Boost
+		end
 		giveAbility("party", 0x01A0)--Once More
 	elseif boostNames[boostCheck] == "All Ansem Reports" then
-		giveAbility(sora, 0x0187)--Air Combo Boost
+		if lvl1 == true then
+			giveAbility(sora, 0x0187)--Air Combo Boost
+		end
 		giveAbility("party", 0x019F)--Second Chance
 	elseif boostNames[boostCheck] == "Fire and Final" then
-		giveAbility(sora, 0x0198)--Fire Boost
+		if lvl1 == true then
+			giveAbility(sora, 0x0198)--Fire Boost
+		end
 		giveAbility("party", 0x0198)--Fire Boost
 	elseif boostNames[boostCheck] == "Blizzard and Wisdom" then
-		giveAbility(sora, 0x0199)--Blizzard Boost
+		if lvl1 == true then
+			giveAbility(sora, 0x0199)--Blizzard Boost
+		end
 		giveAbility("party", 0x0199)--Blizzard Boost
 	elseif boostNames[boostCheck] == "Thunder and Master" then
-		giveAbility(sora, 0x019A)--Thunder Boost
+		if lvl1 == true then
+			giveAbility(sora, 0x019A)--Thunder Boost
+		end
 		giveAbility("party", 0x019A)--Thunder Boost
 	elseif boostNames[boostCheck] == "Cure and Limit" then
 		giveAbility(sora, 0x0190)--Combination Boost
-		if curDiff ~= 3 then
+		if curDiff ~= 3 and lvl1== true then
 			giveAbility(sora, 0x0192)--Leaf Bracer
 		end
 		giveAbility("party", 0x0256)--Protectga
-	elseif boostNames[boostCheck] == "Reflect and Master" then
+	elseif boostNames[boostCheck] == "Reflect and Master" and lvl1==true then
 		giveAbility(sora, 0x018E)--Form Boost
-	elseif boostNames[boostCheck] == "Magnet and Valor" then
+	elseif boostNames[boostCheck] == "Magnet and Valor" and lvl1==true then
 		giveAbility(sora, 0x018D)--Drive Boost
-	elseif boostNames[boostCheck] == "All Tier 1 Spells" then
+	elseif boostNames[boostCheck] == "All Tier 1 Spells" and lvl1==true then
 		if curDiff == 0 then
 			giveAbility(sora, 0x01A6)--MP Hastega
 		end
 		giveAbility("party", 0x01A6)--MP Hastega
-	elseif boostNames[boostCheck] == "All Tier 2 Spells" then
+	elseif boostNames[boostCheck] == "All Tier 2 Spells" and lvl1==true then
 		if curDiff <= 1 then
 			giveAbility(sora, 0x01A6)--MP Hastega
 		end
 		giveAbility("party", 0x01A6)--MP Hastega
-	elseif boostNames[boostCheck] == "All Tier 3 Spells" then
+	elseif boostNames[boostCheck] == "All Tier 3 Spells" and lvl1==true then
 		if curDiff <= 2 then
 			giveAbility(sora, 0x01A6)--MP Hastega
 		end
 		giveAbility("party", 0x01A6)--MP Hastega
-	elseif boostNames[boostCheck] == "Any One Summon" then
+	elseif boostNames[boostCheck] == "Any One Summon" and lvl1==true then
 		if curDiff <=1 then
 			giveAbility(sora, 0x018F)--Summon Boost
 		end
 		giveAbility("party", 0x0256)--Protectga
-	elseif boostNames[boostCheck] == "Any Three Summons" then
+	elseif boostNames[boostCheck] == "Any Three Summons" and lvl1==true then
 		giveAbility(sora, 0x018F)--Summon Boost
 		giveAbility("party", 0x0256)--Protectga
-	elseif boostNames[boostCheck] == "Total Spells" then
+	elseif boostNames[boostCheck] == "Total Spells" and lastSpells < totalSpells then
 		if lvl1 == true then
 			MPbonus2 = 2
 		else
@@ -687,7 +695,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 		--ConsolePrint("lastSpells = "..lastSpells)
 		lastSpells = lastSpells + 1
 		--ConsolePrint("totalSpells = "..totalSpells)
-	elseif boostNames[boostCheck] == "Valor Lvl Up" then
+	elseif boostNames[boostCheck] == "Valor Lvl Up" and valorLast < valorLvl then
 		if valorLvl >= 2 then
 			WriteShort(valor, 0x819F) --Second Chance
 		end
@@ -707,7 +715,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 			WriteShort(valor+10, 0x8187) --Air Combo Boost
 		end
 		valorLast = valorLast + 1
-	elseif boostNames[boostCheck] == "Wisdom Lvl Up" then
+	elseif boostNames[boostCheck] == "Wisdom Lvl Up" and wisdomLast < wisdomLvl then
 		if wisdomLvl >= 2 then
 			WriteShort(wisdom, 0x8193) --Magic Lock-On
 		end
@@ -727,7 +735,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 			WriteShort(wisdom+10, 0x819A) --Thunder Boost
 		end
 		wisdomLast = wisdomLast + 1
-	elseif boostNames[boostCheck] == "Limit Lvl Up" then
+	elseif boostNames[boostCheck] == "Limit Lvl Up" and limitLast < limitLvl then
 		if limitLvl >= 2 and onPC == true then
 			WriteShort(limit, 0x8107) --Distance Step / Dodge Slash
 		end
@@ -747,7 +755,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 			WriteShort(limit+20, 0x81A0) --Once More
 		end
 		limitLast = limitLast + 1
-	elseif boostNames[boostCheck] == "Master Lvl Up" then
+	elseif boostNames[boostCheck] == "Master Lvl Up" and masterLast < masterLvl then
 		if masterLvl >= 2 then
 			WriteShort(master, 0x821C) --Drive Converter
 		end
@@ -767,7 +775,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 			WriteShort(master-26, 0x8187) --Air Combo Boost
 		end
 		masterLast = masterLast + 1
-	elseif boostNames[boostCheck] == "Final Lvl Up" then
+	elseif boostNames[boostCheck] == "Final Lvl Up" and finalLast < finalLvl then
 		if finalLvl >= 2 then
 			WriteShort(final, 0x819A) --Thunder Boost
 		end
