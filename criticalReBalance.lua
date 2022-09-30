@@ -695,6 +695,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 		--ConsolePrint("lastSpells = "..lastSpells)
 		lastSpells = lastSpells + 1
 		--ConsolePrint("totalSpells = "..totalSpells)
+		isBoosted[boostCheck] = false
 	elseif boostNames[boostCheck] == "Valor Lvl Up" and valorLast < valorLvl then
 		if valorLvl >= 2 then
 			WriteShort(valor, 0x819F) --Second Chance
