@@ -144,7 +144,7 @@ function _OnFrame()
 		if loading == 0 and dontSpam == true then
 			dontSpam = false
 		end
-		if loading == 1 and dontSpam == false then
+		if loading == 1 and dontSpam == false and (Place ~= 0x2002 and Events(0x01,Null,0x01)) then
 			ConsolePrint("Reloading Boost Table")
 			isBoosted = {"Reload"}
 			dontSpam = true
@@ -176,7 +176,7 @@ function newGame()
 			end
 			
 			--Starting MP
-			startMP = 100-((curDiff+2)*10)
+			startMP = 100-((curDiff+1)*10)
 			WriteInt(Slot1+0x180,startMP)
 			WriteInt(Slot1+0x184,startMP)
 			lastSpells = 0
@@ -447,7 +447,7 @@ function giveBoost()
 		end
 	elseif Place ~= 0xFFFF and onTitle ~= 1 then
 		for boostCheck = 1, #(boostVars) do
-			if boostVars[boostCheck] > 0 and isBoosted[boostCheck] == false then
+			if boostVars[boostCheck] > 0 and (isBoosted[boostCheck] == false or lastSpells < totalSpells) then
 				--Has item, does not have boost
 				ConsolePrint("Giving Boost for - "..boostNames[boostCheck].." x"..boostVars[boostCheck])
 				isBoosted[boostCheck] = true
@@ -683,7 +683,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 	elseif boostNames[boostCheck] == "Any Three Summons" and lvl1==true then
 		giveAbility(sora, 0x018F)--Summon Boost
 		giveAbility("party", 0x0256)--Protectga
-	elseif boostNames[boostCheck] == "Total Spells" and lastSpells < totalSpells then
+	elseif lastSpells < totalSpells then
 		if lvl1 == true then
 			MPbonus2 = 2
 		else
