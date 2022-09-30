@@ -77,12 +77,7 @@ function _OnInit()
 	startMP = 50
 	lastSpells = 0
 	titleScreenAdr = Now - 0x0654
-	deadMenuAdr = 0x68863A --Aka Menu Point
-	menuSelectAdr = 0x39C242 --Aka Menu Read
-	menuCountAdr = 0x39C258 --Aka Option Read
-	battleFlagAdr = 0x24AA5B6
-	cutsceneFlagAdr = 0x1C1C52
-	pauseFlagAdr = 0x554092
+	loadFlag = 0x453B82
 	dontSpam = false
 end
 
@@ -145,16 +140,15 @@ function _OnFrame()
 		crit = false
 	end
 	if onPC == true then
-		deadMenu = ReadInt(deadMenuAdr)
-		battleFlag = ReadByte(battleFlagAdr)
-		if (onTitle == 1 or (deadMenu ~= 0x00 and battleFlag > 0)) and dontSpam == false then
+		loading = ReadByte(loadFlag)
+		if loading == 0 and dontSpam == true then
+			dontSpam = false
+		end
+		if loading == 1 and dontSpam == false then
+			ConsolePrint("Reloading Boost Table")
 			isBoosted = {"Reload"}
-			--ConsolePrint("Reloading Boost Table")
 			dontSpam = true
 		end
-		if onTitle ~= 1 then
-			dontSpam = false
-		end	
 	end
 	
 	--Execute functions
@@ -434,8 +428,8 @@ function giveBoost()
 	WriteByte(sora+0x0A,statsBoost)--Magic
 	WriteByte(sora+0x0B,math.floor(statsBoost/(curDiff+1)))--Def
 	
-	boostVars = {pPea, pNon, pCon, pCharm, auronWpn, mulanWpn, aladdinWpn, capWpn, beastWpn, boneWpn, simbaWpn, tronWpn, rikuWpn, ocStone, iceCream, picture, report1, report2, report3, report4, report5, report6, report7, report8, report9, report10, report11, report12, report13, pAll, allVisit, reportALL, fireAndFinal, blizAndWiz, thunAndMaster, cureAndLimit, refAndMaster, magAndValor, allSpells, allSpells2, allSpells3, summon, summons3, totalSpells, valorLvl, wisdomLvl, limitLvl, masterLvl, finalLvl}
-	boostNames = {"Proof of Peace", "Proof of Nonexistence", "Proof of Connection", "Promise Charm", "Auron Weapon", "Mulan Weapon", "Aladdin Weapon", "Cap Jack Weapon", "Beast Weapon", "Skel Jack Weapon", "Simba Weapon", "Tron Weapon", "Riku Weapon", "Olympus Stone", "Ice Cream", "Picture", "Ansem Report 1", "Ansem Report 2", "Ansem Report 3", "Ansem Report 4", "Ansem Report 5", "Ansem Report 6", "Ansem Report 7", "Ansem Report 8", "Ansem Report 9", "Ansem Report 10", "Ansem Report 11", "Ansem Report 12", "Ansem Report 13", "All Proofs + Promise Charm", "All Party Weapons", "All Ansem Reports", "Fire and Final", "Blizzard and Wisdom", "Thunder and Master", "Cure and Limit", "Reflect and Master", "Magnet and Valor", "All Teir 1 Spells", "All Teir 2 Spells", "All Teir 3 Spells", "Any One Summon", "Any Three Summons", "Total Spells", "Valor Lvl Up", "Wisdom Lvl Up", "Limit Lvl Up", "Master Lvl Up", "Final Lvl Up"}
+	boostVars = {pPea, pNon, pCon, pCharm, auronWpn, mulanWpn, aladdinWpn, capWpn, beastWpn, boneWpn, simbaWpn, tronWpn, rikuWpn, memCard, ocStone, iceCream, picture, report1, report2, report3, report4, report5, report6, report7, report8, report9, report10, report11, report12, report13, pAll, allVisit, reportALL, fireAndFinal, blizAndWiz, thunAndMaster, cureAndLimit, refAndMaster, magAndValor, allSpells, allSpells2, allSpells3, summon, summons3, totalSpells, valorLvl, wisdomLvl, limitLvl, masterLvl, finalLvl}
+	boostNames = {"Proof of Peace", "Proof of Nonexistence", "Proof of Connection", "Promise Charm", "Auron Weapon", "Mulan Weapon", "Aladdin Weapon", "Cap Jack Weapon", "Beast Weapon", "Skel Jack Weapon", "Simba Weapon", "Tron Weapon", "Riku Weapon", "Membership Card", "Olympus Stone", "Ice Cream", "Picture", "Ansem Report 1", "Ansem Report 2", "Ansem Report 3", "Ansem Report 4", "Ansem Report 5", "Ansem Report 6", "Ansem Report 7", "Ansem Report 8", "Ansem Report 9", "Ansem Report 10", "Ansem Report 11", "Ansem Report 12", "Ansem Report 13", "All Proofs + Promise Charm", "All Party Weapons", "All Ansem Reports", "Fire and Final", "Blizzard and Wisdom", "Thunder and Master", "Cure and Limit", "Reflect and Master", "Magnet and Valor", "All Teir 1 Spells", "All Teir 2 Spells", "All Teir 3 Spells", "Any One Summon", "Any Three Summons", "Total Spells", "Valor Lvl Up", "Wisdom Lvl Up", "Limit Lvl Up", "Master Lvl Up", "Final Lvl Up"}
 	
 	if isBoosted[1] == "Init" and Place ~= 0xFFFF and onTitle ~= 1 then
 		lastSpells = 0
@@ -578,6 +572,8 @@ function boostTable(boostCheck, boostNames, boostVars)
 		WriteByte(Save+0x35D3, ReadByte(Save+0x35D3)+1)-- Shock Charm +
 		WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*1))-- High Drive Recoveries
 		giveAbility("party", 0x019E)--Defender
+	elseif boostNames[boostCheck] == "Membership Card" then
+		--nothing yet
 	elseif boostNames[boostCheck] == "Olympus Stone" then
 		WriteByte(Save+0x35D4, ReadByte(Save+0x35D4)+1)-- Grand Ribbon
 		WriteByte(Save+0x35E1, ReadByte(Save+0x35E1)+((curDiff+1)*3))-- Tents
