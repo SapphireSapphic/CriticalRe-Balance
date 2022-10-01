@@ -202,7 +202,7 @@ function giveBoost()
 	pCon = ReadByte(Save+0x36B2)
 	pNon = ReadByte(Save+0x36B3)
 	pPea = ReadByte(Save+0x36B4)
-	pCharm = ReadByte(Save+0x3964)
+	pCharm = ReadByte(Save+0x3694)
 	numProof = pCon + pNon + pPea + pCharm
 	statsBoost = (numProof+1) * 20
 	for partyMem = 2,12 do
@@ -447,7 +447,7 @@ function giveBoost()
 		end
 	elseif Place ~= 0xFFFF and onTitle ~= 1 then
 		for boostCheck = 1, #(boostVars) do
-			if boostVars[boostCheck] > 0 and (isBoosted[boostCheck] == false or lastSpells < totalSpells) then
+			if boostVars[boostCheck] > 0 and (isBoosted[boostCheck] == false or (lastSpells < totalSpells and boostNames[boostCheck] == "Total Spells")) then
 				--Has item, does not have boost
 				ConsolePrint("Giving Boost for - "..boostNames[boostCheck].." x"..boostVars[boostCheck])
 				isBoosted[boostCheck] = true
