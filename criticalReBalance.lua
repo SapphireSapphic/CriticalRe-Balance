@@ -201,7 +201,7 @@ function giveBoost()
 	numProof = pCon + pNon + pPea + pCharm
 	statsBoost = (numProof+1) * 20
 	for partyMem = 2,12 do
-		WriteByte(partyList[partyMem]+0x08,statsBoost)--AP
+		WriteByte(partyList[partyMem]+0x08,(statsBoost*(curDiff+1)))--AP
 		WriteByte(partyList[partyMem]+0x09,statsBoost)--Power
 		WriteByte(partyList[partyMem]+0x0A,statsBoost)--Magic
 		WriteByte(partyList[partyMem]+0x0B,statsBoost)--Def
@@ -497,6 +497,11 @@ function sysEdits()
 end
 
 function boostTable(boostCheck, boostNames, boostVars)
+	if lvl1 == true then
+		itemBoost = 2
+	else
+		itemBoost = 1
+	end
 	if boostNames[boostCheck] == "Proof of Peace" then
 		giveAbility(sora, 0x0190) --Combination Boost
 		if lvl1 == true and curDiff ~= 3 then
@@ -529,86 +534,86 @@ function boostTable(boostCheck, boostNames, boostVars)
 		giveAbility("party", 0x01A2)--Auto Change
 	elseif boostNames[boostCheck] == "Auron Weapon" then
 		WriteByte(Save+0x35BB, ReadByte(Save+0x35BB)+1)-- Full Bloom +
-		WriteByte(Save+0x3580, ReadByte(Save+0x3580)+((curDiff+1)*3))-- Potions
+		WriteByte(Save+0x3580, ReadByte(Save+0x3580)+((curDiff+1)*itemBoost))-- Potions
 		giveAbility("party", 0x019B)--Item Boost
 	elseif boostNames[boostCheck] == "Mulan Weapon" then
 		WriteByte(Save+0x35BB, ReadByte(Save+0x35BB)+1)-- Full Bloom +
-		WriteByte(Save+0x3581, ReadByte(Save+0x3581)+((curDiff+1)*3))-- Hi-Potions
+		WriteByte(Save+0x3581, ReadByte(Save+0x3581)+((curDiff+1)*itemBoost))-- Hi-Potions
 		giveAbility("party", 0x019B)--Item Boost
 	elseif boostNames[boostCheck] == "Aladdin Weapon" then
 		WriteByte(Save+0x35BB, ReadByte(Save+0x35BB)+1)-- Full Bloom +
-		WriteByte(Save+0x3582, ReadByte(Save+0x3582)+((curDiff+1)*3))-- Ethers
+		WriteByte(Save+0x3582, ReadByte(Save+0x3582)+((curDiff+1)*itemBoost))-- Ethers
 		giveAbility("party", 0x019B)--Item Boost
 	elseif boostNames[boostCheck] == "Cap Jack Weapon" then
 		WriteByte(Save+0x35B7, ReadByte(Save+0x35B7)+1)-- Shadow Archive +
-		WriteByte(Save+0x3583, ReadByte(Save+0x3583)+((curDiff+1)*3))-- Elixirs
+		WriteByte(Save+0x3583, ReadByte(Save+0x3583)+((curDiff+1)*itemBoost))-- Elixirs
 		giveAbility("party", 0x0197)--Lucky Lucky
 	elseif boostNames[boostCheck] == "Beast Weapon" then
 		WriteByte(Save+0x35B7, ReadByte(Save+0x35B7)+1)-- Shadow Archive +
-		WriteByte(Save+0x3584, ReadByte(Save+0x3584)+((curDiff+1)*3))-- Mega-Potions
+		WriteByte(Save+0x3584, ReadByte(Save+0x3584)+((curDiff)*itemBoost))-- Mega-Potions
 		giveAbility("party", 0x0197)--Lucky Lucky
 	elseif boostNames[boostCheck] == "Skel Jack Weapon" then
 		WriteByte(Save+0x35B7, ReadByte(Save+0x35B7)+1)-- Shadow Archive +
-		WriteByte(Save+0x3585, ReadByte(Save+0x3585)+((curDiff+1)*3))-- Mega-Ethers
+		WriteByte(Save+0x3585, ReadByte(Save+0x3585)+((curDiff)*itemBoost))-- Mega-Ethers
 		giveAbility("party", 0x0197)--Lucky Lucky
 	elseif boostNames[boostCheck] == "Simba Weapon" then
 		WriteByte(Save+0x35D3, ReadByte(Save+0x35D3)+1)-- Shock Charm +
-		WriteByte(Save+0x3586, ReadByte(Save+0x3586)+((curDiff+1)*3))-- Megalixirs
+		WriteByte(Save+0x3586, ReadByte(Save+0x3586)+((curDiff)*itemBoost))-- Megalixirs
 		giveAbility("party", 0x019E)--Defender
 	elseif boostNames[boostCheck] == "Tron Weapon" then
 		WriteByte(Save+0x35D3, ReadByte(Save+0x35D3)+1)-- Shock Charm +
-		WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*1))-- Drive Recoveries
+		WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff)*itemBoost))-- Drive Recoveries
 		giveAbility("party", 0x019E)--Defender
 	elseif boostNames[boostCheck] == "Riku Weapon" then
 		WriteByte(Save+0x35D3, ReadByte(Save+0x35D3)+1)-- Shock Charm +
-		WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*1))-- High Drive Recoveries
+		WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff)*itemBoost))-- High Drive Recoveries
 		giveAbility("party", 0x019E)--Defender
 	elseif boostNames[boostCheck] == "Membership Card" then
 		--nothing yet
 	elseif boostNames[boostCheck] == "Olympus Stone" then
 		WriteByte(Save+0x35D4, ReadByte(Save+0x35D4)+1)-- Grand Ribbon
-		WriteByte(Save+0x35E1, ReadByte(Save+0x35E1)+((curDiff+1)*3))-- Tents
+		WriteByte(Save+0x35E1, ReadByte(Save+0x35E1)+((curDiff)*itemBoost))-- Tents
 		giveAbility("party", 0x021E)--Damage Control
 	elseif boostNames[boostCheck] == "Ice Cream" then
 		WriteByte(Save+0x35D4, ReadByte(Save+0x35D4)+1)-- Grand Ribbon
-		WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*1))-- Drive Recoveries
+		WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff)*itemBoost))-- Drive Recoveries
 		giveAbility("party", 0x021E)--Damage Control
 	elseif boostNames[boostCheck] == "Picture" then
 		WriteByte(Save+0x35D4, ReadByte(Save+0x35D4)+1)-- Grand Ribbon
-		WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*1))-- High Drive Recoveries
+		WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff)*itemBoost))-- High Drive Recoveries
 		giveAbility("party", 0x021E)--Damage Control
 	elseif boostNames[boostCheck] == "Ansem Report 1" then
-		WriteByte(Save+0x3580, ReadByte(Save+0x3580)+((curDiff+1)*3))-- Potions
+		WriteByte(Save+0x3580, ReadByte(Save+0x3580)+((curDiff+1)*itemBoost))-- Potions
 		giveAbility("party", 0x0196)--Jackpot
 	elseif boostNames[boostCheck] == "Ansem Report 2" then
-		WriteByte(Save+0x3581, ReadByte(Save+0x3581)+((curDiff+1)*3))-- Hi-Potions
+		WriteByte(Save+0x3581, ReadByte(Save+0x3581)+((curDiff+1)*itemBoost))-- Hi-Potions
 		giveAbility("party", 0x0196)--Jackpot
 	elseif boostNames[boostCheck] == "Ansem Report 3" then
-		WriteByte(Save+0x3582, ReadByte(Save+0x3582)+((curDiff+1)*3))-- Ethers
+		WriteByte(Save+0x3582, ReadByte(Save+0x3582)+((curDiff+1)*itemBoost))-- Ethers
 		giveAbility("party", 0x0196)--Jackpot
 	elseif boostNames[boostCheck] == "Ansem Report 4" then
-		WriteByte(Save+0x3583, ReadByte(Save+0x3583)+((curDiff+1)*3))-- Elixirs
+		WriteByte(Save+0x3583, ReadByte(Save+0x3583)+((curDiff+1)*itemBoost))-- Elixirs
 		giveAbility("party", 0x019C)--MP Rage
 	elseif boostNames[boostCheck] == "Ansem Report 5" then
-		WriteByte(Save+0x3584, ReadByte(Save+0x3584)+((curDiff+1)*3))-- Mega-Potions
+		WriteByte(Save+0x3584, ReadByte(Save+0x3584)+((curDiff)*itemBoost))-- Mega-Potions
 		giveAbility("party", 0x019C)--MP Rage
 	elseif boostNames[boostCheck] == "Ansem Report 6" then
-		WriteByte(Save+0x3585, ReadByte(Save+0x3585)+((curDiff+1)*3))-- Mega-Ethers
+		WriteByte(Save+0x3585, ReadByte(Save+0x3585)+((curDiff)*itemBoost))-- Mega-Ethers
 		giveAbility("party", 0x019C)--MP Rage
 	elseif boostNames[boostCheck] == "Ansem Report 7" then
-		WriteByte(Save+0x3586, ReadByte(Save+0x3586)+((curDiff+1)*3))-- Megalixirs
+		WriteByte(Save+0x3586, ReadByte(Save+0x3586)+((curDiff)*itemBoost))-- Megalixirs
 		giveAbility("party", 0x01A3)--Hyper Healing
 	elseif boostNames[boostCheck] == "Ansem Report 8" then
-		WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*1))-- Drive Recoveries
+		WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff)*itemBoost))-- Drive Recoveries
 		giveAbility("party", 0x01A3)--Hyper Healing
 	elseif boostNames[boostCheck] == "Ansem Report 9" then
-		WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*1))-- High Drive Recoveries
+		WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff)*itemBoost))-- High Drive Recoveries
 		giveAbility("party", 0x01A4)--Auto Healing
 	elseif boostNames[boostCheck] == "Ansem Report 10" then
-		WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff+1)*1))-- High Drive Recoveries
+		WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff)*itemBoost))-- High Drive Recoveries
 		giveAbility("party", 0x01A4)--Auto Healing
 	elseif boostNames[boostCheck] == "Ansem Report 11" then
-		WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff+1)*1))-- Drive Recoveries
+		WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff)*itemBoost))-- Drive Recoveries
 		giveAbility("party", 0x0197)--Lucky Lucky
 	elseif boostNames[boostCheck] == "Ansem Report 12" then
 		WriteByte(Save+0x35B1, ReadByte(Save+0x35B1)+1)-- Cosmic Arts
@@ -617,7 +622,11 @@ function boostTable(boostCheck, boostNames, boostVars)
 		WriteByte(Save+0x35B1, ReadByte(Save+0x35B1)+1)-- Cosmic Arts
 		giveAbility("party", 0x0197)--Lucky Lucky
 	elseif boostNames[boostCheck] == "All Proofs + Promise Charm" then
-		--Nothing yet
+		WriteByte(Save+0x3584, ReadByte(Save+0x3584)+((curDiff)*itemBoost))-- Mega-Potions
+		WriteByte(Save+0x3585, ReadByte(Save+0x3585)+((curDiff)*itemBoost))-- Mega-Ethers
+		WriteByte(Save+0x3586, ReadByte(Save+0x3586)+((curDiff)*itemBoost))-- Megalixirs
+		WriteByte(Save+0x3664, ReadByte(Save+0x3664)+((curDiff)*itemBoost))-- Drive Recoveries
+		WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff)*itemBoost))-- High Drive Recoveries
 	elseif boostNames[boostCheck] == "All Party Weapons" then
 		if lvl1 == true then
 			giveAbility(sora, 0x0186)--Combo Boost
@@ -745,7 +754,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 			WriteShort(limit+8, 0x819F) --Second Chance
 		end
 		if limitLvl >= 7 then
-			WriteShort(limit+20, 0x81A0) --Once More
+			WriteShort(limit+24, 0x81A0) --Once More
 		end
 		limitLast = limitLast + 1
 	elseif masterLast < masterLvl then
@@ -791,4 +800,4 @@ function boostTable(boostCheck, boostNames, boostVars)
 	else
 		--ConsolePrint("Unrecognized Boost. How'd you do that?")
 	end
-end	
+end
