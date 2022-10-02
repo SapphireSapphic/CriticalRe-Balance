@@ -443,6 +443,11 @@ function giveBoost()
 		for boostCheck = 1, #(boostVars) do
 			if boostVars[boostCheck] > 0 and (isBoosted[boostCheck] == false or (lastSpells < totalSpells and boostNames[boostCheck] == "Total Spells") or (valorLast < valorLvl and boostNames[boostCheck] == "Valor Lvl Up") or (wisdomLast < wisdomLvl and boostNames[boostCheck] == "Wisdom Lvl Up") or (limitLast < limitLvl and boostNames[boostCheck] == "Limit Lvl Up") or (masterLast < masterLvl and boostNames[boostCheck] == "Master Lvl Up") or (finalLast < finalLvl and boostNames[boostCheck] == "Final Lvl Up")) then
 				--Has item, does not have boost
+				ConsolePrint(valorLast.." < "..valorLvl)
+				ConsolePrint(wisdomLast.." < "..wisdomLvl)
+				ConsolePrint(limitLast.." < "..limitLvl)
+				ConsolePrint(masterLast.." < "..masterLvl)
+				ConsolePrint(finalLast.." < "..finalLvl)
 				ConsolePrint("Giving Boost for - "..boostNames[boostCheck].." x"..boostVars[boostCheck])
 				isBoosted[boostCheck] = true
 				boostTable(boostCheck, boostNames, boostVars)
