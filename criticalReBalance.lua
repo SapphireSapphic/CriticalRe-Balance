@@ -61,12 +61,12 @@ function _OnInit()
 	limitLast = 1
 	masterLast = 1
 	finalLast = 1
-	valor = valorAnc + 0x0016 + 0x0004 + 0x08-- First Unused Slot, accounting for my form movement mod
-	wisdom = wisdomAnc + 0x000E + 0x000A + 0x08
-	limit = limitAnc + 0x0008 + 0x08
-	master = masterAnc + 0x0014 + 0x000A + 0x08
-	final = finalAnc + 0x0010 + 0x000A + 0x08
-	anti = Save + 0x340C + 0x000C + 0x000A + 0x08
+	valor = valorAnc + 0x0016 + 0x0004 + 0x0A-- First Unused Slot, accounting for my form movement mod
+	wisdom = wisdomAnc + 0x000E + 0x000A + 0x0A
+	limit = limitAnc + 0x0008 + 0x0A
+	master = masterAnc + 0x0014 + 0x000A + 0x0A
+	final = finalAnc + 0x0010 + 0x000A + 0x0A
+	anti = Save + 0x340C + 0x000C + 0x000A + 0x0A
 	isBoosted = {"Reload"}
 	FireTierAdr = Save + 0x3594
 	BlizzTierAdr = Save + 0x3595
@@ -442,11 +442,6 @@ function giveBoost()
 		for boostCheck = 1, #(boostVars) do
 			if boostVars[boostCheck] > 0 and (isBoosted[boostCheck] == false or (lastSpells < totalSpells and boostNames[boostCheck] == "Total Spells") or (valorLast < valorLvl and boostNames[boostCheck] == "Valor Lvl Up") or (wisdomLast < wisdomLvl and boostNames[boostCheck] == "Wisdom Lvl Up") or (limitLast < limitLvl and boostNames[boostCheck] == "Limit Lvl Up") or (masterLast < masterLvl and boostNames[boostCheck] == "Master Lvl Up") or (finalLast < finalLvl and boostNames[boostCheck] == "Final Lvl Up")) then
 				--Has item, does not have boost
-				ConsolePrint(valorLast.." < "..valorLvl)
-				ConsolePrint(wisdomLast.." < "..wisdomLvl)
-				ConsolePrint(limitLast.." < "..limitLvl)
-				ConsolePrint(masterLast.." < "..masterLvl)
-				ConsolePrint(finalLast.." < "..finalLvl)
 				ConsolePrint("Giving Boost for - "..boostNames[boostCheck].." x"..boostVars[boostCheck])
 				isBoosted[boostCheck] = true
 				boostTable(boostCheck, boostNames, boostVars)
@@ -741,7 +736,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 			WriteShort(limit+2, 0x8187) --Air Combo Boost
 		end
 		if limitLvl >= 4 then
-			WriteShort(limit+4, 0x810F) --Horizontal Slash
+			WriteShort(limit+4, 0x81A6) --MP Hastega
 		end
 		if limitLvl >= 5 then
 			WriteShort(limit+6, 0x8186) --Combo Boost
