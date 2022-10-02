@@ -91,7 +91,7 @@ function giveAbility(character, abilityCode)
 			abilityGiven = false
 			for Slot = 0,80 do
 				local Current = partyList[partyMem] + abilOff + 2*Slot
-				local Ability = ReadShort(Current)
+				local Ability = ReadShort(Current) & 0x0FFF
 				if Ability == 0x0000 and abilityGiven == false then
 					WriteShort(Current, abilityCode + 0x8000)
 					abilityGiven = true
@@ -102,7 +102,7 @@ function giveAbility(character, abilityCode)
 		abilityGiven = false
 		for Slot = 0,80 do
 			local Current = character + abilOff + 2*Slot
-			local Ability = ReadShort(Current)
+			local Ability = ReadShort(Current) & 0x0FFF
 			if Ability == 0x0000 and abilityGiven == false then
 				WriteShort(Current, abilityCode + 0x8000)
 				abilityGiven = true
@@ -122,7 +122,7 @@ function _OnFrame()
 	Evt    = ReadShort(Now+0x08)
 	PrevPlace = ReadShort(Now+0x30)
 	onTitle = ReadInt(titleScreenAdr)
-	if ReadByte(curLvlAdr) == 0x01 then
+	if ReadByte(curLvlAdr) == 1 then
 		for Slot = 0,80 do
 			local Current = sora +abilOff+ 2*Slot
 			local Ability = ReadShort(Current)
@@ -134,17 +134,13 @@ function _OnFrame()
 		lvl1 = false
 	end
 	curDiff = ReadByte(curDiffAdr)
-	if curDiff == 0x03 then
-		crit = true
-	else
-		crit = false
-	end
 	if onPC == true then
 		loading = ReadByte(loadFlag)
+		curHP = ReadByte(curHPAdr)
 		if loading == 0 and dontSpam == true then
 			dontSpam = false
 		end
-		if loading == 1 and dontSpam == false and (Place ~= 0x2002 and Events(0x01,Null,0x01)) then
+		if (loading == 1 or curHP < 1) and dontSpam == false and (Place ~= 0x2002 and Events(0x01,Null,0x01)) then
 			ConsolePrint("Reloading Boost Table")
 			isBoosted = {"Reload"}
 			dontSpam = true
@@ -412,17 +408,15 @@ function giveBoost()
 	else
 		reportALL = 0
 	end
-	if auronWpn + mulanWpn + aladdinWpn + capWpn + beastWpn + boneWpn + simbaWpn + tronWpn + rikuWpn + iceCream + picture >= 11 then
+	if auronWpn + mulanWpn + aladdinWpn + capWpn + beastWpn + boneWpn + simbaWpn + tronWpn + rikuWpn + iceCream + picture + memCard >= 12 then
 		allVisit = 1
 	else
 		allVisit = 0
 	end
 	
 	statsBoost = 0
-	if lvl1 == true and curDiff ~= 3 then
-		statsBoost = auronWpn + mulanWpn + beastWpn + boneWpn + simbaWpn + capWpn + aladdinWpn + rikuWpn + tronWpn + memCard + ocStone + iceCream + picture + (totalSpells*2) + (numProof * 5) + report1 + report2 + report3 + report4 + report5 + report6 + report7 + report8 + report9 + report10 + report11 + report12 + report13 + ((stitch + genie + peter + chicken)*2)
-	elseif lvl1 == true and curDiff == 3 then
-		statsBoost = numProof + math.floor((auronWpn + mulanWpn + beastWpn + boneWpn + simbaWpn + capWpn + aladdinWpn + rikuWpn + tronWpn + memCard + ocStone + iceCream + picture + stitch + genie + peter + chicken + report1 + report2 + report3 + report4 + report5 + report6 + report7 + report8 + report9 + report10 + report11 + report12 + report13 + totalSpells)/4)
+	if lvl1 == true then
+		statsBoost = (auronWpn + mulanWpn + aladdinWpn + capWpn + beastWpn + boneWpn + simbaWpn + tronWpn + rikuWpn + iceCream + picture + memCard + allVisit + report1 + report2 + report3 + report4 + report5 + report6 + report7 + report8 + report9 + report10 + report11 + report12 + report13 + reportALL + genie + peter + stitch + chicken + totalSpells + numProof + valorLvl + wisdomLvl + limitLvl +masterLvl + finalLvl + fireAndFinal + blizAndWiz + thunAndMaster + cureAndLimit + refAndMaster + magAndValor + allSpells + allSpells2 + allSpells3 + summon + summons3 + pAll)/(curDiff+1)
 	end
 	WriteByte(sora+0x09,statsBoost)--Power
 	WriteByte(sora+0x0A,statsBoost)--Magic
@@ -652,7 +646,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 		giveAbility("party", 0x019A)--Thunder Boost
 	elseif boostNames[boostCheck] == "Cure and Limit" then
 		giveAbility(sora, 0x0190)--Combination Boost
-		if curDiff ~= 3 and lvl1== true then
+		if lvl1== true then
 			giveAbility(sora, 0x0192)--Leaf Bracer
 		end
 		giveAbility("party", 0x0256)--Protectga
@@ -695,7 +689,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 		--ConsolePrint("lastSpells = "..lastSpells)
 		lastSpells = lastSpells + 1
 		--ConsolePrint("totalSpells = "..totalSpells)
-	elseif boostNames[boostCheck] == "Valor Lvl Up" and valorLast < valorLvl then
+	elseif valorLast < valorLvl then
 		if valorLvl >= 2 then
 			WriteShort(valor, 0x819F) --Second Chance
 		end
@@ -715,7 +709,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 			WriteShort(valor+10, 0x8187) --Air Combo Boost
 		end
 		valorLast = valorLast + 1
-	elseif boostNames[boostCheck] == "Wisdom Lvl Up" and wisdomLast < wisdomLvl then
+	elseif wisdomLast < wisdomLvl then
 		if wisdomLvl >= 2 then
 			WriteShort(wisdom, 0x8193) --Magic Lock-On
 		end
@@ -735,7 +729,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 			WriteShort(wisdom+10, 0x819A) --Thunder Boost
 		end
 		wisdomLast = wisdomLast + 1
-	elseif boostNames[boostCheck] == "Limit Lvl Up" and limitLast < limitLvl then
+	elseif limitLast < limitLvl then
 		if limitLvl >= 2 and onPC == true then
 			WriteShort(limit, 0x8107) --Distance Step / Dodge Slash
 		end
@@ -755,7 +749,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 			WriteShort(limit+20, 0x81A0) --Once More
 		end
 		limitLast = limitLast + 1
-	elseif boostNames[boostCheck] == "Master Lvl Up" and masterLast < masterLvl then
+	elseif masterLast < masterLvl then
 		if masterLvl >= 2 then
 			WriteShort(master, 0x821C) --Drive Converter
 		end
@@ -775,15 +769,15 @@ function boostTable(boostCheck, boostNames, boostVars)
 			WriteShort(master-26, 0x8187) --Air Combo Boost
 		end
 		masterLast = masterLast + 1
-	elseif boostNames[boostCheck] == "Final Lvl Up" and finalLast < finalLvl then
+	elseif finalLast < finalLvl then
 		if finalLvl >= 2 then
-			WriteShort(final, 0x819A) --Thunder Boost
+			WriteShort(final, 0x80A3) --Air Combo Plus
 		end
 		if finalLvl >= 3 then
 			WriteShort(final+2, 0x8198) --Fire Boost
 		end
 		if finalLvl >= 4 then
-			WriteShort(final+4, 0x819A) --Thunder Boost
+			WriteShort(final+4, 0x80A2) --Combo Plus
 		end
 		if finalLvl >= 5 then
 			WriteShort(final+6, 0x819F) --Second Chance
