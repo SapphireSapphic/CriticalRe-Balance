@@ -154,13 +154,12 @@ function _OnFrame()
 end
 
 function newGame()
-	valorLast = 1
-	wisdomLast = 1
-	limitLast = 1
-	masterLast = 1
-	finalLast = 1
 	if Place == 0x2002 and Events(0x01,Null,0x01) then --Station of Serenity Weapons
-		
+		valorLast = 1
+		wisdomLast = 1
+		limitLast = 1
+		masterLast = 1
+		finalLast = 1	
 		--Start all characters with all abilities equipped, except auto limit
 		for partyMem = 1,12 do
 			for Slot = 0,80 do
