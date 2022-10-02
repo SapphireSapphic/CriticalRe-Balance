@@ -788,7 +788,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 		if finalLvl >= 7 then
 			WriteShort(final-14, 0x81A0) --Once More
 		end
-		finalLast = finalLvl + 1
+		finalLast = finalLast + 1
 	else
 		--ConsolePrint("Unrecognized Boost. How'd you do that?")
 	end
