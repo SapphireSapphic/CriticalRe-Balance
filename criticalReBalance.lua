@@ -417,9 +417,10 @@ function giveBoost()
 	if lvl1 == true then
 		statsBoost = math.floor((auronWpn + mulanWpn + aladdinWpn + capWpn + beastWpn + boneWpn + simbaWpn + tronWpn + rikuWpn + iceCream + picture + memCard + allVisit + report1 + report2 + report3 + report4 + report5 + report6 + report7 + report8 + report9 + report10 + report11 + report12 + report13 + reportALL + genie + peter + stitch + chicken + totalSpells + numProof + valorLvl + wisdomLvl + limitLvl +masterLvl + finalLvl + fireAndFinal + blizAndWiz + thunAndMaster + cureAndLimit + refAndMaster + magAndValor + allSpells + allSpells2 + allSpells3 + summon + summons3 + pAll)/(curDiff+2))
 	end
+	WriteByte(sora+0x09,statsBoost*(curDiff+2))--AP
 	WriteByte(sora+0x09,statsBoost)--Power
 	WriteByte(sora+0x0A,statsBoost)--Magic
-	WriteByte(sora+0x0B,math.floor(statsBoost/(curDiff+1)))--Def
+	WriteByte(sora+0x0B,math.floor(statsBoost/((curDiff+1)/2)))--Def
 	
 	boostVars = {pPea, pNon, pCon, pCharm, auronWpn, mulanWpn, aladdinWpn, capWpn, beastWpn, boneWpn, simbaWpn, tronWpn, rikuWpn, memCard, ocStone, iceCream, picture, report1, report2, report3, report4, report5, report6, report7, report8, report9, report10, report11, report12, report13, pAll, allVisit, reportALL, fireAndFinal, blizAndWiz, thunAndMaster, cureAndLimit, refAndMaster, magAndValor, allSpells, allSpells2, allSpells3, summon, summons3, totalSpells, valorLvl, wisdomLvl, limitLvl, masterLvl, finalLvl}
 	boostNames = {"Proof of Peace", "Proof of Nonexistence", "Proof of Connection", "Promise Charm", "Auron Weapon", "Mulan Weapon", "Aladdin Weapon", "Cap Jack Weapon", "Beast Weapon", "Skel Jack Weapon", "Simba Weapon", "Tron Weapon", "Riku Weapon", "Membership Card", "Olympus Stone", "Ice Cream", "Picture", "Ansem Report 1", "Ansem Report 2", "Ansem Report 3", "Ansem Report 4", "Ansem Report 5", "Ansem Report 6", "Ansem Report 7", "Ansem Report 8", "Ansem Report 9", "Ansem Report 10", "Ansem Report 11", "Ansem Report 12", "Ansem Report 13", "All Proofs + Promise Charm", "All Party Weapons", "All Ansem Reports", "Fire and Final", "Blizzard and Wisdom", "Thunder and Master", "Cure and Limit", "Reflect and Master", "Magnet and Valor", "All Teir 1 Spells", "All Teir 2 Spells", "All Teir 3 Spells", "Any One Summon", "Any Three Summons", "Total Spells", "Valor Lvl Up", "Wisdom Lvl Up", "Limit Lvl Up", "Master Lvl Up", "Final Lvl Up"}
@@ -494,6 +495,27 @@ function sysEdits()
 		WriteByte(DistanceDash2, 0x36) --Disable DodgeSlash Entry2
 		WriteByte(DistanceDash3, 0x36) --Disable DodgeSlash Entry3
 	end
+	
+	if lvl1==true then
+		WriteByte(Sys3+09E0, ((curDiff+1)*(1+(fireAndFinal*2)))) --Fire
+		WriteByte(Sys3+15E0, ((curDiff+1)*(2+(fireAndFinal*2)))) --Fira
+		WriteByte(Sys3+1610, ((curDiff+1)*(3+(fireAndFinal*2)))) --Firaga
+		WriteByte(Sys3+0A40, ((curDiff+1)*(2+blizAndWiz))) --Blizzard
+		WriteByte(Sys3+1640, ((curDiff+2)*(3+blizAndWiz))) --Blizzara
+		WriteByte(Sys3+1670, ((curDiff+2)*(4+blizAndWiz))) --Blizzaga
+		WriteByte(Sys3+0A10, ((curDiff+1)*(2+(thunAndMaster*2)))) --Thunder
+		WriteByte(Sys3+16A0, ((curDiff+2)*(3+(thunAndMaster*2)))) --Thundara
+		WriteByte(Sys3+16D0, ((curDiff+2)*(4+(thunAndMaster*3)))) --Thundaga
+		WriteByte(Sys3+0A70, (0xFA-((curDiff+2))*20)) --Cure
+		WriteByte(Sys3+1700, (0xFA-((curDiff+2))*15)) --Cura
+		WriteByte(Sys3+1730, (0xFA-((curDiff+2))*10)) --Curaga
+		WriteByte(Sys3+1F40, ((curDiff+1)*5)) --Magnet
+		WriteByte(Sys3+1F70, ((curDiff+2)*7)) --Magnera
+		WriteByte(Sys3+1FA0, ((curDiff+2)*10)) --Magnega
+		WriteByte(Sys3+1FD0, (curDiff+2)) --Reflect
+		WriteByte(Sys3+2000, ((curDiff+2)*2)) --Reflera
+		WriteByte(Sys3+2030, (curDiff+2)*(curDiff+1)) --Reflega
+	end
 end
 
 function boostTable(boostCheck, boostNames, boostVars)
@@ -504,13 +526,13 @@ function boostTable(boostCheck, boostNames, boostVars)
 	end
 	if boostNames[boostCheck] == "Proof of Peace" then
 		giveAbility(sora, 0x0190) --Combination Boost
-		if lvl1 == true and curDiff ~= 3 then
+		if lvl1 == true then
 			giveAbility(sora, 0x018E) --Form Boost
 		end
 		WriteByte(Save+0x3674, ReadByte(Save+0x3674)+1)-- Armor slot
 		giveAbility("party", 0x256) --Protectga
 	elseif boostNames[boostCheck] == "Proof of Nonexistence" then
-		if lvl1 == true and curDiff ~= 3 then
+		if lvl1 == true then
 			giveAbility(sora, 0x0187)--Air Combo Boost
 		else
 			giveAbility(sora, 0x0188)--Reaction Boost
@@ -518,7 +540,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 		WriteByte(Save+0x3675, ReadByte(Save+0x3675)+1)-- Acc slot
 		giveAbility("party", 0x01A4)--Auto Healing
 	elseif boostNames[boostCheck] == "Proof of Connection" then
-		if lvl1 == true and curDiff ~= 3 then
+		if lvl1 == true then
 			giveAbility(sora, 0x0186)--Combo Boost
 		else
 			giveAbility(sora, 0x018D)--Drive Boost
@@ -527,7 +549,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 		giveAbility("party", 0x01A3)--Hyper Healing
 	elseif boostNames[boostCheck] == "Promise Charm" then
 		giveAbility(sora, 0x018E)--Form Boost
-		if lvl1 == true and curDiff ~= 3 then
+		if lvl1 == true then
 			giveAbility(sora, 0x018D)--Drive Boost
 		end
 		WriteByte(Save+0x3675, ReadByte(Save+0x3675)+1)-- Acc slot
