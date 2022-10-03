@@ -496,26 +496,26 @@ function sysEdits()
 		WriteByte(DistanceDash3, 0x36) --Disable DodgeSlash Entry3
 	end
 	
-	if lvl1==true then
-		WriteByte(Sys3+09E0, ((curDiff+1)*(1+(fireAndFinal*2)))) --Fire
-		WriteByte(Sys3+15E0, ((curDiff+1)*(2+(fireAndFinal*2)))) --Fira
-		WriteByte(Sys3+1610, ((curDiff+1)*(3+(fireAndFinal*2)))) --Firaga
-		WriteByte(Sys3+0A40, ((curDiff+1)*(2+blizAndWiz))) --Blizzard
-		WriteByte(Sys3+1640, ((curDiff+2)*(3+blizAndWiz))) --Blizzara
-		WriteByte(Sys3+1670, ((curDiff+2)*(4+blizAndWiz))) --Blizzaga
-		WriteByte(Sys3+0A10, ((curDiff+1)*(2+(thunAndMaster*2)))) --Thunder
-		WriteByte(Sys3+16A0, ((curDiff+2)*(3+(thunAndMaster*2)))) --Thundara
-		WriteByte(Sys3+16D0, ((curDiff+2)*(4+(thunAndMaster*3)))) --Thundaga
-		WriteByte(Sys3+0A70, (0xFA-((curDiff+2))*20)) --Cure
-		WriteByte(Sys3+1700, (0xFA-((curDiff+2))*15)) --Cura
-		WriteByte(Sys3+1730, (0xFA-((curDiff+2))*10)) --Curaga
-		WriteByte(Sys3+1F40, ((curDiff+1)*5)) --Magnet
-		WriteByte(Sys3+1F70, ((curDiff+2)*7)) --Magnera
-		WriteByte(Sys3+1FA0, ((curDiff+2)*10)) --Magnega
-		WriteByte(Sys3+1FD0, (curDiff+2)) --Reflect
-		WriteByte(Sys3+2000, ((curDiff+2)*2)) --Reflera
-		WriteByte(Sys3+2030, (curDiff+2)*(curDiff+1)) --Reflega
-	end
+	--[[if lvl1==true then
+		WriteByte(Sys3+09E0, ) --Fire
+		WriteByte(Sys3+15E0, ) --Fira
+		WriteByte(Sys3+1610, ) --Firaga
+		WriteByte(Sys3+0A40, ) --Blizzard
+		WriteByte(Sys3+1640, ) --Blizzara
+		WriteByte(Sys3+1670, ) --Blizzaga
+		WriteByte(Sys3+0A10, ) --Thunder
+		WriteByte(Sys3+16A0, ) --Thundara
+		WriteByte(Sys3+16D0, ) --Thundaga
+		WriteByte(Sys3+0A70, ) --Cure
+		WriteByte(Sys3+1700, ) --Cura
+		WriteByte(Sys3+1730, ) --Curaga
+		WriteByte(Sys3+1F40, ) --Magnet
+		WriteByte(Sys3+1F70, ) --Magnera
+		WriteByte(Sys3+1FA0, ) --Magnega
+		WriteByte(Sys3+1FD0, ) --Reflect
+		WriteByte(Sys3+2000, ) --Reflera
+		WriteByte(Sys3+2030, ) --Reflega
+	end]]
 end
 
 function boostTable(boostCheck, boostNames, boostVars)
@@ -526,13 +526,13 @@ function boostTable(boostCheck, boostNames, boostVars)
 	end
 	if boostNames[boostCheck] == "Proof of Peace" then
 		giveAbility(sora, 0x0190) --Combination Boost
-		if lvl1 == true then
+		if lvl1 == true and curDiff ~= 3 then
 			giveAbility(sora, 0x018E) --Form Boost
 		end
 		WriteByte(Save+0x3674, ReadByte(Save+0x3674)+1)-- Armor slot
 		giveAbility("party", 0x256) --Protectga
 	elseif boostNames[boostCheck] == "Proof of Nonexistence" then
-		if lvl1 == true then
+		if lvl1 == true and curDiff ~= 3 then
 			giveAbility(sora, 0x0187)--Air Combo Boost
 		else
 			giveAbility(sora, 0x0188)--Reaction Boost
@@ -540,7 +540,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 		WriteByte(Save+0x3675, ReadByte(Save+0x3675)+1)-- Acc slot
 		giveAbility("party", 0x01A4)--Auto Healing
 	elseif boostNames[boostCheck] == "Proof of Connection" then
-		if lvl1 == true then
+		if lvl1 == true and curDiff ~= 3 then
 			giveAbility(sora, 0x0186)--Combo Boost
 		else
 			giveAbility(sora, 0x018D)--Drive Boost
@@ -549,7 +549,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 		giveAbility("party", 0x01A3)--Hyper Healing
 	elseif boostNames[boostCheck] == "Promise Charm" then
 		giveAbility(sora, 0x018E)--Form Boost
-		if lvl1 == true then
+		if lvl1 == true and curDiff ~= 3 then
 			giveAbility(sora, 0x018D)--Drive Boost
 		end
 		WriteByte(Save+0x3675, ReadByte(Save+0x3675)+1)-- Acc slot
@@ -591,7 +591,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 		WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff)*itemBoost))-- High Drive Recoveries
 		giveAbility("party", 0x019E)--Defender
 	elseif boostNames[boostCheck] == "Membership Card" then
-		--nothing yet
+		giveAbility(sora, 0x0189) --Finishing Plus
 	elseif boostNames[boostCheck] == "Olympus Stone" then
 		WriteByte(Save+0x35D4, ReadByte(Save+0x35D4)+1)-- Grand Ribbon
 		WriteByte(Save+0x35E1, ReadByte(Save+0x35E1)+((curDiff)*itemBoost))-- Tents
