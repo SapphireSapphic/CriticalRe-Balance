@@ -494,6 +494,7 @@ function sysEdits()
 		WriteFloat(DistanceDash, 2000) --DistanceDash MAXRANGE
 		WriteByte(DistanceDash2, 0x36) --Disable DodgeSlash Entry2
 		WriteByte(DistanceDash3, 0x36) --Disable DodgeSlash Entry3
+		WriteFloat(Save+0x2079DF0, 10000)
 	end
 	
 	--[[if lvl1==true then
@@ -548,7 +549,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 		WriteByte(Save+0x3674, ReadByte(Save+0x3674)+1)-- Armor slot
 		giveAbility("party", 0x01A3)--Hyper Healing
 	elseif boostNames[boostCheck] == "Promise Charm" then
-		giveAbility(sora, 0x018E)--Form Boost
+		giveAbility(sora, 0x0195)--Draw
 		if lvl1 == true and curDiff ~= 3 then
 			giveAbility(sora, 0x018D)--Drive Boost
 		end
