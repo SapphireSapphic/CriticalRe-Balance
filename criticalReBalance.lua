@@ -415,9 +415,9 @@ function giveBoost()
 	
 	statsBoost = 0
 	if lvl1 == true then
-		statsBoost = math.floor((auronWpn + mulanWpn + aladdinWpn + capWpn + beastWpn + boneWpn + simbaWpn + tronWpn + rikuWpn + iceCream + picture + memCard + allVisit + report1 + report2 + report3 + report4 + report5 + report6 + report7 + report8 + report9 + report10 + report11 + report12 + report13 + reportALL + genie + peter + stitch + chicken + totalSpells + numProof + valorLvl + wisdomLvl + limitLvl +masterLvl + finalLvl + fireAndFinal + blizAndWiz + thunAndMaster + cureAndLimit + refAndMaster + magAndValor + allSpells + allSpells2 + allSpells3 + summon + summons3 + pAll)/(curDiff+2))
+		statsBoost = math.floor((auronWpn + mulanWpn + aladdinWpn + capWpn + beastWpn + boneWpn + simbaWpn + tronWpn + rikuWpn + iceCream + picture + memCard + ocStone + allVisit + report1 + report2 + report3 + report4 + report5 + report6 + report7 + report8 + report9 + report10 + report11 + report12 + report13 + reportALL + genie + peter + stitch + chicken + totalSpells + numProof + valorLvl + wisdomLvl + limitLvl + masterLvl + finalLvl + fireAndFinal + blizAndWiz + thunAndMaster + cureAndLimit + refAndMaster + magAndValor + allSpells + allSpells2 + allSpells3 + summon + summons3 + pAll)/(curDiff+2))
 	end
-	WriteByte(sora+0x09,statsBoost*(curDiff+2))--AP
+	--WriteByte(sora+0x09,statsBoost*(curDiff+2))--AP
 	WriteByte(sora+0x09,statsBoost)--Power
 	WriteByte(sora+0x0A,statsBoost)--Magic
 	WriteByte(sora+0x0B,math.floor(statsBoost/((curDiff+1)/2)))--Def
