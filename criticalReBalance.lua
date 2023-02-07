@@ -407,7 +407,7 @@ function giveBoost()
 	else
 		reportALL = 0
 	end
-	if auronWpn + mulanWpn + aladdinWpn + capWpn + beastWpn + boneWpn + simbaWpn + tronWpn + rikuWpn + iceCream + picture + memCard >= 12 then
+	if auronWpn + mulanWpn + aladdinWpn + capWpn + beastWpn + boneWpn + simbaWpn + tronWpn + rikuWpn + iceCream + picture + memCard >= 10 then
 		allVisit = 1
 	else
 		allVisit = 0
