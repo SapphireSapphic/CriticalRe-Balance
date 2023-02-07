@@ -489,34 +489,6 @@ function sysEdits()
 		WriteInt(Btl0+0x29D64+(0x10 * partyLevel), 1)--Tron
 		WriteInt(Btl0+0x2A398+(0x10 * partyLevel), 1)--Riku
 	end
-
-	if onPC == true then
-		WriteFloat(DistanceDash, 2000) --DistanceDash MAXRANGE
-		WriteByte(DistanceDash2, 0x36) --Disable DodgeSlash Entry2
-		WriteByte(DistanceDash3, 0x36) --Disable DodgeSlash Entry3
-		WriteFloat(Save+0x2079DF0, 10000)
-	end
-	
-	--[[if lvl1==true then
-		WriteByte(Sys3+09E0, ) --Fire
-		WriteByte(Sys3+15E0, ) --Fira
-		WriteByte(Sys3+1610, ) --Firaga
-		WriteByte(Sys3+0A40, ) --Blizzard
-		WriteByte(Sys3+1640, ) --Blizzara
-		WriteByte(Sys3+1670, ) --Blizzaga
-		WriteByte(Sys3+0A10, ) --Thunder
-		WriteByte(Sys3+16A0, ) --Thundara
-		WriteByte(Sys3+16D0, ) --Thundaga
-		WriteByte(Sys3+0A70, ) --Cure
-		WriteByte(Sys3+1700, ) --Cura
-		WriteByte(Sys3+1730, ) --Curaga
-		WriteByte(Sys3+1F40, ) --Magnet
-		WriteByte(Sys3+1F70, ) --Magnera
-		WriteByte(Sys3+1FA0, ) --Magnega
-		WriteByte(Sys3+1FD0, ) --Reflect
-		WriteByte(Sys3+2000, ) --Reflera
-		WriteByte(Sys3+2030, ) --Reflega
-	end]]
 end
 
 function boostTable(boostCheck, boostNames, boostVars)
