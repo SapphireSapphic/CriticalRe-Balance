@@ -199,7 +199,7 @@ function giveBoost()
 	pPea = ReadByte(Save+0x36B4)
 	pCharm = ReadByte(Save+0x3694)
 	numProof = pCon + pNon + pPea + pCharm
-	statsBoost = (numProof+1) * 20
+	statsBoost = (numProof+1) * 10
 	for partyMem = 2,12 do
 		WriteByte(partyList[partyMem]+0x08,(statsBoost*(curDiff+1)))--AP
 		WriteByte(partyList[partyMem]+0x09,statsBoost)--Power
