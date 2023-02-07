@@ -592,7 +592,7 @@ function boostTable(boostCheck, boostNames, boostVars)
 		WriteByte(Save+0x3665, ReadByte(Save+0x3665)+((curDiff)*itemBoost))-- High Drive Recoveries
 		giveAbility("party", 0x019E)--Defender
 	elseif boostNames[boostCheck] == "Membership Card" then
-		giveAbility(sora, 0x0189) --Finishing Plus
+		giveAbility(sora, 0x018E)--Form Boost
 	elseif boostNames[boostCheck] == "Olympus Stone" then
 		WriteByte(Save+0x35D4, ReadByte(Save+0x35D4)+1)-- Grand Ribbon
 		WriteByte(Save+0x35E1, ReadByte(Save+0x35E1)+((curDiff)*itemBoost))-- Tents
