@@ -434,6 +434,11 @@ function giveBoost()
 		end
 	elseif isBoosted[1] == "Reload" and Place ~= 0xFFFF and onTitle ~= 1 then
 		lastSpells = totalSpells
+		valorLast = valorLvl
+		wisdomLast = wisdomLvl
+		limitLast = limitLvl
+		masterLast = masterLvl
+		finalLast = finalLvl
 		for boostCheck = 1, #(boostVars) do
 			if boostVars[boostCheck] >= 1 then
 				isBoosted[boostCheck] = true
