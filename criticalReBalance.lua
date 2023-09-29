@@ -7,8 +7,8 @@ function _OnInit()
 		ConsolePrint("Critical Re:Balance PCSX2")
 		onPC=false
 		Save = 0x032BB30 --Save File
-		Sys3 = 0x1CCB300 --03system.bin
-		Btl0 = 0x1CE5D80 --00battle.bin	
+		Sys3Pointer = 0x1C61AF8 --03system.bin Pointer Address
+		Btl0Pointer = 0x1C61AFC --00battle.bin Pointer Address
 		Now = 0x032BAE0 --Current Location
 		Slot1    = 0x1C6C750 --Unit Slot 1
 		NextSlot = 0x268
@@ -16,8 +16,8 @@ function _OnInit()
 		onPC=true
 		ConsolePrint("Critical Re:Balance")
 		Save = 0x09A7070 - 0x56450E
-		Sys3 = 0x2A59DB0 - 0x56450E
-		Btl0 = 0x2A74840 - 0x56450E	
+		Sys3Pointer = 0x2AE3550 - 0x56454E
+		Btl0Pointer = 0x2AE3558 - 0x56454E	
 		offset = 0x56454E
 		Now = 0x0714DB8 - offset
 		Slot1    = 0x2A20C58 - 0x56450E
@@ -123,6 +123,19 @@ function _OnFrame()
 	Evt    = ReadShort(Now+0x08)
 	PrevPlace = ReadShort(Now+0x30)
 	onTitle = ReadInt(titleScreenAdr)
+	if Place == 0xFFFF or not MSN then
+		if not OnPC then
+			Obj0 = ReadInt(Obj0Pointer)
+			Sys3 = ReadInt(Sys3Pointer)
+			Btl0 = ReadInt(Btl0Pointer)
+			MSN = 0x04FA440
+		else
+			Obj0 = ReadLong(Obj0Pointer)
+			Sys3 = ReadLong(Sys3Pointer)
+			Btl0 = ReadLong(Btl0Pointer)
+			MSN = 0x0BF08C0 - 0x56450E
+		end
+	end
 	if ReadByte(curLvlAdr) == 1 then
 		for Slot = 0,80 do
 			local Current = sora +abilOff+ 2*Slot
