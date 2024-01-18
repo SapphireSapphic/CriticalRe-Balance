@@ -5,7 +5,7 @@ LUAGUI_DESC = "Rebalances a variety of things in the game, with the goal of impr
 function _OnInit()
 	if (GAME_ID == 0xF266B00B or GAME_ID == 0xFAF99301) and ENGINE_TYPE == "ENGINE" then --PCSX2
 		ConsolePrint("Critical Re:Balance PCSX2")
-		onPC=false
+		onPC = false
 		Save = 0x032BB30 --Save File
 		Sys3Pointer = 0x1C61AF8 --03system.bin Pointer Address
 		Btl0Pointer = 0x1C61AFC --00battle.bin Pointer Address
@@ -13,7 +13,7 @@ function _OnInit()
 		Slot1    = 0x1C6C750 --Unit Slot 1
 		NextSlot = 0x268
 	elseif GAME_ID == 0x431219CC and ENGINE_TYPE == "BACKEND" then
-		onPC=true
+		onPC = true
 		ConsolePrint("Critical Re:Balance")
 		Save = 0x09A7070 - 0x56450E
 		Sys3Pointer = 0x2AE3550 - 0x56454E
@@ -163,7 +163,7 @@ function _OnFrame()
 	
 	--Execute functions
 	newGame()
-	sysEdits()
+	sysEdits(Btl0, Sys3)
 	giveBoost()
 end
 
@@ -471,7 +471,7 @@ function giveBoost()
 	end
 end
 
-function sysEdits()
+function sysEdits(Btl0, Sys3)
 	--Running Speed boost
 	base = 10
 	faster = 16
