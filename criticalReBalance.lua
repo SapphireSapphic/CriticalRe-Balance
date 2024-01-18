@@ -476,38 +476,38 @@ function sysEdits(Btl0, Sys3)
 	base = 10
 	faster = 16
 	fastest = 20
-	WriteFloat(Sys3+0x17CE4, base)--Base Sora
-	WriteFloat(Sys3+0x17D18, faster)--Valor
-	WriteFloat(Sys3+0x17D4C, faster)--Wis
-	WriteFloat(Sys3+0x17D80, faster)--Master
-	WriteFloat(Sys3+0x17DB4, fastest)--Final
-	WriteFloat(Sys3+0x17E84, base)--Donald
-	WriteFloat(Sys3+0x17EEC, base)--Goofy
-	WriteFloat(Sys3+0x17F54, base)--Aladdin
-	WriteFloat(Sys3+0x17F88, base)--Auron
-	WriteFloat(Sys3+0x17FBC, base)--Mulan
-	WriteFloat(Sys3+0x17FF0, base)--Ping
-	WriteFloat(Sys3+0x18024, base)--Tron
-	WriteFloat(Sys3+0x18058, base)--Mickey
-	WriteFloat(Sys3+0x1808C, base)--Beast
-	WriteFloat(Sys3+0x180C0, base)--Jack Skel
-	WriteFloat(Sys3+0x18128, base)--Jack Sparrow
-	WriteFloat(Sys3+0x1815C, base)--Riku
-	WriteFloat(Sys3+0x18364, base)--Limit Form
+	WriteFloat(Sys3+0x17CE4, base, true)--Base Sora
+	WriteFloat(Sys3+0x17D18, faster, true)--Valor
+	WriteFloat(Sys3+0x17D4C, faster, true)--Wis
+	WriteFloat(Sys3+0x17D80, faster, true)--Master
+	WriteFloat(Sys3+0x17DB4, fastest, true)--Final
+	WriteFloat(Sys3+0x17E84, base, true)--Donald
+	WriteFloat(Sys3+0x17EEC, base, true)--Goofy
+	WriteFloat(Sys3+0x17F54, base, true)--Aladdin
+	WriteFloat(Sys3+0x17F88, base, true)--Auron
+	WriteFloat(Sys3+0x17FBC, base, true)--Mulan
+	WriteFloat(Sys3+0x17FF0, base, true)--Ping
+	WriteFloat(Sys3+0x18024, base, true)--Tron
+	WriteFloat(Sys3+0x18058, base, true)--Mickey
+	WriteFloat(Sys3+0x1808C, base, true)--Beast
+	WriteFloat(Sys3+0x180C0, base, true)--Jack Skel
+	WriteFloat(Sys3+0x18128, base, true)--Jack Sparrow
+	WriteFloat(Sys3+0x1815C, base, true)--Riku
+	WriteFloat(Sys3+0x18364, base, true)--Limit Form
 	
 	--make party members Lvl to 99 super fast
 	for partyLevel = 0,98 do
-		WriteInt(Btl0+0x25F5C+(0x10 * partyLevel), 1)--Donald
-		WriteInt(Btl0+0x26590+(0x10 * partyLevel), 1)--Goofy
-		WriteInt(Btl0+0x271F8+(0x10 * partyLevel), 1)--Auron
-		WriteInt(Btl0+0x2782C+(0x10 * partyLevel), 1)--Mulan
-		WriteInt(Btl0+0x27E60+(0x10 * partyLevel), 1)--Aladdin
-		WriteInt(Btl0+0x28494+(0x10 * partyLevel), 1)--Jack Sparrow
-		WriteInt(Btl0+0x28AC8+(0x10 * partyLevel), 1)--Beast
-		WriteInt(Btl0+0x290FC+(0x10 * partyLevel), 1)--Jack Skellington
-		WriteInt(Btl0+0x29730+(0x10 * partyLevel), 1)--Simba
-		WriteInt(Btl0+0x29D64+(0x10 * partyLevel), 1)--Tron
-		WriteInt(Btl0+0x2A398+(0x10 * partyLevel), 1)--Riku
+		WriteInt(Btl0+0x25F5C+(0x10 * partyLevel), 1, true)--Donald
+		WriteInt(Btl0+0x26590+(0x10 * partyLevel), 1, true)--Goofy
+		WriteInt(Btl0+0x271F8+(0x10 * partyLevel), 1, true)--Auron
+		WriteInt(Btl0+0x2782C+(0x10 * partyLevel), 1, true)--Mulan
+		WriteInt(Btl0+0x27E60+(0x10 * partyLevel), 1, true)--Aladdin
+		WriteInt(Btl0+0x28494+(0x10 * partyLevel), 1, true)--Jack Sparrow
+		WriteInt(Btl0+0x28AC8+(0x10 * partyLevel), 1, true)--Beast
+		WriteInt(Btl0+0x290FC+(0x10 * partyLevel), 1, true)--Jack Skellington
+		WriteInt(Btl0+0x29730+(0x10 * partyLevel), 1, true)--Simba
+		WriteInt(Btl0+0x29D64+(0x10 * partyLevel), 1, true)--Tron
+		WriteInt(Btl0+0x2A398+(0x10 * partyLevel), 1, true)--Riku
 	end
 end
 
